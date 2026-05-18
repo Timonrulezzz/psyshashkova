@@ -8,6 +8,7 @@ import Footer from '@/app/components/Footer';
 import Eyebrow from '@/app/components/Eyebrow';
 import Reveal from '@/app/components/Reveal';
 import CountUp from '@/app/components/CountUp';
+import EmotionCheck from '@/app/components/EmotionCheck';
 
 const rotatingWords = ['понятно', 'спокойно', 'честно', 'по-настоящему'];
 
@@ -328,6 +329,13 @@ export default function Home() {
         </div>
       </section>
 
+{/* EMOTION CHECK */}
+      <section className="max-w-6xl mx-auto px-6 py-24 md:py-32 border-t" style={{ borderColor: C.line }}>
+        <Reveal>
+          <EmotionCheck />
+        </Reveal>
+      </section>
+      
       {/* КАК МЫ РАБОТАЕМ */}
       <section style={{ backgroundColor: C.ink, color: C.bg }}>
         <div className="max-w-6xl mx-auto px-6 py-24 md:py-32">
