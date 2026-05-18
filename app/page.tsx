@@ -163,10 +163,17 @@ export default function Home() {
           <div className="md:col-span-4">
             <Reveal delay={200}>
               <div
-                className="aspect-[4/5] rounded-sm flex items-center justify-center transition-transform duration-700 hover:scale-[1.02]"
-                style={{ background: 'linear-gradient(135deg, #2a2a2a 0%, #4a4a4a 50%, #1a1a1a 100%)', color: '#888' }}
+                className="aspect-[4/5] overflow-hidden transition-transform duration-700 hover:scale-[1.02]"
+                style={{
+                  borderRadius: '12px',
+                  boxShadow: '0 8px 32px rgba(31, 27, 22, 0.08)',
+                }}
               >
-                <p className="text-xs tracking-widest uppercase" style={sans}>Портрет</p>
+                <img
+                  src="/images/portrait-hero.png"
+                  alt="Юлия Шашкова, клинический психолог"
+                  className="w-full h-full object-cover"
+                />
               </div>
             </Reveal>
           </div>
@@ -281,14 +288,23 @@ export default function Home() {
       {/* ОБО МНЕ */}
       <section className="max-w-6xl mx-auto px-6 py-24 md:py-32">
         <div className="grid md:grid-cols-12 gap-12 items-start">
-          <Reveal>
-            <div className="md:col-span-5">
+          <div className="md:col-span-5">
+            <Reveal>
               <div
-                className="aspect-[4/5] rounded-sm transition-transform duration-700 hover:scale-[1.02]"
-                style={{ background: 'linear-gradient(135deg, #2a2a2a 0%, #4a4a4a 50%, #1a1a1a 100%)' }}
-              />
-            </div>
-          </Reveal>
+                className="aspect-[4/5] overflow-hidden transition-transform duration-700 hover:scale-[1.02]"
+                style={{
+                  borderRadius: '12px',
+                  boxShadow: '0 8px 32px rgba(31, 27, 22, 0.08)',
+                }}
+              >
+                <img
+                  src="/images/portrait-about.jpg"
+                  alt="Юлия Шашкова"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </Reveal>
+          </div>
           <div className="md:col-span-7 md:pt-8">
             <Reveal delay={150}>
               <Eyebrow>Обо мне</Eyebrow>

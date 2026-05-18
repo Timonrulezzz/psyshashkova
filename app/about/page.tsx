@@ -57,8 +57,18 @@ export default function About() {
           </div>
           <div className="md:col-span-5">
             <Reveal delay={200}>
-              <div className="aspect-[4/5] rounded-sm flex items-center justify-center transition-transform duration-700 hover:scale-[1.02]" style={{ background: 'linear-gradient(135deg, #2a2a2a 0%, #4a4a4a 50%, #1a1a1a 100%)', color: '#888' }}>
-                <p className="text-xs tracking-widest uppercase" style={sans}>Главный портрет</p>
+              <div
+                className="overflow-hidden transition-transform duration-700 hover:scale-[1.02]"
+                style={{
+                  borderRadius: '12px',
+                  boxShadow: '0 8px 32px rgba(31, 27, 22, 0.08)',
+                }}
+              >
+                <img
+                  src="/images/portrait-leisure.jpg"
+                  alt="Юлия Шашкова, клинический психолог"
+                  className="w-full h-auto block"
+                />
               </div>
             </Reveal>
           </div>
@@ -171,8 +181,18 @@ export default function About() {
           <div className="grid md:grid-cols-12 gap-12 items-center">
             <div className="md:col-span-5">
               <Reveal>
-                <div className="aspect-[3/4] rounded-sm flex items-center justify-center transition-transform duration-700 hover:scale-[1.02]" style={{ background: 'linear-gradient(135deg, #2a2a2a 0%, #4a4a4a 50%, #1a1a1a 100%)', color: '#888' }}>
-                  <p className="text-xs tracking-widest uppercase" style={sans}>Вне работы</p>
+                <div
+                  className="aspect-[3/4] overflow-hidden transition-transform duration-700 hover:scale-[1.02]"
+                  style={{
+                    borderRadius: '12px',
+                    boxShadow: '0 8px 32px rgba(31, 27, 22, 0.08)',
+                  }}
+                >
+                  <img
+                    src="/images/portrait-outwork.jpg"
+                    alt="Юлия Шашкова"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </Reveal>
             </div>
