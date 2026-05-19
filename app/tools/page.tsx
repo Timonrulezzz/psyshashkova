@@ -46,7 +46,7 @@ const tools = [
     title: 'Колесо эмоций',
     text: 'Интерактивная схема Плутчика. Помогает точнее распознавать чувства — не «плохо», а конкретно: разочарование, тревога, обида, апатия.',
     color: C.ochre,
-    ready: false,
+    ready: true,
   },
 ];
 
@@ -60,7 +60,7 @@ export default function Tools() {
           <Reveal>
             <Eyebrow>Инструменты</Eyebrow>
             <h1 className="text-4xl md:text-6xl leading-[1.1] tracking-tight font-normal mb-8">
-              Бесплатные инструменты, чтобы лучше понять себя
+              Инструменты, чтобы лучше понять себя
             </h1>
           </Reveal>
           <Reveal delay={150}>
