@@ -17,6 +17,7 @@ import {
   getHealthyLevel,
   groupResultsByCategory,
   categoryLabels,
+  getLevelColor,
   type ModeResult,
   type ModeCategory,
 } from './data';
@@ -410,9 +411,18 @@ function ResultsSection({
                   className="rounded-sm p-8 h-full flex flex-col"
                   style={{ backgroundColor: C.surface }}
                 >
-                  <p className="text-xs tracking-widest uppercase mb-4" style={{ ...sans, color: r.mode.color }}>
-                    {levelLabels[r.level]} уровень · {r.rawScore.toFixed(1)}
-                  </p>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span
+                      className="inline-block w-2 h-2 rounded-full"
+                      style={{ backgroundColor: getLevelColor(r.level, r.mode.isHealthy) }}
+                    />
+                    <p
+                      className="text-xs tracking-widest uppercase"
+                      style={{ ...sans, color: getLevelColor(r.level, r.mode.isHealthy), fontWeight: 500 }}
+                    >
+                      {levelLabels[r.level]} уровень · {r.rawScore.toFixed(2)}
+                    </p>
+                  </div>
                   <h3 className="text-2xl mb-4 leading-snug">{r.mode.name}</h3>
                   <p className="text-[14px] tracking-wider uppercase mb-4" style={{ ...sans, color: C.inkSoft }}>
                     {r.mode.nameEn}
@@ -518,16 +528,10 @@ function ResultsSection({
 // ================== SCALE ROW ==================
 
 function ScaleRow({ result }: { result: ModeResult }) {
-  const { mode, rawScore, level, levelIndex } = result;
-  // Шкала от 1 до 6, преобразуем в проценты
+  const { mode, rawScore, level } = result;
+  // Шкала от 1 до 6, преобразуем в проценты для ширины полосы
   const percent = ((rawScore - 1) / 5) * 100;
-  const isHealthy = mode.isHealthy;
-
-  // Подсветка уровня
-  const intensityColor = isHealthy ? C.moss : mode.color;
-  const intensityOpacity = isHealthy
-    ? 0.4 + (levelIndex / 5) * 0.6  // здоровые: чем выше уровень, тем ярче
-    : 0.3 + (levelIndex / 5) * 0.7; // дисфункц.: тоже чем выше, тем ярче
+  const levelColor = getLevelColor(level, mode.isHealthy);
 
   return (
     <div>
@@ -541,17 +545,20 @@ function ScaleRow({ result }: { result: ModeResult }) {
           </span>
         </div>
         <div className="flex items-baseline gap-3 text-sm" style={{ ...sans }}>
-          <span style={{ color: C.inkSoft }}>{levelLabels[level]}</span>
-          <span style={{ color: C.ink }}>{rawScore.toFixed(2)}</span>
+          <span style={{ color: levelColor, fontWeight: 500 }}>
+            {levelLabels[level]}
+          </span>
+          <span style={{ color: levelColor, fontWeight: 500 }}>
+            {rawScore.toFixed(2)}
+          </span>
         </div>
       </div>
-      <div className="h-2 rounded-full overflow-hidden relative" style={{ backgroundColor: C.line }}>
+      <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor: C.line }}>
         <div
           className="h-full transition-all duration-700 ease-out"
           style={{
             width: `${percent}%`,
-            backgroundColor: intensityColor,
-            opacity: intensityOpacity,
+            backgroundColor: levelColor,
           }}
         />
       </div>

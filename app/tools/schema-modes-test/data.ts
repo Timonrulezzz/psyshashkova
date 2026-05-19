@@ -480,3 +480,28 @@ export function groupResultsByCategory(
   // Здоровый Взрослый — отдельная категория healthy
   return grouped;
 }
+
+export function getLevelColor(level: LevelKey, isHealthy: boolean): string {
+  if (isHealthy) {
+    // Для здоровых режимов: низкий уровень = тревожно, высокий = ресурсно
+    const healthy: Record<LevelKey, string> = {
+      low: C.terracotta,        // выраженный дефицит здорового режима
+      reduced: '#C8804A',       // тёплый оранжевый-промежуточный
+      moderate: C.inkSoft,      // нейтральный
+      elevated: C.moss,         // выраженный ресурс
+      high: '#4E5440',          // насыщенный мох
+      veryHigh: '#393E2E',      // глубокий мох
+    };
+    return healthy[level];
+  }
+  // Для дисфункциональных: низкий = спокойно, высокий = выраженно
+  const dys: Record<LevelKey, string> = {
+    low: '#9B9385',             // приглушённый серый
+    reduced: C.inkSoft,         // серый палитры
+    moderate: C.ochre,          // охра
+    elevated: C.terracotta,     // терракота
+    high: '#8C4429',            // насыщенная терракота
+    veryHigh: '#6B331E',        // глубокая терракота
+  };
+  return dys[level];
+}
