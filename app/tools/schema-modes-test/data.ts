@@ -322,7 +322,7 @@ export const modes: Mode[] = [
   // === РОДИТЕЛЬСКИЕ РЕЖИМЫ ===
   {
     key: 'punitiveParent',
-    name: 'Карающий Родитель',
+    name: 'Наказывающий Родитель',
     nameEn: 'Punitive Parent',
     category: 'parent',
     isHealthy: false,
