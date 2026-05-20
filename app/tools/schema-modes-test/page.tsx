@@ -407,8 +407,9 @@ function ResultsSection({
           <div className="grid md:grid-cols-3 gap-6">
             {topDysfunctional.map((r, i) => (
               <Reveal key={r.mode.key} delay={i * 100}>
-                <div
-                  className="rounded-sm p-8 h-full flex flex-col"
+                <Link
+                  href={`/tools/schema-modes#${r.mode.key}`}
+                  className="block rounded-sm p-8 h-full flex flex-col transition-all duration-300 hover:-translate-y-1 group"
                   style={{ backgroundColor: C.surface }}
                 >
                   <div className="flex items-center gap-2 mb-4">
@@ -427,10 +428,16 @@ function ResultsSection({
                   <p className="text-[14px] tracking-wider uppercase mb-4" style={{ ...sans, color: C.inkSoft }}>
                     {r.mode.nameEn}
                   </p>
-                  <p className="text-[15px] leading-relaxed flex-1" style={{ color: C.ink }}>
+                  <p className="text-[15px] leading-relaxed flex-1 mb-5" style={{ color: C.ink }}>
                     {r.mode.description}
                   </p>
-                </div>
+                  <span
+                    className="text-sm transition-transform duration-300 group-hover:translate-x-1 inline-block mt-auto"
+                    style={{ ...sans, color: C.ink }}
+                  >
+                    Подробнее о режиме →
+                  </span>
+                </Link>
               </Reveal>
             ))}
           </div>
