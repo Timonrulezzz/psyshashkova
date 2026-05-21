@@ -14,7 +14,6 @@ import {
   additionalSchemas,
   getSchemasByDomain,
   getNeedByKey,
-  getDomainByKey,
   type SchemaKey,
   type DomainKey,
   type Schema,
@@ -79,7 +78,7 @@ export default function SchemasAndNeedsMap() {
         </Reveal>
       </section>
 
-      {/* КАРТА ПОТРЕБНОСТЕЙ И ДОМЕНОВ */}
+      {/* SVG-КАРТА */}
       <section className="max-w-4xl mx-auto px-6 py-8 md:py-12">
         <Reveal>
           <NeedsAndDomainsMap
@@ -90,7 +89,7 @@ export default function SchemasAndNeedsMap() {
         </Reveal>
       </section>
 
-      {/* БАЗОВЫЕ ПОТРЕБНОСТИ — ТЕКСТОВЫЙ БЛОК */}
+      {/* БАЗОВЫЕ ПОТРЕБНОСТИ */}
       <section className="max-w-4xl mx-auto px-6 py-12 md:py-16">
         <Reveal>
           <div className="mb-10">
@@ -212,7 +211,6 @@ export default function SchemasAndNeedsMap() {
           </div>
         </Reveal>
 
-        {/* Дополнительные потребности */}
         <Reveal>
           <p className="text-xs tracking-widest uppercase mb-5" style={{ ...sans, color: C.inkSoft }}>
             Дополнительные потребности
@@ -236,7 +234,6 @@ export default function SchemasAndNeedsMap() {
           ))}
         </div>
 
-        {/* Дополнительные схемы */}
         <Reveal>
           <p className="text-xs tracking-widest uppercase mb-5" style={{ ...sans, color: C.inkSoft }}>
             Дополнительные схемы
@@ -328,7 +325,7 @@ export default function SchemasAndNeedsMap() {
 }
 
 // ============================================================
-// SVG-карта: 5 «островов» доменов вокруг центрального узла потребностей
+// SVG-карта
 // ============================================================
 
 function NeedsAndDomainsMap({
@@ -340,16 +337,14 @@ function NeedsAndDomainsMap({
   onHoverDomain: (key: DomainKey | null) => void;
   onClickDomain: (key: DomainKey) => void;
 }) {
-  // Геометрия
   const cx = 350;
   const cy = 350;
   const centerR = 70;
-  const islandR = 95;       // радиус «острова» домена
-  const orbitR = 220;       // радиус, по которому размещены острова
+  const islandR = 95;
+  const orbitR = 220;
 
-  // Размещаем 5 доменов по кругу
   const positions = domains.map((d, i) => {
-    const angle = (i * (2 * Math.PI)) / 5 - Math.PI / 2; // первый — сверху
+    const angle = (i * (2 * Math.PI)) / 5 - Math.PI / 2;
     return {
       x: cx + orbitR * Math.cos(angle),
       y: cy + orbitR * Math.sin(angle),
@@ -380,7 +375,6 @@ function NeedsAndDomainsMap({
           </filter>
         </defs>
 
-        {/* Связи от центра к доменам */}
         {positions.map((p) => {
           const dx = p.x - cx;
           const dy = p.y - cy;
@@ -407,7 +401,6 @@ function NeedsAndDomainsMap({
           );
         })}
 
-        {/* Центр — «5 потребностей» */}
         <g>
           <circle
             cx={cx}
@@ -419,30 +412,15 @@ function NeedsAndDomainsMap({
             strokeWidth="3"
             filter="url(#soft-shadow-needs)"
           />
-          <text
-            x={cx}
-            y={cy - 10}
-            textAnchor="middle"
-            fontSize="14"
-            fill={C.bg}
-            style={{ ...serif }}
-          >
+          <text x={cx} y={cy - 10} textAnchor="middle" fontSize="14" fill={C.bg} style={{ ...serif }}>
             5 базовых
           </text>
-          <text
-            x={cx}
-            y={cy + 10}
-            textAnchor="middle"
-            fontSize="14"
-            fill={C.bg}
-            style={{ ...serif }}
-          >
+          <text x={cx} y={cy + 10} textAnchor="middle" fontSize="14" fill={C.bg} style={{ ...serif }}>
             потребностей
           </text>
         </g>
 
-        {/* Острова доменов */}
-        {positions.map((p, i) => {
+        {positions.map((p) => {
           const isHovered = hoveredDomain === p.domain.key;
           const schemasCount = getSchemasByDomain(p.domain.key).length;
           return (
@@ -464,13 +442,11 @@ function NeedsAndDomainsMap({
                 filter="url(#soft-shadow-needs)"
                 style={{ transition: 'opacity 0.2s' }}
               />
-              {/* Текст — разбиваем название по 1-2 слова на строку */}
               <DomainLabel x={p.x} y={p.y} name={p.domain.name} schemasCount={schemasCount} />
             </g>
           );
         })}
 
-        {/* Подсказка снизу */}
         <text
           x={cx}
           y={680}
@@ -486,14 +462,12 @@ function NeedsAndDomainsMap({
   );
 }
 
-// Подпись острова домена
 function DomainLabel({ x, y, name, schemasCount }: { x: number; y: number; name: string; schemasCount: number }) {
   const words = name.split(' ');
   const lines: string[] = [];
   if (words.length <= 2) {
     lines.push(...words);
   } else {
-    // Стараемся разбить по 1-2 слова
     if (words[0].length + words[1].length < 18) {
       lines.push(words[0] + ' ' + words[1]);
       lines.push(words.slice(2).join(' '));
@@ -558,7 +532,6 @@ function SchemaCard({
       className="rounded-sm overflow-hidden scroll-mt-24"
       style={{ backgroundColor: C.surface }}
     >
-      {/* Заголовок-кнопка */}
       <button
         onClick={onToggle}
         className="w-full text-left p-7 flex items-start gap-5 transition-colors"
@@ -590,11 +563,17 @@ function SchemaCard({
         </div>
       </button>
 
-      {/* Раскрывающееся содержимое */}
       {isOpen && (
         <div className="px-7 pb-8 pt-2" style={{ borderTop: `1px solid ${C.line}` }}>
-          {/* Основное описание */}
-          <div className="pt-6 mb-8">
+          {/* Короткое описание из теста — как первый абзац-вход */}
+          <div className="pt-6 mb-6 pl-6 border-l-2" style={{ borderColor: domainColor }}>
+            <p className="text-[17px] leading-relaxed" style={{ color: C.ink }}>
+              {schema.shortDescription}
+            </p>
+          </div>
+
+          {/* Подробное описание */}
+          <div className="mb-8">
             {schema.description.split('\n\n').map((para, i) => (
               <p key={i} className="text-base leading-relaxed mb-4 last:mb-0" style={{ color: C.ink }}>
                 {para}
@@ -603,7 +582,7 @@ function SchemaCard({
           </div>
 
           {/* Ранний опыт */}
-          <div className="mb-8 pl-6 border-l-2" style={{ borderColor: domainColor }}>
+          <div className="mb-8">
             <p className="text-xs tracking-widest uppercase mb-3" style={{ ...sans, color: C.inkSoft }}>
               Типичный ранний опыт
             </p>
@@ -618,24 +597,9 @@ function SchemaCard({
               Три способа проживания схемы
             </p>
             <div className="grid md:grid-cols-3 gap-4">
-              <CopingBox
-                title="Капитуляция"
-                titleEn="Surrender"
-                description={schema.copingSurrender}
-                color={domainColor}
-              />
-              <CopingBox
-                title="Избегание"
-                titleEn="Avoidance"
-                description={schema.copingAvoidance}
-                color={domainColor}
-              />
-              <CopingBox
-                title="Гиперкомпенсация"
-                titleEn="Overcompensation"
-                description={schema.copingOvercompensation}
-                color={domainColor}
-              />
+              <CopingBox title="Капитуляция" titleEn="Surrender" description={schema.copingSurrender} color={domainColor} />
+              <CopingBox title="Избегание" titleEn="Avoidance" description={schema.copingAvoidance} color={domainColor} />
+              <CopingBox title="Гиперкомпенсация" titleEn="Overcompensation" description={schema.copingOvercompensation} color={domainColor} />
             </div>
           </div>
 

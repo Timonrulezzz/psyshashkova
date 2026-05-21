@@ -493,36 +493,46 @@ export default function SchemaTest() {
           <section className="max-w-4xl mx-auto px-6 py-8">
             <div className="space-y-4">
               {results.map((r, i) => (
-                <Reveal key={r.key} delay={i * 40}>
-                  <div className="p-6 rounded-sm transition-all duration-300 hover:translate-x-1" style={{ backgroundColor: C.surface }}>
-                    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-3">
-                      <div className="flex-1">
-                        <p className="text-xs tracking-widest uppercase mb-2" style={{ ...sans, color: C.inkSoft }}>
-                          {r.domain}
-                        </p>
-                        <h3 className="text-xl">{r.name}</h3>
-                      </div>
-                      <div className="shrink-0 md:text-right">
-                        <p className="text-2xl" style={{ color: r.classification.color }}>
-                          {r.avg.toFixed(1)}
-                        </p>
-                        <p className="text-xs" style={{ ...sans, color: r.classification.color }}>
-                          {r.classification.label}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="h-1.5 rounded-full mb-4 overflow-hidden" style={{ backgroundColor: C.bg }}>
-                      <div
-                        className="h-full rounded-full transition-all duration-1000 ease-out"
-                        style={{ width: `${(r.avg / 6) * 100}%`, backgroundColor: r.classification.color }}
-                      />
-                    </div>
-                    <p className="text-[15px] leading-relaxed" style={{ color: C.inkSoft }}>
-                      {r.description}
-                    </p>
-                  </div>
-                </Reveal>
-              ))}
+  <Reveal key={r.key} delay={i * 40}>
+    <Link
+      href={`/tools/schemas-needs#${r.key}`}
+      className="block p-6 rounded-sm transition-all duration-300 hover:-translate-y-1 group"
+      style={{ backgroundColor: C.surface }}
+    >
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-3">
+        <div className="flex-1">
+          <p className="text-xs tracking-widest uppercase mb-2" style={{ ...sans, color: C.inkSoft }}>
+            {r.domain}
+          </p>
+          <h3 className="text-xl">{r.name}</h3>
+        </div>
+        <div className="shrink-0 md:text-right">
+          <p className="text-2xl" style={{ color: r.classification.color }}>
+            {r.avg.toFixed(1)}
+          </p>
+          <p className="text-xs" style={{ ...sans, color: r.classification.color }}>
+            {r.classification.label}
+          </p>
+        </div>
+      </div>
+      <div className="h-1.5 rounded-full mb-4 overflow-hidden" style={{ backgroundColor: C.bg }}>
+        <div
+          className="h-full rounded-full transition-all duration-1000 ease-out"
+          style={{ width: `${(r.avg / 6) * 100}%`, backgroundColor: r.classification.color }}
+        />
+      </div>
+      <p className="text-[15px] leading-relaxed mb-3" style={{ color: C.inkSoft }}>
+        {r.description}
+      </p>
+      <span
+        className="text-sm transition-transform duration-300 group-hover:translate-x-1 inline-block"
+        style={{ ...sans, color: C.ink }}
+      >
+        Подробнее о схеме →
+      </span>
+    </Link>
+  </Reveal>
+))}
             </div>
           </section>
 
