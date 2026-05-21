@@ -25,6 +25,7 @@ export default function Footer() {
           <div className="space-y-2">
             <Link href="/legal/offer" className="block" style={{ color: C.ink }}>Оферта</Link>
             <Link href="/legal/privacy" className="block" style={{ color: C.ink }}>Политика конфиденциальности</Link>
+            <Link href="/legal/consent" className="block" style={{ color: C.ink }}>Согласие на обработку данных</Link>
             <Link href="/ethics" className="block" style={{ color: C.ink }}>Этика работы</Link>
           </div>
         </div>
@@ -37,7 +38,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="max-w-6xl mx-auto px-6 pb-8 text-xs" style={{ ...sans, color: C.inkSoft }}>
-        © 2026 Шашкова Юлия Алексеевна · самозанятая
+        © 2026 Шашкова Юлия Алексеевна · самозанятая · ИНН 222390957450
       </div>
     </footer>
   );
