@@ -38,7 +38,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="max-w-6xl mx-auto px-6 pb-8 text-xs" style={{ ...sans, color: C.inkSoft }}>
-        © 2026 Шашкова Юлия Алексеевна · самозанятая · ИНН 222390957450
+        © 2026 ИП Шашкова Юлия Алексеевна · ИНН 222390957450 · ОГРН/ОГРНИП 326220200085619
       </div>
     </footer>
   );

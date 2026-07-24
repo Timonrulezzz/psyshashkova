@@ -30,7 +30,7 @@ export default function Offer() {
       <article className="max-w-3xl mx-auto px-6 pb-24 prose-content">
         <Section number="1" title="Термины и определения">
           <P>
-            <B>Исполнитель</B> — Шашкова Юлия Алексеевна, плательщик налога на профессиональный доход (самозанятая), ИНН 222390957450, оказывающая услуги психологического консультирования дистанционно.
+            <B>Исполнитель</B> — ИП Шашкова Юлия Алексеевна, ИНН 222390957450, ОГРН/ОГРНИП 326220200085619, оказывающая услуги психологического консультирования дистанционно.
           </P>
           <P>
             <B>Заказчик</B> — физическое лицо в возрасте 18 лет и старше, обладающее полной дееспособностью, акцептовавшее настоящую оферту в порядке, установленном в разделе 3.
@@ -267,13 +267,13 @@ export default function Offer() {
         <Section number="12" title="Реквизиты Исполнителя">
           <div className="p-6 rounded-sm mt-4" style={{ backgroundColor: C.surface }}>
             <p className="text-base leading-relaxed mb-2">
-              <B>Шашкова Юлия Алексеевна</B>
+              <B>ИП Шашкова Юлия Алексеевна</B>
             </p>
             <p className="text-base leading-relaxed mb-1" style={{ color: C.ink }}>
-              Плательщик налога на профессиональный доход (самозанятый)
+              ИНН 222390957450
             </p>
             <p className="text-base leading-relaxed mb-1" style={{ color: C.ink }}>
-              ИНН: 222390957450
+              ОГРН/ОГРНИП 326220200085619
             </p>
             <p className="text-base leading-relaxed mb-1" style={{ color: C.ink }}>
               Email: timonrulez@yandex.ru
