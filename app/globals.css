@@ -4,21 +4,55 @@
   --bg: #F7F3EC;
   --surface: #EDE5D6;
   --surface-warm: #E4C9A8;
+
   --ink: #1F1B16;
   --ink-soft: #6B6358;
+
   --terracotta: #B85C3C;
+  --berry: #963B59;
+  --berry-soft: #D8A5B5;
+
   --ochre: #C89B5A;
   --moss: #6B7355;
+
   --line: #D9D2C2;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background-color: var(--bg);
   color: var(--ink);
-  font-family: Georgia, "Times New Roman", serif;
+
+  font-family:
+    var(--font-manrope),
+    system-ui,
+    -apple-system,
+    sans-serif;
+
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family:
+    var(--font-literata),
+    Georgia,
+    "Times New Roman",
+    serif;
 }
 
 .font-sans-ui {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family:
+    var(--font-manrope),
+    system-ui,
+    -apple-system,
+    sans-serif;
 }

@@ -35,8 +35,7 @@ export default function Footer() {
         <div>
           <p className="mb-3 uppercase tracking-widest text-xs" style={{ color: C.inkSoft }}>Связь</p>
           <div className="space-y-2">
-            <a href="https://t.me/wentintoabar" className="block" style={{ color: C.ink }}>Telegram-канал</a>
-            <Link href="/book" className="block" style={{ color: C.ink }}>Записаться</Link>
+                        <Link href="/book" className="block" style={{ color: C.ink }}>Записаться</Link>
           </div>
         </div>
       </div>

@@ -1,6 +1,19 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { site } from '@/app/data/site';
+import { Literata, Manrope } from 'next/font/google';
+
+const literata = Literata({
+  subsets: ['cyrillic', 'latin'],
+  variable: '--font-literata',
+  display: 'swap',
+});
+
+const manrope = Manrope({
+  subsets: ['cyrillic', 'latin'],
+  variable: '--font-manrope',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -41,8 +54,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru">
-      <body>{children}</body>
-    </html>
+    <html
+  lang="ru"
+  className={`${literata.variable} ${manrope.variable}`}
+>
+  <body>{children}</body>
+</html>
   );
 }
