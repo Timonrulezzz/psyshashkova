@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { C, sans } from '@/app/lib/theme';
+import { site, siteDisplay } from '@/app/data/site';
 
 type NavigationItem = {
   href: string;
@@ -126,7 +127,7 @@ export default function MobileNav({
             color: C.ink,
           }}
         >
-          Юлия Шашкова
+          {site.brand.shortName}
         </Link>
 
         <button
@@ -211,7 +212,7 @@ export default function MobileNav({
                   color: C.inkSoft,
                 }}
               >
-                Онлайн · 50 минут · 7 000 ₽
+                {siteDisplay.sessionConditions}
               </p>
             </div>
           </div>
