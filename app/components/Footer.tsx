@@ -1,14 +1,17 @@
 import Link from 'next/link';
 import { C, serif, sans } from '@/app/lib/theme';
+import { site } from '@/app/data/site';
 
 export default function Footer() {
   return (
     <footer className="border-t" style={{ borderColor: C.line }}>
       <div className="max-w-6xl mx-auto px-6 py-12 grid md:grid-cols-4 gap-8 text-sm" style={sans}>
         <div>
-          <p className="mb-2" style={{ ...serif, fontSize: '16px', color: C.ink }}>Юлия Шашкова</p>
-          <p style={{ color: C.inkSoft }}>Клинический психолог</p>
-          <p style={{ color: C.inkSoft }}>КПТ · схема-терапия</p>
+          <p className="mb-2" style={{ ...serif, fontSize: '16px', color: C.ink }}>
+  {site.brand.name}
+</p>
+<p style={{ color: C.inkSoft }}>{site.brand.professionalTitle}</p>
+<p style={{ color: C.inkSoft }}>{site.brand.methods.join(' · ')}</p>
         </div>
         <div>
           <p className="mb-3 uppercase tracking-widest text-xs" style={{ color: C.inkSoft }}>Сайт</p>
@@ -38,7 +41,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="max-w-6xl mx-auto px-6 pb-8 text-xs" style={{ ...sans, color: C.inkSoft }}>
-        © 2026 ИП Шашкова Юлия Алексеевна · ИНН 222390957450 · ОГРН/ОГРНИП 326220200085619
+        © 2026 {site.legal.entityType} {site.legal.fullName} · ИНН {site.legal.inn} · ОГРНИП {site.legal.ogrnip}
       </div>
     </footer>
   );
