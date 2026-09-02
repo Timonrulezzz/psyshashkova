@@ -1,38 +1,85 @@
 import Link from 'next/link';
 import { C, sans } from '@/app/lib/theme';
+import { site } from '@/app/data/site';
+import MobileNav from '@/app/components/MobileNav';
 
 export default function Nav({ active }: { active?: string }) {
-  const items = [
-    { href: '/about', label: 'Обо мне' },
-    { href: '/how-we-work', label: 'Как работаем' },
-    { href: '/approaches', label: 'Подходы' },
-    { href: '/articles', label: 'Статьи' },
-    { href: '/tools', label: 'Инструменты' },
-  ];
+  const items = site.navigation.main;
+  const booking = site.navigation.booking;
 
   return (
-    <nav className="border-b" style={{ borderColor: C.line, backgroundColor: C.bg }}>
-      <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
-        <Link href="/" className="text-lg tracking-tight">Юлия Шашкова</Link>
-        <div className="hidden md:flex items-center gap-8 text-sm" style={sans}>
-          {items.map(i => (
-            <Link
-              key={i.href}
-              href={i.href}
-              className={active === i.href ? 'underline underline-offset-4' : 'hover:opacity-60'}
-            >
-              {i.label}
-            </Link>
-          ))}
-        </div>
+    <header
+      className="relative z-50 border-b"
+      style={{
+        borderColor: C.line,
+        backgroundColor: C.bg,
+      }}
+    >
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4 md:py-5">
         <Link
-          href="/book"
-          className="px-5 py-2 rounded-full text-sm transition hover:opacity-90"
-          style={{ ...sans, backgroundColor: C.ink, color: C.bg }}
+          href="/"
+          className="shrink-0 text-lg tracking-tight"
+          style={{
+            color: C.ink,
+          }}
         >
-          Записаться
+          {site.brand.shortName}
         </Link>
+
+        <nav
+          aria-label="Основная навигация"
+          className="hidden items-center gap-7 text-sm md:flex"
+          style={sans}
+        >
+          {items.map((item) => {
+            const isActive = active === item.href;
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={isActive ? 'page' : undefined}
+                className="relative py-2 transition-opacity hover:opacity-60"
+                style={{
+                  color: C.ink,
+                }}
+              >
+                {item.label}
+
+                {isActive && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-x-0 bottom-0 h-px"
+                    style={{
+                      backgroundColor: C.ink,
+                    }}
+                  />
+                )}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="flex items-center gap-3">
+          <Link
+            href={booking.href}
+            className="hidden rounded-full px-5 py-2 text-sm transition hover:opacity-90 sm:block"
+            style={{
+              ...sans,
+              backgroundColor: C.ink,
+              color: C.bg,
+            }}
+          >
+            {booking.label}
+          </Link>
+
+          <MobileNav
+            items={items}
+            active={active}
+            booking={booking}
+          />
+        </div>
       </div>
-    </nav>
+    </header>
   );
 }

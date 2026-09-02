@@ -9,6 +9,36 @@ export const site = {
     language: 'Русский',
   },
 
+    navigation: {
+  main: [
+    {
+      href: '/how-we-work',
+      label: 'Работа со мной',
+    },
+    {
+      href: '/approaches',
+      label: 'Подходы',
+    },
+    {
+      href: '/about',
+      label: 'Обо мне',
+    },
+    {
+      href: '/articles',
+      label: 'Статьи',
+    },
+    {
+      href: '/tools',
+      label: 'Инструменты',
+    },
+  ],
+
+    booking: {
+      href: '/book',
+      label: 'Записаться',
+    },
+  },
+
   practice: {
     startedYear: 2023,
 
