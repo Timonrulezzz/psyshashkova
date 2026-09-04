@@ -1,422 +1,1099 @@
 'use client';
 
-import { useState } from 'react';
+import {
+  useRef,
+  useState,
+  type FormEvent,
+  type ReactNode,
+} from 'react';
+
 import Link from 'next/link';
-import { C, serif, sans } from '@/app/lib/theme';
+
 import Nav from '@/app/components/Nav';
 import Footer from '@/app/components/Footer';
 import Eyebrow from '@/app/components/Eyebrow';
 import Reveal from '@/app/components/Reveal';
 
-const TELEGRAM_USERNAME = 'timonrulez';
+import { site } from '@/app/data/site';
+import {
+  C,
+  radius,
+  sans,
+  serif,
+  shadow,
+} from '@/app/lib/theme';
+
+type ContactMethod = 'telegram' | 'max' | 'email';
+
+type FormErrors = {
+  name?: string;
+  contact?: string;
+  adult?: string;
+  request?: string;
+  agreed?: string;
+};
+
+const contactOptions: {
+  value: ContactMethod;
+  label: string;
+}[] = [
+  { value: 'telegram', label: 'Telegram' },
+  { value: 'max', label: 'MAX' },
+  { value: 'email', label: 'Email' },
+];
 
 export default function Book() {
   const [name, setName] = useState('');
+  const [contactMethod, setContactMethod] =
+    useState<ContactMethod>('telegram');
+  const [contact, setContact] = useState('');
+  const [adult, setAdult] = useState(false);
   const [request, setRequest] = useState('');
   const [agreed, setAgreed] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [nameError, setNameError] = useState(false);
-  const [agreedError, setAgreedError] = useState(false);
 
-  const handleSubmit = () => {
-    let hasError = false;
+  // Honeypot для простых ботов.
+  const [website, setWebsite] = useState('');
+
+  const [errors, setErrors] =
+    useState<FormErrors>({});
+  const [submitError, setSubmitError] =
+    useState('');
+  const [submitting, setSubmitting] =
+    useState(false);
+  const [submitted, setSubmitted] =
+    useState(false);
+
+  const applicationStarted = useRef(false);
+
+  const session = site.practice.session;
+
+  const price = new Intl.NumberFormat('ru-RU').format(
+    session.priceRub,
+  );
+
+  const markApplicationStarted = () => {
+    if (applicationStarted.current) return;
+
+    applicationStarted.current = true;
+
+    window.dispatchEvent(
+      new CustomEvent('application_start'),
+    );
+  };
+
+  const validate = () => {
+    const nextErrors: FormErrors = {};
 
     if (!name.trim()) {
-      setNameError(true);
-      hasError = true;
-    } else {
-      setNameError(false);
+      nextErrors.name =
+        'Напишите, пожалуйста, как к вам обращаться';
+    }
+
+    const trimmedContact = contact.trim();
+
+    if (!trimmedContact) {
+      nextErrors.contact =
+        'Оставьте, пожалуйста, контакт для ответа';
+    } else if (contactMethod === 'email') {
+      const emailPattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailPattern.test(trimmedContact)) {
+        nextErrors.contact =
+          'Проверьте, пожалуйста, адрес email';
+      }
+    } else if (contactMethod === 'telegram') {
+      const normalizedUsername =
+        trimmedContact.startsWith('@')
+          ? trimmedContact.slice(1)
+          : trimmedContact;
+
+      const telegramPattern =
+        /^[A-Za-z0-9_]{5,32}$/;
+
+      if (!telegramPattern.test(normalizedUsername)) {
+        nextErrors.contact =
+          'Укажите имя пользователя в Telegram, например @username';
+      }
+    } else if (contactMethod === 'max') {
+      const digits = trimmedContact.replace(/\D/g, '');
+
+      if (digits.length < 10 || digits.length > 15) {
+        nextErrors.contact =
+          'Проверьте, пожалуйста, номер телефона';
+      }
+    }
+
+    if (!adult) {
+      nextErrors.adult =
+        'Для записи нужно подтвердить, что вам уже исполнилось 18 лет';
+    }
+
+    if (request.trim().length < 50) {
+      nextErrors.request =
+        'Напишите, пожалуйста, еще пару предложений, чтобы я могла немного понять ситуацию';
     }
 
     if (!agreed) {
-      setAgreedError(true);
-      hasError = true;
-    } else {
-      setAgreedError(false);
+      nextErrors.agreed =
+        'Для отправки заявки нужно согласие с условиями и обработкой данных';
     }
 
-    if (hasError) return;
+    setErrors(nextErrors);
 
-    // Формируем сообщение для Telegram
-    const trimmedName = name.trim();
-    const trimmedRequest = request.trim();
-
-    let message = `Здравствуйте! Меня зовут ${trimmedName}. Хочу записаться на консультацию.`;
-    if (trimmedRequest) {
-      message += `\n\nКратко о запросе: ${trimmedRequest}`;
-    }
-
-    const encodedMessage = encodeURIComponent(message);
-    const telegramUrl = `https://t.me/${TELEGRAM_USERNAME}?text=${encodedMessage}`;
-
-    setSubmitted(true);
-
-    // Небольшая задержка для UX — пользователь видит подтверждение, потом открывается Telegram
-    setTimeout(() => {
-      window.open(telegramUrl, '_blank');
-    }, 600);
+    return Object.keys(nextErrors).length === 0;
   };
 
+  const handleSubmit = async (
+    event: FormEvent<HTMLFormElement>,
+  ) => {
+    event.preventDefault();
+
+    setSubmitError('');
+
+    if (!validate()) return;
+
+    setSubmitting(true);
+
+    try {
+      const response = await fetch(
+        '/api/application',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name,
+            contactMethod,
+            contact,
+            adult,
+            request,
+            agreed,
+            website,
+          }),
+        },
+      );
+
+      const result = await response
+        .json()
+        .catch(() => ({}));
+
+      if (!response.ok) {
+        if (
+          result.errors &&
+          typeof result.errors === 'object'
+        ) {
+          setErrors(result.errors);
+
+          window.setTimeout(() => {
+            document
+              .getElementById('application-form')
+              ?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+              });
+          }, 50);
+
+          return;
+        }
+
+        setSubmitError(
+          result.message ||
+            'Не получилось отправить заявку. Попробуйте еще раз через несколько минут.',
+        );
+
+        return;
+      }
+
+      setSubmitted(true);
+
+      window.dispatchEvent(
+        new CustomEvent('application_submit'),
+      );
+
+      window.setTimeout(() => {
+        document
+          .getElementById('application-form')
+          ?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+          });
+      }, 50);
+    } catch {
+      setSubmitError(
+        'Не получилось отправить заявку. Проверьте соединение и попробуйте еще раз.',
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const selectContactMethod = (
+    method: ContactMethod,
+  ) => {
+    setContactMethod(method);
+    setContact('');
+
+    setErrors((current) => ({
+      ...current,
+      contact: undefined,
+    }));
+  };
+
+  const contactLabel =
+    contactMethod === 'telegram'
+      ? 'Ваш Telegram'
+      : contactMethod === 'max'
+        ? 'Номер для MAX'
+        : 'Ваш email';
+
+  const contactPlaceholder =
+    contactMethod === 'telegram'
+      ? '@username'
+      : contactMethod === 'max'
+        ? '+7 999 123-45-67'
+        : 'name@example.com';
+
+  const contactHint =
+    contactMethod === 'telegram'
+      ? 'Укажите имя пользователя, по которому я смогу вам написать, например @username.'
+      : contactMethod === 'max'
+        ? 'Укажите номер телефона, к которому привязан ваш аккаунт MAX.'
+        : 'Укажите адрес, на который вам удобно получить ответ.';
+
+  const facts = [
+    {
+      value: `${price} ₽`,
+      label: 'стоимость встречи',
+    },
+    {
+      value: `${session.durationMinutes} минут`,
+      label: 'одна встреча',
+    },
+    {
+      value: session.format,
+      label: session.platform,
+    },
+    {
+      value: 'Раз в 7–10 дней',
+      label: 'обычная частота',
+    },
+  ];
+
   return (
-    <div style={{ ...serif, backgroundColor: C.bg, color: C.ink }} className="min-h-screen">
+    <div
+      className="min-h-screen"
+      style={{
+        ...serif,
+        backgroundColor: C.bg,
+        color: C.ink,
+      }}
+    >
       <Nav active="/book" />
 
-      <section className="max-w-3xl mx-auto px-6 pt-20 pb-12 md:pt-28">
-        <Reveal>
-          <Eyebrow>Запись на консультацию</Eyebrow>
-          <h1 className="text-4xl md:text-5xl leading-[1.1] tracking-tight font-normal mb-8">
-            Если решились — давайте познакомимся
-          </h1>
-        </Reveal>
-        <Reveal delay={150}>
-          <p className="text-lg leading-relaxed mb-6" style={{ color: C.inkSoft }}>
-            Я провожу индивидуальные онлайн-консультации через Телемост. Одна встреча — 50 минут, 3 500 рублей.
-          </p>
-          <p className="text-base leading-relaxed" style={{ color: C.inkSoft }}>
-            Заполните короткую форму ниже — после этого откроется Telegram с готовым сообщением мне. Дальше мы согласуем время, и я расскажу про оплату.
-          </p>
-        </Reveal>
-      </section>
+      <main>
+        {/* HERO */}
 
-      {/* Условия — для тех, кто читает внимательно */}
-      <section className="max-w-3xl mx-auto px-6 py-8">
-        <Reveal>
-          <div className="grid md:grid-cols-3 gap-5">
-            <ConditionCard
-              label="Формат"
-              value="Онлайн через Телемост"
-            />
-            <ConditionCard
-              label="Длительность"
-              value="50 минут"
-            />
-            <ConditionCard
-              label="Стоимость"
-              value="3 500 ₽"
-            />
+        <section className="mx-auto max-w-6xl px-6 pb-7 pt-10 md:px-8 md:pb-9 md:pt-14">
+          <div className="max-w-4xl">
+            <Reveal>
+              <Eyebrow>Запись</Eyebrow>
+
+              <h1 className="mt-4 max-w-[820px] text-[37px] font-normal leading-[1.03] tracking-[-0.025em] md:text-[46px] lg:text-[50px]">
+                Записаться на встречу
+              </h1>
+            </Reveal>
+
+            <Reveal delay={80}>
+              <p
+                className="mt-4 max-w-[730px] text-[15px] leading-[1.65] md:text-[16px]"
+                style={{
+                  ...sans,
+                  color: C.inkSoft,
+                }}
+              >
+                Здесь можно оставить короткую заявку на
+                встречу. Ниже собраны основные
+                условия работы, а в форме можно немного
+                рассказать о том, с чем хотите прийти.
+                После этого я свяжусь с вами, и мы
+                договоримся о следующих шагах.
+              </p>
+            </Reveal>
           </div>
-        </Reveal>
-      </section>
 
-      {/* Форма */}
-      <section className="max-w-2xl mx-auto px-6 py-12 md:py-16">
-        <Reveal>
-          <div className="p-8 md:p-10 rounded-sm" style={{ backgroundColor: C.surface }}>
-            {!submitted ? (
-              <>
-                <h2 className="text-2xl leading-tight font-normal mb-8">
-                  Заявка
-                </h2>
+          <Reveal delay={130}>
+            <div
+              className="mt-7 grid grid-cols-2 overflow-hidden md:grid-cols-4"
+              style={{
+                backgroundColor: C.surface,
+                border: `1px solid ${C.line}`,
+                borderRadius: radius.lg,
+              }}
+            >
+              {facts.map((fact, index) => (
+                <Fact
+                  key={fact.label}
+                  value={fact.value}
+                  label={fact.label}
+                  index={index}
+                />
+              ))}
+            </div>
+          </Reveal>
+        </section>
 
-                {/* Имя */}
-                <div className="mb-6">
-                  <label className="block text-sm mb-2" style={{ ...sans, color: C.ink }}>
-                    Как к вам обращаться
-                  </label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => {
-                      setName(e.target.value);
-                      if (e.target.value.trim()) setNameError(false);
-                    }}
-                    placeholder="Имя"
-                    className="w-full px-4 py-3 rounded-sm transition-all focus:outline-none"
-                    style={{
-                      ...sans,
-                      backgroundColor: C.bg,
-                      color: C.ink,
-                      fontSize: '16px',
-                      border: `1px solid ${nameError ? C.terracotta : C.line}`,
-                    }}
-                  />
-                  {nameError && (
-                    <p className="text-xs mt-2" style={{ ...sans, color: C.terracotta }}>
-                      Пожалуйста, укажите имя
-                    </p>
-                  )}
+        {/* CONDITIONS */}
+
+        <section className="mx-auto max-w-6xl px-6 py-6 md:px-8 md:py-8">
+          <Reveal>
+            <div
+              className="overflow-hidden"
+              style={{
+                backgroundColor: C.surfaceWarm,
+                borderRadius: radius.lg,
+                boxShadow: shadow.soft,
+              }}
+            >
+              <div className="grid gap-6 p-6 md:grid-cols-[0.72fr_1.28fr] md:gap-10 md:p-8 lg:p-10">
+                <div>
+                  <Eyebrow>Перед заявкой</Eyebrow>
+
+                  <h2 className="mt-3 text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
+                    Несколько важных условий
+                  </h2>
                 </div>
 
-                {/* Запрос */}
-                <div className="mb-8">
-                  <label className="block text-sm mb-2" style={{ ...sans, color: C.ink }}>
-                    Коротко о запросе{' '}
-                    <span style={{ color: C.inkSoft, fontSize: '13px' }}>
-                      (необязательно)
-                    </span>
-                  </label>
-                  <textarea
-                    value={request}
-                    onChange={(e) => setRequest(e.target.value)}
-                    placeholder="С чем хотите поработать — одной-двумя фразами. Можно ничего не писать, разберёмся в переписке."
-                    rows={4}
-                    className="w-full px-4 py-3 rounded-sm transition-all focus:outline-none resize-none"
-                    style={{
-                      ...sans,
-                      backgroundColor: C.bg,
-                      color: C.ink,
-                      fontSize: '16px',
-                      border: `1px solid ${C.line}`,
-                      lineHeight: 1.5,
-                    }}
-                  />
-                  <p className="text-xs mt-2" style={{ ...sans, color: C.inkSoft }}>
-                    Это поле увидите только вы и я — всё, что вы напишете, конфиденциально.
+                <div
+                  className="space-y-4 text-[14px] leading-[1.65] md:text-[15px]"
+                  style={{
+                    ...sans,
+                    color: C.ink,
+                  }}
+                >
+                  <p>
+                    Я работаю индивидуально со взрослыми от
+                    18 лет.
                   </p>
-                </div>
 
-                {/* Галочка согласия */}
-                <div className="mb-8">
-                  <label
-                    className="flex items-start gap-3 cursor-pointer group"
+                  <p>
+                    Я не работаю с парами, расстройствами
+                    пищевого поведения и активными
+                    зависимостями. Этот формат также не
+                    подходит для ситуаций, в которых есть
+                    непосредственная угроза жизни или
+                    требуется экстренная психиатрическая
+                    помощь.
+                  </p>
+
+                  <p>
+                    Если состояние требует психиатрического
+                    наблюдения, я могу работать параллельно
+                    при условии, что вы уже наблюдаетесь у
+                    врача или организуете такое наблюдение
+                    самостоятельно.
+                  </p>
+
+                  <div
+                    className="mt-5 p-4 md:p-5"
+                    style={{
+                      backgroundColor:
+                        'rgba(247, 243, 236, 0.64)',
+                      borderRadius: radius.md,
+                    }}
                   >
-                    <div
-                      className="shrink-0 mt-0.5 w-5 h-5 rounded-sm flex items-center justify-center transition-all"
+                    <p
+                      className="mb-1.5 text-[14px] font-semibold"
                       style={{
-                        border: `1.5px solid ${agreedError ? C.terracotta : agreed ? C.terracotta : C.inkSoft}`,
-                        backgroundColor: agreed ? C.terracotta : 'transparent',
+                        ...sans,
+                        color: C.ink,
                       }}
                     >
-                      {agreed && (
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                          <path d="M2 6L5 9L10 3" stroke={C.bg} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
+                      Не уверены, относится ли ваша ситуация
+                      к моей работе?
+                    </p>
+
+                    <p
+                      className="text-[13px] leading-[1.6] md:text-[14px]"
+                      style={{
+                        ...sans,
+                        color: C.inkSoft,
+                      }}
+                    >
+                      Это нормально. Можно оставить
+                      заявку, не пытаясь заранее определить
+                      свой запрос или поставить себе диагноз.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </section>
+
+        {/* FORM */}
+
+        <section
+          id="application-form"
+          className="mx-auto max-w-6xl scroll-mt-24 px-6 pb-12 pt-6 md:px-8 md:pb-14 md:pt-8"
+        >
+          <div className="mx-auto max-w-2xl">
+            {!submitted ? (
+              <>
+                <Reveal>
+                  <div className="mb-6">
+                    <Eyebrow>Короткая заявка</Eyebrow>
+
+                    <h2 className="mt-3 text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
+                      Расскажите, с чем хотите прийти
+                    </h2>
+
+                    <p
+                      className="mt-4 max-w-xl text-[14px] leading-[1.65] md:text-[15px]"
+                      style={{
+                        ...sans,
+                        color: C.inkSoft,
+                      }}
+                    >
+                      Здесь не нужно подробно описывать свою
+                      историю. Достаточно оставить контакт и
+                      в нескольких предложениях рассказать,
+                      что сейчас происходит и с чем хотелось
+                      бы поработать.
+                    </p>
+                  </div>
+                </Reveal>
+
+                <Reveal delay={60}>
+                  <form
+                    onSubmit={handleSubmit}
+                    onFocusCapture={markApplicationStarted}
+                    onChangeCapture={markApplicationStarted}
+                    noValidate
+                    className="p-5 md:p-7"
+                    style={{
+                      backgroundColor: C.surface,
+                      borderRadius: radius.lg,
+                      boxShadow: shadow.soft,
+                    }}
+                  >
+                    {/* HONEYPOT */}
+
+                    <div
+                      aria-hidden="true"
+                      className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden"
+                    >
+                      <label htmlFor="website">
+                        Сайт
+                      </label>
+
+                      <input
+                        id="website"
+                        name="website"
+                        type="text"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={website}
+                        onChange={(event) =>
+                          setWebsite(event.target.value)
+                        }
+                      />
+                    </div>
+
+                    {/* NAME */}
+
+                    <FormField>
+                      <FieldLabel htmlFor="name">
+                        Как к вам обращаться
+                      </FieldLabel>
+
+                      <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        autoComplete="name"
+                        value={name}
+                        onChange={(event) => {
+                          setName(event.target.value);
+
+                          if (event.target.value.trim()) {
+                            setErrors((current) => ({
+                              ...current,
+                              name: undefined,
+                            }));
+                          }
+                        }}
+                        placeholder="Имя"
+                        className="w-full px-4 py-3.5 outline-none transition"
+                        style={{
+                          ...inputStyle(Boolean(errors.name)),
+                          ...sans,
+                        }}
+                      />
+
+                      {errors.name && (
+                        <FieldError>
+                          {errors.name}
+                        </FieldError>
+                      )}
+                    </FormField>
+
+                    {/* CONTACT METHOD */}
+
+                    <FormField>
+                      <FieldLabel>
+                        Как вам удобнее получить ответ
+                      </FieldLabel>
+
+                      <div
+                        className="grid grid-cols-3 gap-1.5 p-1.5"
+                        role="radiogroup"
+                        aria-label="Способ связи"
+                        style={{
+                          backgroundColor: C.bg,
+                          borderRadius: radius.pill,
+                          border: `1px solid ${C.line}`,
+                        }}
+                      >
+                        {contactOptions.map((option) => {
+                          const active =
+                            contactMethod === option.value;
+
+                          return (
+                            <button
+                              key={option.value}
+                              type="button"
+                              role="radio"
+                              aria-checked={active}
+                              onClick={() =>
+                                selectContactMethod(
+                                  option.value,
+                                )
+                              }
+                              className="min-h-10 px-3 py-2 text-[13px] font-medium transition"
+                              style={{
+                                ...sans,
+                                borderRadius: radius.pill,
+                                backgroundColor: active
+                                  ? C.ink
+                                  : 'transparent',
+                                color: active
+                                  ? C.bg
+                                  : C.inkSoft,
+                              }}
+                            >
+                              {option.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </FormField>
+
+                    {/* CONTACT */}
+
+                    <FormField>
+                      <FieldLabel htmlFor="contact">
+                        {contactLabel}
+                      </FieldLabel>
+
+                      <input
+                        id="contact"
+                        name="contact"
+                        type={
+                          contactMethod === 'email'
+                            ? 'email'
+                            : contactMethod === 'max'
+                              ? 'tel'
+                              : 'text'
+                        }
+                        inputMode={
+                          contactMethod === 'email'
+                            ? 'email'
+                            : contactMethod === 'max'
+                              ? 'tel'
+                              : 'text'
+                        }
+                        autoComplete={
+                          contactMethod === 'email'
+                            ? 'email'
+                            : contactMethod === 'max'
+                              ? 'tel'
+                              : 'off'
+                        }
+                        value={contact}
+                        onChange={(event) => {
+                          setContact(event.target.value);
+
+                          if (event.target.value.trim()) {
+                            setErrors((current) => ({
+                              ...current,
+                              contact: undefined,
+                            }));
+                          }
+                        }}
+                        placeholder={contactPlaceholder}
+                        className="w-full px-4 py-3.5 outline-none transition"
+                        style={{
+                          ...inputStyle(
+                            Boolean(errors.contact),
+                          ),
+                          ...sans,
+                        }}
+                      />
+
+                      {errors.contact ? (
+                        <FieldError>
+                          {errors.contact}
+                        </FieldError>
+                      ) : (
+                        <p
+                          className="mt-2 text-[12px] leading-[1.55]"
+                          style={{
+                            ...sans,
+                            color: C.inkSoft,
+                          }}
+                        >
+                          {contactHint}
+                        </p>
+                      )}
+                    </FormField>
+
+                    {/* AGE */}
+
+                    <FormField>
+                      <CheckRow
+                        checked={adult}
+                        onChange={(checked) => {
+                          setAdult(checked);
+
+                          if (checked) {
+                            setErrors((current) => ({
+                              ...current,
+                              adult: undefined,
+                            }));
+                          }
+                        }}
+                        label="Мне уже исполнилось 18 лет"
+                      />
+
+                      {errors.adult && (
+                        <FieldError>
+                          {errors.adult}
+                        </FieldError>
+                      )}
+                    </FormField>
+
+                    {/* REQUEST */}
+
+                    <FormField>
+                      <FieldLabel htmlFor="request">
+                        С чем хотите обратиться?
+                      </FieldLabel>
+
+                      <textarea
+                        id="request"
+                        name="request"
+                        rows={5}
+                        value={request}
+                        onChange={(event) => {
+                          setRequest(event.target.value);
+
+                          if (
+                            event.target.value.trim().length >=
+                            50
+                          ) {
+                            setErrors((current) => ({
+                              ...current,
+                              request: undefined,
+                            }));
+                          }
+                        }}
+                        placeholder="Расскажите в нескольких предложениях, что сейчас происходит и с чем хотелось бы поработать. Подробно описывать всю историю не нужно."
+                        className="w-full resize-y px-4 py-4 outline-none transition"
+                        style={{
+                          ...inputStyle(
+                            Boolean(errors.request),
+                          ),
+                          ...sans,
+                          minHeight: '145px',
+                          lineHeight: 1.6,
+                        }}
+                      />
+
+                      {errors.request ? (
+                        <FieldError>
+                          {errors.request}
+                        </FieldError>
+                      ) : (
+                        <p
+                          className="mt-2 text-[12px]"
+                          style={{
+                            ...sans,
+                            color: C.inkSoft,
+                          }}
+                        >
+                          Обычно достаточно 2–5 предложений.
+                        </p>
+                      )}
+                    </FormField>
+
+                    {/* CONSENT */}
+
+                    <FormField>
+                      <CheckRow
+                        checked={agreed}
+                        onChange={(checked) => {
+                          setAgreed(checked);
+
+                          if (checked) {
+                            setErrors((current) => ({
+                              ...current,
+                              agreed: undefined,
+                            }));
+                          }
+                        }}
+                        label={
+                          <>
+                            Я ознакомился(-ась) с{' '}
+                            <Link
+                              href="/how-we-work"
+                              target="_blank"
+                              style={inlineLinkStyle}
+                            >
+                              условиями работы
+                            </Link>
+                            ,{' '}
+                            <Link
+                              href="/legal/privacy"
+                              target="_blank"
+                              style={inlineLinkStyle}
+                            >
+                              политикой конфиденциальности
+                            </Link>{' '}
+                            и даю{' '}
+                            <Link
+                              href="/legal/consent"
+                              target="_blank"
+                              style={inlineLinkStyle}
+                            >
+                              согласие на обработку
+                              персональных данных
+                            </Link>
+                            .
+                          </>
+                        }
+                      />
+
+                      {errors.agreed && (
+                        <FieldError>
+                          {errors.agreed}
+                        </FieldError>
+                      )}
+                    </FormField>
+
+                    <div
+                      aria-live="polite"
+                      aria-atomic="true"
+                    >
+                      {submitError && (
+                        <div
+                          className="mb-5 p-4 text-[13px] leading-[1.6]"
+                          style={{
+                            ...sans,
+                            color: C.berry,
+                            backgroundColor:
+                              'rgba(150, 59, 89, 0.08)',
+                            borderRadius: radius.sm,
+                          }}
+                        >
+                          {submitError}
+                        </div>
                       )}
                     </div>
-                    <input
-                      type="checkbox"
-                      checked={agreed}
-                      onChange={(e) => {
-                        setAgreed(e.target.checked);
-                        if (e.target.checked) setAgreedError(false);
+
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="w-full px-7 py-3.5 text-[14px] font-medium transition duration-200 hover:-translate-y-0.5 disabled:cursor-wait disabled:opacity-60 disabled:hover:translate-y-0"
+                      style={{
+                        ...sans,
+                        backgroundColor: C.ink,
+                        color: C.bg,
+                        borderRadius: radius.pill,
                       }}
-                      className="sr-only"
-                    />
-                    <span className="text-[14px] leading-relaxed" style={{ ...sans, color: C.ink }}>
-                      Я ознакомился(-ась) с{' '}
-                      <Link href="/legal/offer" target="_blank" style={{ color: C.terracotta, textDecoration: 'underline' }}>
-                        офертой
-                      </Link>
-                      ,{' '}
-                      <Link href="/legal/privacy" target="_blank" style={{ color: C.terracotta, textDecoration: 'underline' }}>
-                        политикой конфиденциальности
-                      </Link>
-                      {' '}и даю{' '}
-                      <Link href="/legal/consent" target="_blank" style={{ color: C.terracotta, textDecoration: 'underline' }}>
-                        согласие на обработку персональных данных
-                      </Link>
-                      .
-                    </span>
-                  </label>
-                  {agreedError && (
-                    <p className="text-xs mt-2 ml-8" style={{ ...sans, color: C.terracotta }}>
-                      Без согласия с документами я не смогу принять заявку
+                    >
+                      {submitting
+                        ? 'Отправляю...'
+                        : 'Отправить заявку'}
+                    </button>
+
+                    <p
+                      className="mx-auto mt-3 max-w-md text-center text-[11.5px] leading-[1.55]"
+                      style={{
+                        ...sans,
+                        color: C.inkSoft,
+                      }}
+                    >
+                      После отправки вы останетесь на этой
+                      странице. Я отвечу по контакту, который
+                      вы указали.
                     </p>
-                  )}
-                </div>
-
-                {/* Кнопка */}
-                <button
-                  onClick={handleSubmit}
-                  className="w-full px-8 py-4 rounded-full text-base transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
-                  style={{ ...sans, backgroundColor: C.ink, color: C.bg }}
-                >
-                  Перейти в Telegram →
-                </button>
-
-                <p className="text-xs mt-5 text-center" style={{ ...sans, color: C.inkSoft }}>
-                  Откроется чат со мной с готовым сообщением. Останется только нажать «Отправить».
-                </p>
+                  </form>
+                </Reveal>
               </>
             ) : (
-              <SubmittedView name={name} />
+              <Reveal>
+                <SuccessState />
+              </Reveal>
             )}
           </div>
-        </Reveal>
-      </section>
-
-      {/* Что будет дальше */}
-      <section className="max-w-3xl mx-auto px-6 py-12 md:py-16">
-        <Reveal>
-          <Eyebrow>Что будет дальше</Eyebrow>
-          <h2 className="text-2xl md:text-3xl leading-tight font-normal mb-8">
-            Как мы дойдём до первой встречи
-          </h2>
-        </Reveal>
-        <div className="space-y-6">
-          <Reveal delay={50}>
-            <StepRow number="1" title="Вы напишете">
-              После заполнения формы откроется Telegram с готовым сообщением. Останется его отправить.
-            </StepRow>
-          </Reveal>
-          <Reveal delay={100}>
-            <StepRow number="2" title="Я отвечу в течение суток">
-              Обычно — в тот же день. Я работаю на сессиях, поэтому ночью или в выходной может быть задержка.
-            </StepRow>
-          </Reveal>
-          <Reveal delay={150}>
-            <StepRow number="3" title="Согласуем время">
-              Если ваш запрос подходит для моей работы — обсудим, в какое время удобно встретиться. Если не подходит — я честно скажу и помогу с навигацией к нужному специалисту.
-            </StepRow>
-          </Reveal>
-          <Reveal delay={200}>
-            <StepRow number="4" title="Оплата за час до встречи">
-              Перевод по номеру телефона на карту Альфа-банка. Реквизиты пришлю после согласования времени. После оплаты — чек из «Мой налог».
-            </StepRow>
-          </Reveal>
-          <Reveal delay={250}>
-            <StepRow number="5" title="Встретимся в Телемосте">
-              За несколько минут до сессии я пришлю ссылку. На первой встрече познакомимся, обсудим запрос и план работы.
-            </StepRow>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* FAQ — короткий */}
-      <section className="max-w-3xl mx-auto px-6 py-12 md:py-16">
-        <Reveal>
-          <Eyebrow>Частые сомнения</Eyebrow>
-          <h2 className="text-2xl md:text-3xl leading-tight font-normal mb-8">
-            На что обычно спотыкаются
-          </h2>
-        </Reveal>
-        <div className="space-y-5">
-          <Reveal delay={50}>
-            <FaqRow question="А вдруг мне не нужно к психологу?">
-              Никто не приходит к психологу, потому что «нужно». Приходят, потому что что-то не складывается, болит, мешает. Если у вас есть что обсудить — этого достаточно. Решение продолжать после первой встречи остаётся за вами.
-            </FaqRow>
-          </Reveal>
-          <Reveal delay={100}>
-            <FaqRow question="Что если мы не подойдём друг другу?">
-              Это нормально. На первой встрече мы оба смотрим, есть ли контакт. Если нет — я порекомендую коллег, которым доверяю. Психологическая работа без живого контакта не работает, и насильно держать никого не имеет смысла.
-            </FaqRow>
-          </Reveal>
-          <Reveal delay={150}>
-            <FaqRow question="Что если я не знаю, с чего начать?">
-              Начнём с того, что есть. Не нужно готовить «правильный запрос» заранее. Часто на первой встрече формулируется именно тогда, когда мы разговариваем.
-            </FaqRow>
-          </Reveal>
-          <Reveal delay={200}>
-            <FaqRow question="Можно ли сначала задать вопросы, а потом записаться?">
-              Да, конечно. Напишите в Telegram —{' '}
-              <a
-                href={`https://t.me/${TELEGRAM_USERNAME}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: C.terracotta, textDecoration: 'underline' }}
-              >
-                @{TELEGRAM_USERNAME}
-              </a>
-              {' '}— и спросите. Никаких обязательств это не создаёт.
-            </FaqRow>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Этика — ссылка для тех, кто хочет читать ещё */}
-      <section className="max-w-3xl mx-auto px-6 pb-24">
-        <Reveal>
-          <div className="p-8 rounded-sm" style={{ backgroundColor: C.surface, borderLeft: `3px solid ${C.moss}` }}>
-            <p className="text-base leading-relaxed mb-3" style={{ color: C.ink }}>
-              Если хочется заранее понять, как у меня устроена работа — конфиденциальность, границы, что в кризисной ситуации — почитайте страницу{' '}
-              <Link href="/ethics" style={{ color: C.terracotta, textDecoration: 'underline' }}>
-                «Этика работы»
-              </Link>
-              .
-            </p>
-            <p className="text-base leading-relaxed" style={{ color: C.ink }}>
-              Если плохо прямо сейчас и нужна срочная помощь — там же указаны телефоны бесплатных кризисных линий, которые работают круглосуточно.
-            </p>
-          </div>
-        </Reveal>
-      </section>
+        </section>
+      </main>
 
       <Footer />
     </div>
   );
 }
 
-// ============================================================
-// Подкомпоненты
-// ============================================================
+function Fact({
+  value,
+  label,
+  index,
+}: {
+  value: string;
+  label: string;
+  index: number;
+}) {
+  const mobileLeftBorder =
+    index % 2 === 1 ? 'border-l' : '';
 
-function ConditionCard({ label, value }: { label: string; value: string }) {
+  const mobileTopBorder =
+    index >= 2 ? 'border-t' : '';
+
+  const desktopLeftBorder =
+    index > 0
+      ? 'md:border-l'
+      : 'md:border-l-0';
+
   return (
-    <div className="p-5 rounded-sm" style={{ backgroundColor: C.surface }}>
-      <p className="text-xs tracking-widest uppercase mb-2" style={{ ...sans, color: C.inkSoft }}>
-        {label}
-      </p>
-      <p className="text-base" style={{ color: C.ink }}>
+    <div
+      className={[
+        'min-h-[92px] px-5 py-4 md:min-h-[100px] md:px-6 md:py-5 md:border-t-0',
+        mobileLeftBorder,
+        mobileTopBorder,
+        desktopLeftBorder,
+      ].join(' ')}
+      style={{
+        borderColor: C.line,
+      }}
+    >
+      <p
+        className="text-[18px] leading-[1.2] md:text-[20px]"
+        style={{
+          color: C.ink,
+        }}
+      >
         {value}
+      </p>
+
+      <p
+        className="mt-1.5 text-[11.5px] leading-[1.45] md:text-[12px]"
+        style={{
+          ...sans,
+          color: C.inkSoft,
+        }}
+      >
+        {label}
       </p>
     </div>
   );
 }
 
-function StepRow({ number, title, children }: { number: string; title: string; children: React.ReactNode }) {
+function FormField({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
-    <div className="flex items-start gap-5">
-      <span
-        className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm"
+    <div className="mb-5">
+      {children}
+    </div>
+  );
+}
+
+function FieldLabel({
+  htmlFor,
+  children,
+}: {
+  htmlFor?: string;
+  children: ReactNode;
+}) {
+  return (
+    <label
+      htmlFor={htmlFor}
+      className="mb-2 block text-[13px] font-medium"
+      style={{
+        ...sans,
+        color: C.ink,
+      }}
+    >
+      {children}
+    </label>
+  );
+}
+
+function FieldError({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  return (
+    <p
+      className="mt-2 text-[12px] leading-[1.5]"
+      style={{
+        ...sans,
+        color: C.berry,
+      }}
+    >
+      {children}
+    </p>
+  );
+}
+
+function CheckRow({
+  checked,
+  onChange,
+  label,
+}: {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label: ReactNode;
+}) {
+  return (
+    <label
+      className="flex cursor-pointer items-start gap-3"
+      style={sans}
+    >
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(event) =>
+          onChange(event.target.checked)
+        }
+        className="mt-0.5 h-[18px] w-[18px] shrink-0 cursor-pointer"
         style={{
-          ...sans,
-          backgroundColor: C.surface,
-          color: C.terracotta,
+          accentColor: C.terracotta,
+        }}
+      />
+
+      <span
+        className="text-[13px] leading-[1.6]"
+        style={{
+          color: C.ink,
         }}
       >
-        {number}
+        {label}
       </span>
-      <div className="flex-1">
-        <h3 className="text-lg mb-2">{title}</h3>
-        <p className="text-[15px] leading-relaxed" style={{ color: C.inkSoft }}>
-          {children}
+    </label>
+  );
+}
+
+function SuccessState() {
+  return (
+    <div
+      className="px-6 py-9 text-center md:px-10 md:py-11"
+      style={{
+        backgroundColor: C.surface,
+        borderRadius: radius.lg,
+        boxShadow: shadow.soft,
+      }}
+    >
+      <div
+        className="mx-auto flex h-10 w-10 items-center justify-center text-[19px]"
+        style={{
+          backgroundColor:
+            'rgba(107, 115, 85, 0.13)',
+          color: C.moss,
+          borderRadius: radius.pill,
+        }}
+      >
+        ✓
+      </div>
+
+      <h2 className="mt-5 text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
+        Заявка отправлена
+      </h2>
+
+      <div
+        className="mx-auto mt-5 max-w-lg space-y-3 text-[14px] leading-[1.65] md:text-[15px]"
+        style={{
+          ...sans,
+          color: C.inkSoft,
+        }}
+      >
+        <p>
+          Спасибо. Я прочитаю заявку и отвечу по
+          контакту, который вы указали.
+        </p>
+
+        <p>
+          Дальше мы при необходимости уточним
+          несколько деталей и договоримся о времени
+          встречи. Если для вашей ситуации
+          нужен другой формат помощи, я тоже скажу
+          об этом сразу.
+        </p>
+      </div>
+
+      <div
+        className="mx-auto mt-6 max-w-lg px-5 py-4"
+        style={{
+          backgroundColor: C.bg,
+          borderRadius: radius.md,
+        }}
+      >
+        <p
+          className="text-[10px] font-semibold uppercase tracking-[0.14em]"
+          style={{
+            ...sans,
+            color: C.inkSoft,
+          }}
+        >
+          Что будет дальше
+        </p>
+
+        <p
+          className="mt-2.5 text-[13px] leading-[1.6]"
+          style={{
+            ...sans,
+            color: C.ink,
+          }}
+        >
+          Ответ → согласование времени → оплата →
+           встреча
         </p>
       </div>
     </div>
   );
 }
 
-function FaqRow({ question, children }: { question: string; children: React.ReactNode }) {
-  return (
-    <div className="p-6 rounded-sm" style={{ backgroundColor: C.surface }}>
-      <h3 className="text-lg mb-3">{question}</h3>
-      <p className="text-[15px] leading-relaxed" style={{ color: C.inkSoft }}>
-        {children}
-      </p>
-    </div>
-  );
+function inputStyle(
+  hasError: boolean,
+) {
+  return {
+    backgroundColor: C.bg,
+    color: C.ink,
+    border: `1px solid ${
+      hasError ? C.berry : C.line
+    }`,
+    borderRadius: radius.sm,
+    fontSize: '16px',
+  };
 }
 
-function SubmittedView({ name }: { name: string }) {
-  return (
-    <div className="py-8 text-center">
-      <div
-        className="w-16 h-16 rounded-full mx-auto mb-6 flex items-center justify-center"
-        style={{ backgroundColor: C.moss }}
-      >
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-          <path
-            d="M6 14L11 19L22 8"
-            stroke={C.bg}
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </div>
-      <h2 className="text-2xl mb-4">Открываю Telegram, {name.trim()}…</h2>
-      <p className="text-base leading-relaxed max-w-md mx-auto mb-6" style={{ color: C.inkSoft }}>
-        Если ничего не открылось автоматически — нажмите кнопку ниже.
-      </p>
-      <a
-        href={`https://t.me/${TELEGRAM_USERNAME}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-block px-8 py-4 rounded-full text-base transition-all duration-300 hover:scale-[1.02]"
-        style={{ ...sans, backgroundColor: C.ink, color: C.bg }}
-      >
-        Открыть Telegram
-      </a>
-    </div>
-  );
-}
+const inlineLinkStyle = {
+  color: C.terracotta,
+  textDecoration: 'underline',
+  textUnderlineOffset: '3px',
+};
