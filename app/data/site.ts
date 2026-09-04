@@ -3,7 +3,8 @@ export const site = {
 
   seo: {
     siteName: 'Юлия Шашкова',
-    defaultTitle: 'Юлия Шашкова — психолог, КПТ и схема-терапия',
+    defaultTitle:
+      'Юлия Шашкова — психолог, КПТ и схема-терапия',
     titleTemplate: '%s — Юлия Шашкова',
     defaultDescription:
       'Онлайн-консультации психолога для взрослых. Работа с тревогой, самокритикой, сложностями в отношениях и повторяющимися жизненными сценариями. КПТ и схема-терапия.',
@@ -18,29 +19,29 @@ export const site = {
     language: 'Русский',
   },
 
-    navigation: {
-  main: [
-    {
-      href: '/how-we-work',
-      label: 'Работа со мной',
-    },
-    {
-      href: '/approaches',
-      label: 'Подходы',
-    },
-    {
-      href: '/about',
-      label: 'Обо мне',
-    },
-    {
-      href: '/articles',
-      label: 'Статьи',
-    },
-    {
-      href: '/tools',
-      label: 'Инструменты',
-    },
-  ],
+  navigation: {
+    main: [
+      {
+        href: '/how-we-work',
+        label: 'Работа со мной',
+      },
+      {
+        href: '/approaches',
+        label: 'Подходы',
+      },
+      {
+        href: '/about',
+        label: 'Обо мне',
+      },
+      {
+        href: '/articles',
+        label: 'Статьи',
+      },
+      {
+        href: '/tools',
+        label: 'Инструменты',
+      },
+    ],
 
     booking: {
       href: '/book',
@@ -94,20 +95,6 @@ export const site = {
     },
   },
 
-  contacts: {
-    telegram: {
-      username: 'timonrulez',
-      label: '@timonrulez',
-      url: 'https://t.me/timonrulez',
-      public: true,
-    },
-
-    email: {
-      address: 'timonrulez@yandex.ru',
-      public: false,
-    },
-  },
-
   payment: {
     provider: 'Robokassa',
     receipt: true,
@@ -121,80 +108,80 @@ export const site = {
   },
 
   education: [
-  {
-    period: '2026',
-    institution: 'РАНХиГС',
-    type: 'Магистратура',
-    program: 'Психология',
-    hours: 1414,
-    result: 'Квалификация: магистр психологии',
-    completed: true,
-  },
+    {
+      period: '2026',
+      institution: 'РАНХиГС',
+      type: 'Магистратура',
+      program: 'Психология',
+      hours: 1414,
+      result: 'Квалификация: магистр психологии',
+      completed: true,
+    },
 
-  {
-    period: '2026',
-    institution: 'ООО «Психодемия»',
-    type: 'Профессиональная переподготовка',
-    program: 'Психология личности',
-    hours: 2412,
-    result: 'Квалификация: психолог-консультант',
-    completed: true,
-  },
+    {
+      period: '2026',
+      institution: 'ООО «Психодемия»',
+      type: 'Профессиональная переподготовка',
+      program: 'Психология личности',
+      hours: 2412,
+      result: 'Квалификация: психолог-консультант',
+      completed: true,
+    },
 
-  {
-    period: '2025',
-    institution: 'РАНХиГС',
-    type: 'Профессиональная переподготовка',
-    program:
-      'Специалист по развитию личной и профессиональной эффективности',
-    hours: 496,
-    result: 'Квалификация: психолог в социальной сфере',
-    completed: true,
-  },
+    {
+      period: '2025',
+      institution: 'РАНХиГС',
+      type: 'Профессиональная переподготовка',
+      program:
+        'Специалист по развитию личной и профессиональной эффективности',
+      hours: 496,
+      result: 'Квалификация: психолог в социальной сфере',
+      completed: true,
+    },
 
-  {
-    period: '2025',
-    institution: 'ООО «Психодемия»',
-    type: 'Дополнительное обучение',
-    program: 'Схема-терапия',
-    hours: 254,
-    result: null,
-    completed: true,
-  },
+    {
+      period: '2025',
+      institution: 'ООО «Психодемия»',
+      type: 'Дополнительное обучение',
+      program: 'Схема-терапия',
+      hours: 254,
+      result: null,
+      completed: true,
+    },
 
-  {
-    period: '2024',
-    institution: 'ООО «Психодемия»',
-    type: 'Дополнительное обучение',
-    program: 'Когнитивно-поведенческая терапия',
-    hours: 269,
-    result: null,
-    completed: true,
-  },
+    {
+      period: '2024',
+      institution: 'ООО «Психодемия»',
+      type: 'Дополнительное обучение',
+      program: 'Когнитивно-поведенческая терапия',
+      hours: 269,
+      result: null,
+      completed: true,
+    },
 
-  {
-    period: '2024',
-    institution: 'ООО «Психодемия»',
-    type: 'Профессиональная переподготовка',
-    program: 'Консультант в сфере сексуальных отношений',
-    hours: 1194,
-    result:
-      'Квалификация: психолог-консультант в сексуальной сфере',
-    completed: true,
-  },
+    {
+      period: '2024',
+      institution: 'ООО «Психодемия»',
+      type: 'Профессиональная переподготовка',
+      program: 'Консультант в сфере сексуальных отношений',
+      hours: 1194,
+      result:
+        'Квалификация: психолог-консультант в сексуальной сфере',
+      completed: true,
+    },
 
-  {
-    period: '2023',
-    institution:
-      'АНО ДПО «Институт прикладной психологии в социальной сфере»',
-    type: 'Профессиональная переподготовка',
-    program:
-      'Клиническая психология. Диагностика, коррекция и восстановление психической деятельности',
-    hours: 1560,
-    result: 'Квалификация: клинический психолог',
-    completed: true,
-  },
-],
+    {
+      period: '2023',
+      institution:
+        'АНО ДПО «Институт прикладной психологии в социальной сфере»',
+      type: 'Профессиональная переподготовка',
+      program:
+        'Клиническая психология. Диагностика, коррекция и восстановление психической деятельности',
+      hours: 1560,
+      result: 'Квалификация: клинический психолог',
+      completed: true,
+    },
+  ],
 } as const;
 
 
@@ -206,9 +193,11 @@ export const site = {
  * длительность или условия из отдельных чисел.
  */
 export const siteDisplay = {
-  sessionPrice: `${site.practice.session.priceRub.toLocaleString('ru-RU')} ₽`,
+  sessionPrice:
+    `${site.practice.session.priceRub.toLocaleString('ru-RU')} ₽`,
 
-  sessionDuration: `${site.practice.session.durationMinutes} минут`,
+  sessionDuration:
+    `${site.practice.session.durationMinutes} минут`,
 
   sessionConditions:
     `${site.practice.session.format} · ` +
@@ -221,9 +210,11 @@ export const siteDisplay = {
     `${site.practice.session.priceRub.toLocaleString('ru-RU')} ₽ · ` +
     `${site.practice.session.frequency.label}`,
 
-  clients: `${site.practice.clients.count}+`,
+  clients:
+    `${site.practice.clients.count}+`,
 
-  practiceHours: `${site.practice.hours.count.toLocaleString('ru-RU')}+`,
+  practiceHours:
+    `${site.practice.hours.count.toLocaleString('ru-RU')}+`,
 
   cancellationPayment:
     `${site.practice.cancellation.repeatedLateCancellationPaymentPercent}% стоимости сессии`,
