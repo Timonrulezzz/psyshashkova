@@ -1,155 +1,699 @@
-'use client';
-
 import Link from 'next/link';
-import { C, serif, sans } from '@/app/lib/theme';
+
 import Nav from '@/app/components/Nav';
 import Footer from '@/app/components/Footer';
 import Eyebrow from '@/app/components/Eyebrow';
 import Reveal from '@/app/components/Reveal';
+import AnimatedRule from '@/app/components/AnimatedRule';
+
+import {
+  site,
+  siteDisplay,
+} from '@/app/data/site';
+
+import {
+  C,
+  radius,
+  sans,
+  serif,
+  shadow,
+} from '@/app/lib/theme';
+
+import { createPageMetadata } from '@/app/lib/metadata';
+
+export const metadata =
+  createPageMetadata({
+    title: 'Как проходит работа',
+    description:
+      'Как устроена психологическая работа: первая встреча, дальнейший процесс, частота консультаций, оплата, отмены и ответы на частые вопросы.',
+    path: '/how-we-work',
+  });
 
 const steps = [
   {
-    n: '01',
-    title: 'Первая сессия',
-    duration: '50 минут, 3 500 ₽',
-    text: 'Это диагностическая встреча. Вы рассказываете подробнее, я задаю уточняющие вопросы. К концу мы вместе формулируем запрос — то, с чем будем работать. Если за эту сессию я пойму, что вам нужен другой специалист или формат, скажу честно и порекомендую коллегу.',
+    number: '01',
+    title: 'Первая встреча',
+    meta: 'Знакомимся и разбираемся, что происходит',
+    text:
+      'Вы рассказываете о том, что привело вас сейчас. Я задаю вопросы, помогаю отделить главное от второстепенного и начинаю собирать картину происходящего. Не обязательно заранее уметь сформулировать точный запрос. Иногда он становится понятнее уже в разговоре. «Мне плохо и я пока не очень понимаю почему» тоже может быть достаточной точкой начала.',
   },
   {
-    n: '02',
-    title: 'Концептуализация',
-    duration: '2–3 сессии',
-    text: 'Собираем картину: как устроена ваша ситуация, какие мысли, чувства и поведение её поддерживают, какие у вас есть точки опоры. К концу этого этапа у нас появляется общая карта — и план, по которому идём дальше.',
+    number: '02',
+    title: 'Собираем общую картину',
+    meta: 'Понимаем, что поддерживает трудность',
+    text:
+      'В первые встречи мы постепенно замечаем повторяющиеся ситуации, реакции, мысли, эмоции, способы справляться и важный жизненный контекст. Задача не в том, чтобы навесить объяснение, а в том, чтобы у нас появилось достаточно точное общее понимание: что происходит именно с вами и где на это можно влиять.',
   },
   {
-    n: '03',
-    title: 'Работа',
-    duration: 'столько, сколько нужно',
-    text: 'Подбираем техники под ваш запрос. Между сессиями — короткие домашние задания: не «прочитайте книгу за неделю», а конкретные практики, наблюдения, эксперименты. Терапия — это в основном то, что происходит между сессиями.',
+    number: '03',
+    title: 'Пробуем менять',
+    meta: 'Работаем с тем, что можно изменить',
+    text:
+      'В зависимости от ситуации мы можем разбирать конкретные эпизоды, проверять привычные выводы, тренировать новые способы действовать, работать с эмоциями и устойчивыми жизненными сценариями. Иногда между встречами появляются наблюдения, упражнения или небольшие эксперименты. Они подбираются под задачу, а не выдаются автоматически после каждой сессии.',
   },
   {
-    n: '04',
-    title: 'Завершение',
-    duration: 'обсуждается заранее',
-    text: 'В какой-то момент вы замечаете, что справляетесь сами. Это и есть цель — не зависимость от терапевта, а возвращение к собственной устойчивости. Мы обсудим, как завершимся: иногда плавно, через сокращение частоты, иногда — назначаем последнюю сессию и подводим итоги.',
+    number: '04',
+    title: 'Проверяем, что меняется',
+    meta: 'Корректируем направление и завершаем работу',
+    text:
+      'Мы периодически возвращаемся к вопросу, стало ли в жизни что-то реально меняться. Если нет, пересматриваем наше понимание или способ работы. Когда основные задачи решены или дальнейшая регулярная работа уже не нужна, заранее обсуждаем завершение и то, как сохранить полученные изменения.',
   },
-];
+] as const;
 
-const formatCards = [
-  { eyebrow: 'длительность', value: '50 минут' },
-  { eyebrow: 'стоимость', value: '3 500 ₽' },
-  { eyebrow: 'формат', value: 'Онлайн' },
-  { eyebrow: 'частота', value: 'Раз в неделю' },
-  { eyebrow: 'платформа', value: 'Телемост' },
-  { eyebrow: 'язык', value: 'Русский' },
-];
+const therapistSide = [
+  'объяснять, что мы делаем и зачем, когда это имеет значение',
+  'задавать прямые вопросы, но не требовать рассказывать больше, чем вы готовы',
+  'говорить, если вижу, что выбранный способ работы не помогает или нужен другой специалист',
+  'возвращаться к целям и проверять, происходят ли изменения не только на встречах, но и в жизни',
+  'соблюдать профессиональные границы и конфиденциальность',
+  'регулярно проходить супервизию',
+] as const;
+
+const clientSide = [
+  'говорить, если что-то непонятно, не подходит или вызывает сомнения',
+  'по возможности приносить на встречи реальные ситуации, а не пытаться отвечать правильно',
+  'пробовать новые способы действий между встречами, когда мы договорились о таком эксперименте',
+  'сообщать, если изменились цели, состояние или обстоятельства жизни',
+  'предупреждать, если встречу нужно отменить или перенести',
+  'не соглашаться со мной автоматически: рабочие гипотезы можно и нужно проверять',
+] as const;
 
 const faq = [
-  { q: 'Сколько всего нужно сессий?', a: 'Заранее не знаю. С короткими запросами иногда хватает 5–10 встреч, с более сложными работа может идти год и дольше. После концептуализации (2–3 сессии) я смогу дать более точное предположение.' },
-  { q: 'Как часто встречаемся?', a: 'По умолчанию — раз в неделю. Это рабочий ритм, который позволяет удерживать процесс. Реже — теряется связность. Чаще (2 раза в неделю) бывает нужно в острые периоды.' },
-  { q: 'Как оплачивается?', a: ' Оплата за час до встречи — переводом по номеру телефона.' },
-  { q: 'Что если нужно отменить или перенести?', a: 'Отменить или перенести можно бесплатно, если предупредить не позднее чем за 12 часов. Если меньше — сессия оплачивается полностью. Я придерживаюсь этого правила, потому что это рабочее время, которое я выделила для вас.' },
-  { q: 'На какой платформе встречаемся?', a: 'Я использую Яндекс Телемост. За полчаса до сессии присылаю ссылку. Никаких приложений ставить не нужно, всё открывается в браузере.' },
-  { q: 'Что мне нужно подготовить?', a: 'Только тихое место, где вас не прервут, и наушники. Иногда полезно перед сессией коротко записать, о чём хочется поговорить — но это необязательно.' },
-  { q: 'А если я передумаю продолжать?', a: 'Это нормально. Прийти один раз и решить, что мы не подходим друг другу — это право клиента, не нужно объясняться или оправдываться. Можно просто написать «не хочу продолжать», и всё.' },
-  { q: 'Что вы записываете во время сессии?', a: 'Иногда короткие пометки — какие темы поднимались, какие техники мы пробовали, что договорились сделать к следующей встрече. Это нужно мне, чтобы не терять нить между сессиями. Никаких аудио- или видеозаписей я не делаю.' },
-  { q: 'Сохраняется ли конфиденциальность?', a: 'Да. Всё, что вы говорите, остаётся между нами. Исключения только стандартные: угроза вашей жизни или жизни других людей — в этих случаях я обязана выйти за рамки конфиденциальности. На первой сессии мы это проговорим.' },
-];
+  {
+    q: 'Сколько встреч понадобится?',
+    a:
+      'Заранее назвать точное число нельзя. Продолжительность зависит от того, с чем вы приходите, насколько давно это происходит, сколько задач мы берем в работу и как меняется ситуация по ходу процесса. После первых встреч обычно уже можно содержательнее обсудить предполагаемый объем работы, но это все равно не контракт на определенное количество сессий.',
+  },
+  {
+    q: 'Как часто мы встречаемся?',
+    a:
+      `Обычно раз в ${site.practice.session.frequency.usualMinDays}–${site.practice.session.frequency.usualMaxDays} дней. Такой ритм помогает сохранять связность процесса и одновременно оставляет время что-то заметить и попробовать между встречами. В некоторых случаях интервал может быть увеличен примерно до ${site.practice.session.frequency.possibleMaxDays} дней, если это подходит текущему этапу работы.`,
+  },
+  {
+    q: 'Как проходит оплата?',
+    a:
+      `После того как мы согласовали время встречи, я отправляю ссылку на оплату через ${site.payment.provider}. Стоимость одной встречи — ${siteDisplay.sessionPrice}. После оплаты формируется кассовый чек.`,
+  },
+  {
+    q: 'Что если нужно отменить или перенести встречу?',
+    a:
+      `Лучше предупредить минимум за ${site.practice.cancellation.standardNoticeHours} часов. К экстренным и действительно непредвиденным ситуациям я отношусь спокойно. Если поздние отмены или пропуски начинают повторяться, мы отдельно обсуждаем, как организовать дальнейшие встречи так, чтобы формат оставался рабочим для обеих сторон.`,
+  },
+  {
+    q: 'Что нужно подготовить к первой встрече?',
+    a:
+      'Ничего специального. Нужны стабильный интернет и место, где вы сможете спокойно говорить и вас не будут слышать посторонние. Можно заранее подумать, что хотелось бы обсудить, но готовить историю жизни, список симптомов или правильно сформулированный запрос не требуется.',
+  },
+  {
+    q: 'Обязательно ли делать домашние задания?',
+    a:
+      'Нет. Между встречами я могу предлагать наблюдения, упражнения или небольшие эксперименты, если они действительно нужны для нашей задачи. Мы обсуждаем их смысл и подбираем реалистичный объем. Сам факт выполненной домашки не является мерой хорошего клиента.',
+  },
+  {
+    q: 'А если я передумаю продолжать?',
+    a:
+      'Вы можете закончить работу в любой момент. Если получится, я бы предложила не исчезать молча, а хотя бы немного обсудить это: что повлияло на решение, что в работе было полезно, что не подошло и с чем вы уходите.',
+  },
+  {
+    q: 'Что вы записываете во время встречи?',
+    a:
+      'Иногда я делаю короткие рабочие заметки: основные темы, важные наблюдения, гипотезы или договоренности к следующей встрече. Я не веду аудио- или видеозапись консультаций.',
+  },
+  {
+    q: 'Сохраняется ли конфиденциальность?',
+    a:
+      'Да. То, что вы рассказываете на встречах, остается внутри нашей работы. На супервизию я могу выносить отдельные моменты из случая, но без имени и лишних деталей, по которым вас можно было бы узнать. Исключения возможны только в ситуациях, где у меня появляются предусмотренные законом обязанности.',
+  },
+  {
+    q: 'А если мне нужен психиатр?',
+    a:
+      'Это не значит, что психологическая работа прекращается. Можно одновременно работать со мной и наблюдаться у психиатра. Если я вижу, что без врача здесь лучше не обходиться, я скажу об этом прямо. Лекарства и медицинские решения остаются зоной ответственности врача, а мы продолжаем работать со своей частью.',
+  },
+] as const;
 
-export default function HowWeWork() {
+const facts = [
+  {
+    value: siteDisplay.sessionPrice,
+    label: 'одна встреча',
+  },
+  {
+    value: siteDisplay.sessionDuration,
+    label: 'продолжительность',
+  },
+  {
+    value: site.practice.session.format,
+    label: site.practice.session.platform,
+  },
+  {
+    value: `Раз в ${site.practice.session.frequency.usualMinDays}–${site.practice.session.frequency.usualMaxDays} дней`,
+    label: 'обычный ритм',
+  },
+  {
+    value: 'Индивидуально',
+    label: 'один клиент',
+  },
+  {
+    value: site.practice.session.age,
+    label: 'работаю со взрослыми',
+  },
+] as const;
+
+export default function HowWeWorkPage() {
   return (
-    <div style={{ ...serif, backgroundColor: C.bg, color: C.ink }} className="min-h-screen">
+    <div
+      className="min-h-screen"
+      style={{
+        ...serif,
+        backgroundColor: C.bg,
+        color: C.ink,
+      }}
+    >
       <Nav active="/how-we-work" />
 
-      <section className="max-w-6xl mx-auto px-6 pt-20 pb-16 md:pt-28">
-        <div className="max-w-3xl">
+      <main>
+        {/* HERO */}
+
+        <section className="mx-auto max-w-6xl px-6 pb-7 pt-10 md:px-8 md:pb-9 md:pt-14">
           <Reveal>
-            <Eyebrow>Как мы работаем</Eyebrow>
-            <h1 className="text-4xl md:text-6xl leading-[1.1] tracking-tight font-normal mb-8">Терапия — это не магия. Это последовательность шагов</h1>
-          </Reveal>
-          <Reveal delay={150}>
-            <p className="text-lg leading-relaxed" style={{ color: C.inkSoft }}>На этой странице — то, как устроен процесс. Что происходит на сессиях, сколько это стоит, как оплачивается, что делать, если нужно отменить. Чем меньше у вас остаётся неясных моментов, тем спокойнее начинать.</p>
-          </Reveal>
-        </div>
-      </section>
+            <div className="max-w-4xl">
+              <Eyebrow>Работа со мной</Eyebrow>
 
-      <section className="max-w-6xl mx-auto px-6 py-16 md:py-24">
-        <div className="space-y-6">
-          {steps.map((s, i) => (
-            <Reveal key={s.n} delay={i * 120}>
-              <div className="grid md:grid-cols-12 gap-6 md:gap-12 py-10 border-t transition-all duration-300 hover:translate-x-1" style={{ borderColor: C.line }}>
-                <div className="md:col-span-3">
-                  <p className="text-sm mb-2" style={{ ...sans, color: C.terracotta }}>{s.n}</p>
-                  <h2 className="text-2xl mb-2">{s.title}</h2>
-                  <p className="text-sm" style={{ ...sans, color: C.inkSoft }}>{s.duration}</p>
-                </div>
-                <div className="md:col-span-9">
-                  <p className="text-[16px] leading-relaxed" style={{ color: C.inkSoft }}>{s.text}</p>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
+              <h1 className="mt-4 max-w-[820px] text-[37px] font-normal leading-[1.03] tracking-[-0.025em] md:text-[46px] lg:text-[50px]">
+                Как устроена психологическая работа
+              </h1>
 
-      <section style={{ backgroundColor: C.surface }}>
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32">
-          <div className="grid md:grid-cols-12 gap-12">
-            <div className="md:col-span-4">
-              <Reveal>
-                <Eyebrow>Формат</Eyebrow>
-                <h2 className="text-3xl md:text-4xl leading-tight font-normal mb-6">Кратко о главном</h2>
-                <p className="text-base leading-relaxed" style={{ color: C.inkSoft }}>Эти параметры — стандартные. Если есть что-то, что в ваш ритм или ситуацию не вписывается, обсудим индивидуально.</p>
-              </Reveal>
+              <p
+                className="mt-4 max-w-[730px] text-[15px] leading-[1.65] md:text-[16px]"
+                style={{
+                  ...sans,
+                  color: C.inkSoft,
+                }}
+              >
+                До первой встречи полезно понимать не только
+                цену и длительность, но и сам процесс: что мы
+                будем делать, чего можно ожидать от меня, что
+                будет зависеть от вас и как понять, что работа
+                действительно куда-то движется.
+              </p>
             </div>
-            <div className="md:col-span-8">
-              <div className="grid sm:grid-cols-2 gap-6">
-                {formatCards.map((card, i) => (
-                  <Reveal key={i} delay={i * 80}>
-                    <div className="p-6 rounded-sm transition-all duration-300 hover:-translate-y-1 cursor-default" style={{ backgroundColor: C.bg }}>
-                      <p className="text-xs tracking-widest uppercase mb-3" style={{ ...sans, color: C.terracotta }}>{card.eyebrow}</p>
-                      <p className="text-2xl">{card.value}</p>
+          </Reveal>
+
+          <Reveal delay={80}>
+            <div
+              className="mt-7 grid grid-cols-2 overflow-hidden md:grid-cols-3 lg:grid-cols-6"
+              style={{
+                backgroundColor: C.surface,
+                border: `1px solid ${C.line}`,
+                borderRadius: radius.lg,
+              }}
+            >
+              {facts.map((fact, index) => (
+                <Fact
+                  key={fact.label}
+                  value={fact.value}
+                  label={fact.label}
+                  index={index}
+                />
+              ))}
+            </div>
+          </Reveal>
+        </section>
+
+        <div className="mx-auto max-w-6xl px-6 md:px-8">
+          <AnimatedRule />
+        </div>
+
+        {/* PROCESS */}
+
+        <section className="mx-auto max-w-6xl px-6 py-8 md:px-8 md:py-10">
+          <Reveal>
+            <div className="mb-5">
+  <div className="grid gap-4 md:grid-cols-2">
+    <div>
+      <Eyebrow>Процесс</Eyebrow>
+
+      <h2 className="mt-3 text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
+        Общая логика работы
+      </h2>
+    </div>
+
+    <div className="md:pl-0">
+      <p
+        className="max-w-xl text-[14px] leading-[1.65]"
+        style={{
+          ...sans,
+          color: C.inkSoft,
+        }}
+      >
+        Эти шаги могут идти не строго один за другим.
+        Иногда мы возвращаемся к пониманию ситуации,
+        меняем гипотезу или переключаемся на более
+        актуальную задачу. Структура нужна не ради
+        структуры, а чтобы работа не превращалась в
+        бесконечный разговор без направления.
+      </p>
+    </div>
+  </div>
+</div>
+          </Reveal>
+
+          <div className="grid gap-3 md:grid-cols-2">
+            {steps.map((step, index) => (
+              <Reveal
+                key={step.number}
+                delay={index * 35}
+              >
+                <article
+                  className="group h-full border px-5 py-5 transition-all duration-300 hover:-translate-y-1"
+                  style={{
+                    borderColor: C.line,
+                    backgroundColor:
+                      'rgba(255,255,255,0.12)',
+                    borderRadius: radius.md,
+                  }}
+                >
+                  <div className="mb-3 flex items-start gap-3">
+                    <span
+                      className="min-w-[26px] pt-1 text-[10px]"
+                      style={{
+                        ...sans,
+                        color: C.terracotta,
+                      }}
+                    >
+                      {step.number}
+                    </span>
+
+                    <div>
+                      <h3 className="text-[19px] leading-[1.2]">
+                        {step.title}
+                      </h3>
+
+                      <p
+                        className="mt-1 text-[11.5px] leading-[1.45]"
+                        style={{
+                          ...sans,
+                          color: C.inkSoft,
+                        }}
+                      >
+                        {step.meta}
+                      </p>
                     </div>
-                  </Reveal>
-                ))}
+                  </div>
+
+                  <p
+                    className="pl-[39px] text-[13px] leading-[1.62] md:text-[13.5px]"
+                    style={{
+                      ...sans,
+                      color: C.inkSoft,
+                    }}
+                  >
+                    {step.text}
+                  </p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+
+          <Reveal delay={80}>
+            <div
+              className="mt-4 px-5 py-4"
+              style={{
+                backgroundColor:
+                  'rgba(150, 59, 89, 0.06)',
+                border: `1px solid ${C.berry}18`,
+                borderRadius: radius.md,
+              }}
+            >
+              <p
+                className="text-[13px] leading-[1.6]"
+                style={{
+                  ...sans,
+                  color: C.inkSoft,
+                }}
+              >
+                <strong
+                  style={{
+                    color: C.ink,
+                    fontWeight: 600,
+                  }}
+                >
+                  На встрече не нужно быть удобным или собранным. Можно приходить растерянным, злым, уставшим, молчаливым, плакать, смеяться, ругаться матом или не знать, с чего начать. Моя задача не оценивать, насколько правильно вы проходите терапию, а помогать разбираться с тем, что происходит.
+                </strong>{' '}
+              </p>
+            </div>
+          </Reveal>
+        </section>
+
+        {/* RESPONSIBILITY */}
+
+        <section className="mx-auto max-w-6xl px-6 py-7 md:px-8 md:py-9">
+          <Reveal>
+            <div
+              className="overflow-hidden"
+              style={{
+                backgroundColor: C.surfaceWarm,
+                borderRadius: radius.lg,
+                boxShadow: shadow.soft,
+              }}
+            >
+              <div className="grid gap-7 p-6 md:grid-cols-2 md:gap-10 md:p-8 lg:p-10">
+                <div>
+                  <Eyebrow>С моей стороны</Eyebrow>
+
+                  <h2 className="mt-3 max-w-md text-[28px] font-normal leading-[1.1] tracking-[-0.02em] md:text-[35px]">
+                    За что отвечаю я
+                  </h2>
+
+                  <div className="mt-5">
+                    <CheckList items={therapistSide} />
+                  </div>
+                </div>
+
+                <div>
+                  <Eyebrow>С вашей стороны</Eyebrow>
+
+                  <h2 className="mt-3 max-w-md text-[28px] font-normal leading-[1.1] tracking-[-0.02em] md:text-[35px]">
+                    Что помогает работе быть полезной
+                  </h2>
+
+                  <div className="mt-5">
+                    <CheckList items={clientSide} />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </Reveal>
+        </section>
 
-      <section className="max-w-4xl mx-auto px-6 py-24 md:py-32">
-        <Reveal>
-          <Eyebrow>Частые вопросы</Eyebrow>
-          <h2 className="text-3xl md:text-4xl leading-tight font-normal mb-16">Если что-то ещё непонятно</h2>
-        </Reveal>
-        <div className="space-y-px">
-          {faq.map((item, i) => (
-            <Reveal key={i} delay={i * 60}>
-              <details className="group border-t py-6" style={{ borderColor: C.line }}>
-                <summary className="flex items-start gap-6 cursor-pointer list-none">
-                  <span className="text-sm pt-1 shrink-0 w-8" style={{ ...sans, color: C.terracotta }}>{String(i + 1).padStart(2, '0')}</span>
-                  <span className="text-xl leading-snug flex-1">{item.q}</span>
-                  <span className="text-xl shrink-0 transition-transform duration-300 group-open:rotate-45" style={{ color: C.terracotta }}>+</span>
-                </summary>
-                <p className="text-[16px] leading-relaxed mt-4 pl-14 pr-10" style={{ color: C.inkSoft }}>{item.a}</p>
-              </details>
-            </Reveal>
-          ))}
-        </div>
-      </section>
+        {/* PROGRESS */}
 
-      <section className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
-        <Reveal>
-          <div className="rounded-sm p-12 md:p-20 text-center" style={{ backgroundColor: C.ink, color: C.bg }}>
-            <h2 className="text-3xl md:text-5xl leading-tight font-normal mb-8 max-w-3xl mx-auto">Готовы записаться?</h2>
-            <p className="text-lg leading-relaxed max-w-xl mx-auto mb-10" style={{ color: '#C9C2B5' }}>Если остались вопросы, на которые не нашли ответа — пишите в форме записи, я отвечу до того, как назначим встречу.</p>
-            <Link href="/book" className="inline-block px-8 py-4 rounded-full text-base transition-all duration-300 hover:scale-[1.04] hover:shadow-2xl" style={{ ...sans, backgroundColor: C.ochre, color: C.ink }}>Записаться на консультацию</Link>
-            <p className="text-sm mt-6" style={{ ...sans, color: '#C9C2B5' }}>Онлайн · 50 минут · 3 500 ₽</p>
+        <section className="mx-auto max-w-6xl px-6 py-8 md:px-8 md:py-10">
+          <Reveal>
+            <div className="grid gap-6 md:grid-cols-[0.8fr_1.2fr] md:items-center">
+              <div>
+                <Eyebrow>Результат</Eyebrow>
+
+                <h2 className="mt-3 text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
+                  Как понять, что работа движется
+                </h2>
+              </div>
+
+              <div
+                className="grid gap-3 sm:grid-cols-2"
+                style={sans}
+              >
+                <ProgressCard>
+                  Сложная ситуация возникает реже или уже не выбивает так сильно.
+                </ProgressCard>
+
+                <ProgressCard>
+                  После сложного момента вы быстрее
+                  возвращаетесь в свое обычное состояние.
+                </ProgressCard>
+
+                <ProgressCard>
+                  Между автоматической реакцией и действием
+                  появляется больше выбора.
+                </ProgressCard>
+
+                <ProgressCard>
+                  То, что раньше приходилось только понимать,
+                  постепенно получается делать иначе в реальной
+                  жизни.
+                </ProgressCard>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal delay={60}>
+            <p
+              className="mt-5 max-w-3xl text-[13px] leading-[1.65]"
+              style={{
+                ...sans,
+                color: C.inkSoft,
+              }}
+            >
+              Улучшение не всегда выглядит как полное
+              исчезновение неприятных эмоций. Иногда более
+              важный результат в том, что тревога, стыд,
+              раздражение или неопределенность перестают
+              полностью управлять тем, что вы делаете.
+            </p>
+          </Reveal>
+        </section>
+
+        <div className="mx-auto max-w-6xl px-6 md:px-8">
+          <AnimatedRule />
+        </div>
+
+        {/* FAQ */}
+
+        <section className="mx-auto max-w-4xl px-6 py-8 md:px-8 md:py-10">
+          <Reveal>
+            <Eyebrow>Частые вопросы</Eyebrow>
+
+            <h2 className="mt-3 text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
+              Практические детали
+            </h2>
+
+            <p
+              className="mt-3 max-w-2xl text-[14px] leading-[1.65]"
+              style={{
+                ...sans,
+                color: C.inkSoft,
+              }}
+            >
+              То, что обычно хочется уточнить до первой
+              встречи или в самом начале работы.
+            </p>
+          </Reveal>
+
+          <div className="mt-6">
+            {faq.map((item, index) => (
+              <Reveal
+                key={item.q}
+                delay={index * 20}
+              >
+                <details
+                  className="group border-t py-4"
+                  style={{
+                    borderColor: C.line,
+                  }}
+                >
+                  <summary className="flex cursor-pointer list-none items-start gap-3">
+                    <span
+                      className="w-7 shrink-0 pt-0.5 text-[10px]"
+                      style={{
+                        ...sans,
+                        color: C.terracotta,
+                      }}
+                    >
+                      {String(index + 1).padStart(
+                        2,
+                        '0',
+                      )}
+                    </span>
+
+                    <span className="flex-1 text-[16px] leading-[1.35] md:text-[17px]">
+                      {item.q}
+                    </span>
+
+                    <span
+                      aria-hidden="true"
+                      className="shrink-0 text-[18px] leading-none transition-transform duration-300 group-open:rotate-45"
+                      style={{
+                        color: C.terracotta,
+                      }}
+                    >
+                      +
+                    </span>
+                  </summary>
+
+                  <p
+                    className="mt-3 pl-10 pr-8 text-[13px] leading-[1.65] md:text-[13.5px]"
+                    style={{
+                      ...sans,
+                      color: C.inkSoft,
+                    }}
+                  >
+                    {item.a}
+                  </p>
+                </details>
+              </Reveal>
+            ))}
           </div>
-        </Reveal>
-      </section>
+        </section>
+
+        {/* CTA */}
+
+        <section className="mx-auto max-w-6xl px-6 pb-12 pt-4 md:px-8 md:pb-14">
+          <Reveal>
+            <div
+              className="grid gap-6 px-6 py-7 md:grid-cols-[1fr_auto] md:items-center md:px-8 md:py-8"
+              style={{
+                backgroundColor: C.ink,
+                color: C.bg,
+                borderRadius: radius.lg,
+                boxShadow: shadow.soft,
+              }}
+            >
+              <div>
+                <Eyebrow>Первая встреча</Eyebrow>
+
+                <h2 className="mt-3 text-[28px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[34px]">
+                  Если формат вам подходит, можно оставить
+                  заявку
+                </h2>
+
+                <p
+                  className="mt-3 max-w-2xl text-[13px] leading-[1.6] md:text-[14px]"
+                  style={{
+                    ...sans,
+                    color: '#C9C2B5',
+                  }}
+                >
+                  В заявке достаточно оставить контакт,
+                  выбрать общую тему и при желании добавить
+                  короткий комментарий. Подробно рассказывать
+                  всю историю заранее не нужно.
+                </p>
+              </div>
+
+              <div className="md:text-right">
+                <Link
+                  href="/book"
+                  className="inline-flex justify-center px-7 py-3 text-[13px] font-medium transition-all duration-300 hover:-translate-y-0.5"
+                  style={{
+                    ...sans,
+                    backgroundColor: C.bg,
+                    color: C.ink,
+                    borderRadius: radius.pill,
+                  }}
+                >
+                  Оставить заявку
+                </Link>
+
+                <p
+                  className="mt-2 text-[11px]"
+                  style={{
+                    ...sans,
+                    color: '#C9C2B5',
+                  }}
+                >
+                  {siteDisplay.sessionDuration} ·{' '}
+                  {siteDisplay.sessionPrice}
+                </p>
+              </div>
+            </div>
+          </Reveal>
+        </section>
+      </main>
 
       <Footer />
+    </div>
+  );
+}
+
+function Fact({
+  value,
+  label,
+  index,
+}: {
+  value: string;
+  label: string;
+  index: number;
+}) {
+  const mobileLeft =
+    index % 2 === 1 ? 'border-l' : '';
+
+  const mobileTop =
+    index >= 2 ? 'border-t' : '';
+
+  const desktopLeft =
+    index > 0
+      ? 'lg:border-l'
+      : 'lg:border-l-0';
+
+  return (
+    <div
+      className={[
+        'min-h-[84px] px-4 py-4',
+        'lg:border-t-0',
+        mobileLeft,
+        mobileTop,
+        desktopLeft,
+      ].join(' ')}
+      style={{
+        borderColor: C.line,
+      }}
+    >
+      <p className="text-[17px] leading-[1.2]">
+        {value}
+      </p>
+
+      <p
+        className="mt-1.5 text-[11px] leading-[1.4]"
+        style={{
+          ...sans,
+          color: C.inkSoft,
+        }}
+      >
+        {label}
+      </p>
+    </div>
+  );
+}
+
+function CheckList({
+  items,
+}: {
+  items: readonly string[];
+}) {
+  return (
+    <ul className="space-y-3">
+      {items.map((item) => (
+        <li
+          key={item}
+          className="flex items-start gap-3"
+        >
+          <span
+            aria-hidden="true"
+            className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full"
+            style={{
+              backgroundColor: C.terracotta,
+            }}
+          />
+
+          <span
+            className="text-[13px] leading-[1.6] md:text-[13.5px]"
+            style={{
+              ...sans,
+              color: C.ink,
+            }}
+          >
+            {item}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function ProgressCard({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className="h-full px-4 py-4 text-[12.5px] leading-[1.6] md:text-[13px]"
+      style={{
+        backgroundColor: C.surface,
+        color: C.inkSoft,
+        borderRadius: radius.md,
+      }}
+    >
+      {children}
     </div>
   );
 }
