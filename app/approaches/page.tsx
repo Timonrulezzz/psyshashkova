@@ -1,252 +1,812 @@
-'use client';
+import type { ReactNode } from 'react';
 
 import Link from 'next/link';
-import { C, serif, sans } from '@/app/lib/theme';
+
 import Nav from '@/app/components/Nav';
 import Footer from '@/app/components/Footer';
 import Eyebrow from '@/app/components/Eyebrow';
 import Reveal from '@/app/components/Reveal';
+import AnimatedRule from '@/app/components/AnimatedRule';
 
-const cbtFor = [
-  'Тревога — генерализованная, социальная, панические атаки',
-  'Прокрастинация и сложности с самодисциплиной',
-  'Самокритика и низкая самооценка',
-  'Подавленное настроение и апатия',
-  'Сложности с принятием решений',
-  'Стресс и выгорание',
-  'Конкретные поведенческие изменения',
-];
+import {
+  C,
+  radius,
+  sans,
+  serif,
+  shadow,
+} from '@/app/lib/theme';
 
-const cbtHow = [
-  { title: 'Структурно', text: 'У нас есть план: что разбираем сейчас, к чему движемся, как поймём, что цель достигнута. Я открыто говорю, какой шаг мы делаем и зачем.' },
-  { title: 'С домашними заданиями', text: 'Между сессиями вы наблюдаете за собой, ведёте дневники, пробуете новые способы. Терапия — это не только разговор раз в неделю.' },
-  { title: 'С опорой на исследования', text: 'Я использую техники, эффективность которых проверена в исследованиях. Если технику не поддерживает доказательная база — я её не применяю.' },
-  { title: 'Краткосрочно или средне', text: 'Для конкретных запросов хватает 10–20 сессий. Это не «терапия на годы» — мы движемся к понятной цели.' },
-];
+import { createPageMetadata } from '@/app/lib/metadata';
 
-const schemaFor = [
-  'Повторяющиеся сценарии в отношениях, на работе, с собой',
-  'Эмоциональная зависимость, страх покинутости, страх близости',
-  'Глубокая самокритика и ощущение «я недостаточно хорош/а»',
-  'Сложности с границами и собственными желаниями',
-  'Тревога или подавленность, которые не уходят от КПТ',
-  'Ощущение «как будто живу не свою жизнь»',
-  'Пограничные черты, нарциссические сценарии',
-];
+export const metadata =
+  createPageMetadata({
+    title: 'Подходы в работе',
+    description:
+      'Как я использую когнитивно-поведенческую терапию и схема-терапию: чем они отличаются, где пересекаются и как выбирается способ работы.',
+    path: '/approaches',
+  });
 
-const schemaHow = [
-  { title: 'Глубже', text: 'Работаем не только с актуальными мыслями и реакциями, но и с тем, как сложились ваши базовые представления о себе и других — в основном в детстве.' },
-  { title: 'С эмоциями, не только с мыслями', text: 'В схема-терапии много техник, которые работают с эмоциональной памятью: воображение, работа с детскими сценами, диалоги с частями себя.' },
-  { title: 'Дольше и медленнее', text: 'Глубокие сценарии не меняются за месяц. Реалистично — от полугода до 2 лет работы. Это не значит «сессии каждую неделю всё это время», но процесс длинный.' },
-  { title: 'С 18 схемами и 10 режимами', text: 'Схема-терапия даёт чёткий язык, на котором можно описать, что с вами происходит. Это помогает не «винить себя за реакции», а понимать, откуда они растут.' },
-];
+const cbtPoints = [
+  {
+    title: 'Замечать цикл',
+    text:
+      'Смотрим, что запускает реакцию, какие мысли и ожидания появляются, что происходит с эмоциями и телом и что вы делаете дальше.',
+  },
+  {
+    title: 'Проверять предположения',
+    text:
+      'Не убеждаем себя, что все хорошо. Разбираемся, где вывод достаточно точный, а где тревога, прошлый опыт или привычка дорисовывают то, чего мы пока не знаем.',
+  },
+  {
+    title: 'Менять поведение',
+    text:
+      'Пробуем иначе действовать там, где привычные способы вроде избегания, бесконечных проверок или попыток все проконтролировать дают облегчение на минуту, но поддерживают трудность дальше.',
+  },
+  {
+    title: 'Переносить изменения в жизнь',
+    text:
+      'То, что мы поняли на встрече, проверяем в реальных ситуациях. Иногда для этого нужны наблюдения, упражнения или небольшие эксперименты между сессиями.',
+  },
+] as const;
 
-const myth = [
-  { q: 'Это как коучинг или мотивационные практики?', a: 'Нет. КПТ — это клиническая психотерапия с доказанной эффективностью при тревожных, депрессивных, обсессивно-компульсивных и других расстройствах. Коучинг работает с целями и результативностью у в целом здоровых людей. Это разные области.' },
-  { q: 'КПТ — это просто «думайте позитивно»?', a: 'Нет. Это распространённый миф. КПТ не учит «менять плохие мысли на хорошие». Она помогает заметить, что мысли — это не факты, и проверять их связь с реальностью. Часто вывод оказывается не «я был неправ», а «моя реакция логична, и теперь понятно, что с этим делать».' },
-  { q: 'Схема-терапия — это про детство и копание в прошлом?', a: 'Прошлое там есть, но не как самоцель. Мы смотрим, как сложились ваши «схемы» (устойчивые убеждения о себе и мире), но работаем в основном с тем, как они проявляются сейчас. Цель — не понять, кто виноват, а перестать жить по сценариям, которые больше не работают.' },
-  { q: 'Это «холодные» подходы — там нет места эмоциям?', a: 'Это устаревший миф. Современная КПТ много работает с эмоциями. Схема-терапия — вообще один из самых эмоционально насыщенных подходов: там есть техники воображения, диалогов с разными частями себя, работа с травматическими воспоминаниями.' },
-];
+const schemaPoints = [
+  {
+    title: 'Повторяющиеся сценарии',
+    text:
+      'Похожие отношения, конфликты или переживания возникают снова и снова, хотя люди и обстоятельства меняются.',
+  },
+  {
+    title: 'Сильные реакции',
+    text:
+      'Ситуация вроде бы небольшая, а внутри она переживается как катастрофа, отвержение, провал, унижение или угроза потерять отношения.',
+  },
+  {
+    title: 'Отношение к себе',
+    text:
+      'Самокритика, стыд, ощущение собственной неправильности или привычка требовать от себя больше, чем возможно выдержать.',
+  },
+  {
+    title: 'Потребности и границы',
+    text:
+      'Трудно замечать собственные желания, говорить нет, просить, занимать место, выдерживать чужое недовольство или не ставить отношения выше себя.',
+  },
+] as const;
 
-const comparison: [string, string, string][] = [
-  ['Длительность', '10–20 сессий', 'От полугода до 2 лет'],
-  ['Глубина', 'Поверхностные слои: мысли, реакции, поведение', 'Глубокие слои: устойчивые паттерны с детства'],
-  ['С чем работает', 'Конкретные симптомы и ситуации', 'Повторяющиеся жизненные сценарии'],
-  ['Эмоции', 'Анализируем и регулируем', 'Работаем с эмоциональной памятью напрямую'],
-  ['Прошлое', 'Минимально, в основном «здесь и сейчас»', 'Важная часть работы'],
-  ['Запрос', '«Хочу справиться с тревогой»', '«Я снова в тех же отношениях / снова чувствую то же»'],
-];
+const principles = [
+  {
+    title: 'Не спорю с каждой мыслью',
+    text:
+      'Если вы думаете что-то неприятное, моя задача не доказать, что вы ошибаетесь. Сначала нужно понять, откуда этот вывод взялся и что он делает с вашей жизнью.',
+  },
+  {
+    title: 'Не объясняю все родителями',
+    text:
+      'Прошлый опыт бывает важен, но не потому, что нам обязательно нужно найти виноватого. Мы обращаемся к прошлому тогда, когда оно помогает лучше понять то, что происходит сейчас.',
+  },
+  {
+    title: 'Не подгоняю человека под технику',
+    text:
+      'Если упражнение выглядит хорошим по учебнику, но не помогает именно вам, это повод менять упражнение или нашу гипотезу, а не считать, что вы неправильно проходите терапию.',
+  },
+  {
+    title: 'Не держусь за один метод',
+    text:
+      'Подход нужен для того, чтобы лучше понимать ситуацию и выбирать рабочие инструменты. Если другая перспектива помогает точнее, мы можем ей воспользоваться.',
+  },
+] as const;
 
-export default function Approaches() {
+export default function ApproachesPage() {
   return (
-    <div style={{ ...serif, backgroundColor: C.bg, color: C.ink }} className="min-h-screen">
+    <div
+      className="min-h-screen"
+      style={{
+        ...serif,
+        backgroundColor: C.bg,
+        color: C.ink,
+      }}
+    >
       <Nav active="/approaches" />
 
-      <section className="max-w-6xl mx-auto px-6 pt-20 pb-16 md:pt-28">
-        <div className="max-w-3xl">
-          <Reveal>
-            <Eyebrow>Подходы в работе</Eyebrow>
-            <h1 className="text-4xl md:text-6xl leading-[1.1] tracking-tight font-normal mb-8">Два метода, между которыми мы выбираем под ваш запрос</h1>
-          </Reveal>
-          <Reveal delay={150}>
-            <p className="text-lg leading-relaxed mb-6" style={{ color: C.inkSoft }}>Я не работаю «во всех подходах сразу». В психотерапии это часто признак того, что специалист ни в одном не разобрался достаточно глубоко.</p>
-          </Reveal>
-          <Reveal delay={250}>
-            <p className="text-lg leading-relaxed" style={{ color: C.inkSoft }}>Я работаю в двух — когнитивно-поведенческой терапии (КПТ) и схема-терапии. Это разные методы с разной глубиной, и выбор между ними мы делаем вместе после первой сессии, исходя из вашего запроса.</p>
-          </Reveal>
-        </div>
-      </section>
+      <main>
+        {/* HERO */}
 
-      <section style={{ backgroundColor: C.surface }}>
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32">
-          <div className="grid md:grid-cols-12 gap-12 items-start mb-16">
-            <div className="md:col-span-4">
-              <Reveal>
-                <p className="text-xs tracking-widest uppercase mb-3" style={{ ...sans, color: C.terracotta }}>Подход 1</p>
-                <h2 className="text-4xl md:text-5xl leading-tight font-normal">Когнитивно-поведенческая терапия</h2>
-              </Reveal>
+        <section className="mx-auto max-w-6xl px-6 pb-7 pt-10 md:px-8 md:pb-9 md:pt-14">
+          <Reveal>
+            <div className="max-w-4xl">
+              <Eyebrow>Подходы</Eyebrow>
+
+              <h1 className="mt-4 max-w-[850px] text-[37px] font-normal leading-[1.03] tracking-[-0.025em] md:text-[46px] lg:text-[50px]">
+                КПТ и схема-терапия: два способа смотреть на одну ситуацию
+              </h1>
+
+              <p
+                className="mt-4 max-w-[760px] text-[15px] leading-[1.65] md:text-[16px]"
+                style={{
+                  ...sans,
+                  color: C.inkSoft,
+                }}
+              >
+                Я работаю в когнитивно-поведенческом подходе
+                и схема-терапии. Обычно нам не нужно на первой
+                встрече выбрать один метод и дальше держаться
+                только за него. Важнее понять, что именно происходит и какой взгляд на ситуацию сейчас поможет нам лучше в ней разобраться.
+              </p>
             </div>
-            <div className="md:col-span-8 md:pt-4">
-              <Reveal delay={150}>
-                <p className="text-lg leading-relaxed mb-6" style={{ color: C.inkSoft }}>КПТ — это метод, в основе которого простая, но рабочая идея: наши чувства и поведение во многом зависят от того, как мы интерпретируем происходящее. Не от самих событий, а от мыслей о них.</p>
-                <p className="text-base leading-relaxed" style={{ color: C.inkSoft }}>Если бесконечно крутить в голове «я не справлюсь», тревога будет расти, даже если объективно справиться можно. Если автоматически думать «он молчит — значит, злится», вы будете действовать так, как будто это правда, и часто получать в ответ как раз то, чего боялись. КПТ помогает заметить эти автоматические мысли, проверить их на реальность и постепенно менять не только мышление, но и поведение.</p>
-              </Reveal>
+          </Reveal>
+
+          <Reveal delay={80}>
+            <div
+              className="mt-7 grid gap-3 md:grid-cols-3"
+            >
+              <IntroCard
+                number="01"
+                title="Здесь и сейчас"
+              >
+                Что запускает трудность и что поддерживает ее
+                сегодня.
+              </IntroCard>
+
+              <IntroCard
+                number="02"
+                title="Повторяющийся сценарий"
+              >
+                Почему похожие реакции возвращаются в разных
+                ситуациях и отношениях.
+              </IntroCard>
+
+              <IntroCard
+                number="03"
+                title="Изменение"
+              >
+                Что можно попробовать делать, переживать или
+                понимать иначе.
+              </IntroCard>
             </div>
+          </Reveal>
+        </section>
+
+        <div className="mx-auto max-w-6xl px-6 md:px-8">
+          <AnimatedRule />
+        </div>
+
+        {/* CBT */}
+
+        <section className="mx-auto max-w-6xl px-6 py-8 md:px-8 md:py-10">
+          <Reveal>
+            <div className="grid gap-5 md:grid-cols-2 md:gap-10">
+              <div>
+                <Eyebrow>КПТ</Eyebrow>
+
+                <h2 className="mt-3 max-w-lg text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
+                  Что происходит сейчас и почему это продолжается
+                </h2>
+              </div>
+
+              <div
+                className="space-y-3 text-[14px] leading-[1.65] md:text-[15px]"
+                style={{
+                  ...sans,
+                  color: C.inkSoft,
+                }}
+              >
+                <p>
+                  В КПТ мы смотрим не только на мысли.
+                  Мы смотрим на весь цикл: что произошло, на что вы обратили внимание, что подумали, что почувствовали и что сделали дальше.
+                </p>
+
+                <p>
+                  Часто какой-то способ действительно помогает
+                  в моменте, но одновременно поддерживает
+                  трудность дальше. Например, избегание быстро
+                  снижает тревогу, поэтому хочется избегать
+                  снова. А мозг так и не получает возможности
+                  узнать, что ситуацию можно было бы выдержать.
+                </p>
+              </div>
+            </div>
+          </Reveal>
+
+          <div className="mt-6 grid gap-3 md:grid-cols-2">
+            {cbtPoints.map((point, index) => (
+              <Reveal
+                key={point.title}
+                delay={index * 30}
+              >
+                <ApproachCard
+                  number={String(index + 1).padStart(2, '0')}
+                  title={point.title}
+                >
+                  {point.text}
+                </ApproachCard>
+              </Reveal>
+            ))}
           </div>
 
-          <div className="grid md:grid-cols-12 gap-12 mb-12">
-            <div className="md:col-span-5">
-              <Reveal>
-                <h3 className="text-xl mb-6">Как мы работаем</h3>
-                <div className="space-y-6">
-                  {cbtHow.map((item, i) => (
-                    <Reveal key={i} delay={i * 80}>
-                      <div>
-                        <p className="text-base mb-2" style={{ color: C.ink }}>· {item.title}</p>
-                        <p className="text-[15px] leading-relaxed pl-4" style={{ color: C.inkSoft }}>{item.text}</p>
+          <Reveal delay={80}>
+            <div
+              className="mt-4 px-5 py-4"
+              style={{
+                backgroundColor:
+                  'rgba(184, 92, 60, 0.07)',
+                borderRadius: radius.md,
+              }}
+            >
+              <p
+                className="text-[13px] leading-[1.62]"
+                style={{
+                  ...sans,
+                  color: C.inkSoft,
+                }}
+              >
+                <strong
+                  style={{
+                    color: C.ink,
+                    fontWeight: 600,
+                  }}
+                >
+                  КПТ не про позитивное мышление.
+                </strong>{' '}
+                Мы не заменяем неприятную мысль на красивую.
+                Иногда вывод действительно оказывается
+                слишком категоричным. Иногда он вполне
+                реалистичен. Нам важнее научиться замечать,
+                проверять и выбирать, что делать дальше.
+              </p>
+            </div>
+          </Reveal>
+        </section>
+
+        {/* SCHEMA */}
+
+        <section className="mx-auto max-w-6xl px-6 py-7 md:px-8 md:py-9">
+          <Reveal>
+            <div
+              className="overflow-hidden"
+              style={{
+                backgroundColor: C.surfaceWarm,
+                borderRadius: radius.lg,
+                boxShadow: shadow.soft,
+              }}
+            >
+              <div className="p-6 md:p-8 lg:p-10">
+                <div className="grid gap-5 md:grid-cols-2 md:gap-10">
+                  <div>
+                    <Eyebrow>Схема-терапия</Eyebrow>
+
+                    <h2 className="mt-3 max-w-lg text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
+                      Когда одна и та же история повторяется в разных декорациях
+                    </h2>
+                  </div>
+
+                  <div
+                    className="space-y-3 text-[14px] leading-[1.65] md:text-[15px]"
+                    style={{
+                      ...sans,
+                      color: C.ink,
+                    }}
+                  >
+                    <p>
+                      Иногда недостаточно разобраться только
+                      с одной конкретной ситуацией. Можно
+                      менять работу, партнеров или
+                      обстоятельства, а внутри снова
+                      оказываться примерно в том же месте.
+                    </p>
+
+                    <p>
+                      Схема-терапия помогает замечать привычные представления о себе, других людях и о том, чего ждать от отношений. Они
+                      складываются под влиянием темперамента
+                      и жизненного опыта и могут продолжать
+                      работать даже тогда, когда давно
+                      перестали быть полезными.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-6 grid gap-3 md:grid-cols-2">
+                  {schemaPoints.map((point, index) => (
+                    <Reveal
+                      key={point.title}
+                      delay={index * 30}
+                    >
+                      <div
+                        className="h-full px-5 py-5"
+                        style={{
+                          backgroundColor:
+                            'rgba(247, 243, 236, 0.62)',
+                          borderRadius: radius.md,
+                        }}
+                      >
+                        <div className="flex items-start gap-3">
+                          <span
+                            className="min-w-[26px] pt-0.5 text-[10px]"
+                            style={{
+                              ...sans,
+                              color: C.moss,
+                            }}
+                          >
+                            {String(index + 1).padStart(
+                              2,
+                              '0',
+                            )}
+                          </span>
+
+                          <div>
+                            <h3 className="text-[18px] leading-[1.25]">
+                              {point.title}
+                            </h3>
+
+                            <p
+                              className="mt-2 text-[13px] leading-[1.6]"
+                              style={{
+                                ...sans,
+                                color: C.inkSoft,
+                              }}
+                            >
+                              {point.text}
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     </Reveal>
                   ))}
                 </div>
-              </Reveal>
-            </div>
-            <div className="md:col-span-7">
-              <Reveal delay={100}>
-                <h3 className="text-xl mb-6">Кому подходит</h3>
-                <ul className="space-y-3">
-                  {cbtFor.map((item, i) => (
-                    <Reveal key={i} delay={i * 60}>
-                      <li className="flex gap-3">
-                        <span className="shrink-0 mt-1" style={{ color: C.terracotta }}>—</span>
-                        <span className="text-[16px] leading-relaxed" style={{ color: C.ink }}>{item}</span>
-                      </li>
-                    </Reveal>
-                  ))}
-                </ul>
-              </Reveal>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <section className="max-w-6xl mx-auto px-6 py-24 md:py-32">
-        <div className="grid md:grid-cols-12 gap-12 items-start mb-16">
-          <div className="md:col-span-4">
-            <Reveal>
-              <p className="text-xs tracking-widest uppercase mb-3" style={{ ...sans, color: C.moss }}>Подход 2</p>
-              <h2 className="text-4xl md:text-5xl leading-tight font-normal">Схема-терапия</h2>
-            </Reveal>
-          </div>
-          <div className="md:col-span-8 md:pt-4">
-            <Reveal delay={150}>
-              <p className="text-lg leading-relaxed mb-6" style={{ color: C.inkSoft }}>Иногда человек приходит в терапию с конкретным запросом — например, «хочу справиться с тревогой» — и КПТ помогает. А иногда видно: запрос есть, но за ним стоит что-то более глубокое, что повторяется снова и снова, в разных ролях, разных отношениях, в разные годы. В таких случаях работает схема-терапия.</p>
-              <p className="text-base leading-relaxed" style={{ color: C.inkSoft }}>Схема-терапия — это «вторая волна» КПТ, разработанная Джеффри Янгом. Она исходит из того, что у каждого из нас в детстве формируются устойчивые представления о себе, других людях и мире — «схемы». Если базовые потребности ребёнка не были удовлетворены (например, в безопасности, принятии, автономии), схемы получаются болезненными. Во взрослой жизни они продолжают работать, и человек оказывается в одних и тех же ситуациях, реагирует одними и теми же способами, страдает по одним и тем же причинам.</p>
-            </Reveal>
-          </div>
-        </div>
-
-        <div className="grid md:grid-cols-12 gap-12 mb-12">
-          <div className="md:col-span-5">
-            <Reveal>
-              <h3 className="text-xl mb-6">Как мы работаем</h3>
-              <div className="space-y-6">
-                {schemaHow.map((item, i) => (
-                  <Reveal key={i} delay={i * 80}>
-                    <div>
-                      <p className="text-base mb-2" style={{ color: C.ink }}>· {item.title}</p>
-                      <p className="text-[15px] leading-relaxed pl-4" style={{ color: C.inkSoft }}>{item.text}</p>
+                <Reveal delay={80}>
+                  <div
+                    className="mt-4 grid gap-3 md:grid-cols-2"
+                  >
+                    <div
+                      className="px-5 py-4"
+                      style={{
+                        backgroundColor:
+                          'rgba(247, 243, 236, 0.45)',
+                        borderRadius: radius.md,
+                      }}
+                    >
+                      <p
+                        className="text-[13px] leading-[1.62]"
+                        style={{
+                          ...sans,
+                          color: C.inkSoft,
+                        }}
+                      >
+                        <strong
+                          style={{
+                            color: C.ink,
+                            fontWeight: 600,
+                          }}
+                        >
+                          Прошлое не является самоцелью.
+                        </strong>{' '}
+                        Мы возвращаемся к нему тогда, когда
+                        это помогает понять, почему
+                        сегодняшняя ситуация переживается
+                        именно так.
+                      </p>
                     </div>
-                  </Reveal>
-                ))}
+
+                    <div
+                      className="px-5 py-4"
+                      style={{
+                        backgroundColor:
+                          'rgba(247, 243, 236, 0.45)',
+                        borderRadius: radius.md,
+                      }}
+                    >
+                      <p
+                        className="text-[13px] leading-[1.62]"
+                        style={{
+                          ...sans,
+                          color: C.inkSoft,
+                        }}
+                      >
+                        В схема-терапии есть не только
+                        разговор: могут использоваться
+                        воображение, работа с эмоционально
+                        заряженными воспоминаниями и диалоги
+                        между разными внутренними позициями.
+                      </p>
+                    </div>
+                  </div>
+                </Reveal>
               </div>
-            </Reveal>
-          </div>
-          <div className="md:col-span-7">
-            <Reveal delay={100}>
-              <h3 className="text-xl mb-6">Кому подходит</h3>
-              <ul className="space-y-3">
-                {schemaFor.map((item, i) => (
-                  <Reveal key={i} delay={i * 60}>
-                    <li className="flex gap-3">
-                      <span className="shrink-0 mt-1" style={{ color: C.moss }}>—</span>
-                      <span className="text-[16px] leading-relaxed" style={{ color: C.ink }}>{item}</span>
-                    </li>
-                  </Reveal>
-                ))}
-              </ul>
-            </Reveal>
-          </div>
-        </div>
-      </section>
+            </div>
+          </Reveal>
+        </section>
 
-      <section style={{ backgroundColor: C.ink, color: C.bg }}>
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32">
+        {/* TWO LENSES */}
+
+<section className="mx-auto max-w-6xl px-6 py-8 md:px-8 md:py-10">
+  <Reveal>
+    <div className="grid gap-y-2 md:grid-cols-[0.72fr_1.28fr] md:gap-x-10">
+      <div>
+        <Eyebrow>Вместе</Eyebrow>
+      </div>
+
+      <div className="hidden md:block" />
+
+      <h2 className="text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
+        Одна ситуация, две перспективы
+      </h2>
+
+      <p
+        className="text-[14px] leading-[1.65] md:text-[15px]"
+        style={{
+          ...sans,
+          color: C.inkSoft,
+        }}
+      >
+        В реальной работе КПТ и схема-терапия не разделены
+        четкой чертой. Одну и ту же ситуацию бывает полезно
+        посмотреть с двух сторон.
+      </p>
+    </div>
+  </Reveal>
+
+  <Reveal delay={50}>
+    <div
+      className="mt-6 overflow-hidden"
+      style={{
+        border: `1px solid ${C.line}`,
+        borderRadius: radius.lg,
+      }}
+    >
+      <div
+        className="px-5 py-5 md:px-7"
+        style={{
+          backgroundColor: C.surface,
+        }}
+      >
+        <Eyebrow>Например</Eyebrow>
+
+        <p className="mt-2 text-[20px] leading-[1.25] md:text-[23px]">
+          Начальник указывает на ошибку в работе, а внутри
+          ощущение, будто вы полностью провалились
+        </p>
+      </div>
+
+      <div className="grid md:grid-cols-2">
+        <Perspective
+          eyebrow="Если смотреть через КПТ"
+          title="Что происходит в этом эпизоде"
+        >
+          Можно заметить автоматический вывод вроде «я не
+          справляюсь», тревогу или стыд, желание несколько
+          раз перепроверить всю работу, оправдаться или
+          вообще избегать похожих задач. Потом посмотреть,
+          какой из этих элементов поддерживает цикл и что
+          можно попробовать иначе.
+        </Perspective>
+
+        <Perspective
+          eyebrow="Если смотреть через схема-терапию"
+          title="Почему это так сильно задевает"
+          border
+        >
+          Может оказаться, что любая ошибка быстро
+          превращается в доказательство собственной
+          несостоятельности, а критика человека с более
+          высоким статусом переживается особенно болезненно.
+          Тогда имеет смысл работать уже не только с этим
+          письмом начальника, но и с самим повторяющимся
+          способом переживать такие ситуации.
+        </Perspective>
+      </div>
+    </div>
+  </Reveal>
+
+  <Reveal delay={80}>
+    <p
+      className="mt-4 w-full text-[13px] leading-[1.65]"
+      style={{
+        ...sans,
+        color: C.inkSoft,
+      }}
+    >
+      Мы можем начать с одного конкретного эпизода, заметить
+      за ним знакомый сценарий, поработать уже с ним, а потом
+      проверить изменения снова в обычной жизни. Поэтому вам
+      не нужно самим выбирать подход перед записью.
+    </p>
+  </Reveal>
+</section>
+
+        {/* EVIDENCE */}
+
+        <section className="mx-auto max-w-6xl px-6 py-7 md:px-8 md:py-9">
           <Reveal>
-            <div className="max-w-2xl mb-16">
-              <p className="text-xs tracking-[0.2em] uppercase mb-4" style={{ ...sans, color: C.ochre }}>Сравнение</p>
-              <h2 className="text-3xl md:text-4xl leading-tight font-normal mb-6">Как понять, что вам ближе</h2>
-              <p className="text-base leading-relaxed" style={{ color: '#C9C2B5' }}>Окончательно мы это решим на первой сессии. Но если хочется сориентироваться заранее — вот таблица.</p>
+            <div
+              className="grid gap-6 px-6 py-6 md:grid-cols-[0.78fr_1.22fr] md:gap-10 md:px-8 md:py-8"
+              style={{
+                backgroundColor: C.surface,
+                borderRadius: radius.lg,
+              }}
+            >
+              <div>
+                <Eyebrow>Доказательность</Eyebrow>
+
+                <h2 className="mt-3 text-[28px] font-normal leading-[1.1] tracking-[-0.02em] md:text-[35px]">
+                  Исследования важны. Но это не инструкция по сборке человека
+                </h2>
+              </div>
+
+              <div
+                className="space-y-3 text-[13.5px] leading-[1.65] md:text-[14px]"
+                style={{
+                  ...sans,
+                  color: C.inkSoft,
+                }}
+              >
+                <p>
+                  КПТ хорошо изучена: ее методы входят в клинические рекомендации по работе со многими распространенными состояниями, например тревожными и депрессивными.
+                </p>
+
+                <p>
+                  Схема-терапия изучена меньше и появилась
+                  позже. Наиболее сильная ее
+                  исследовательская база связана с
+                  длительными трудностями и расстройствами
+                  личности, хотя сейчас подход исследуется и
+                  для других состояний.
+                </p>
+
+                <p>
+                  Для меня «опираться на исследования» не
+                  значит автоматически применять технику,
+                  потому что она хорошо сработала в среднем
+                  по группе. Исследования помогают выбирать
+                  разумное направление, а дальше мы все
+                  равно проверяем, что происходит именно с
+                  вами.
+                </p>
+              </div>
+            </div>
+          </Reveal>
+        </section>
+
+        {/* PRINCIPLES */}
+
+        <section className="mx-auto max-w-6xl px-6 py-8 md:px-8 md:py-10">
+          <Reveal>
+            <div className="max-w-3xl">
+              <Eyebrow>На практике</Eyebrow>
+
+              <h2 className="mt-3 text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
+                Что все это значит на обычной встрече
+              </h2>
+
+              <p
+                className="mt-3 max-w-2xl text-[14px] leading-[1.65]"
+                style={{
+                  ...sans,
+                  color: C.inkSoft,
+                }}
+              >
+                Название подхода само по себе мало говорит о
+                том, как человек будет чувствовать себя на встрече. Поэтому для меня важнее несколько
+                рабочих принципов.
+              </p>
             </div>
           </Reveal>
 
+          <div className="mt-6 grid gap-3 md:grid-cols-2">
+            {principles.map((item, index) => (
+              <Reveal
+                key={item.title}
+                delay={index * 30}
+              >
+                <ApproachCard
+                  number={String(index + 1).padStart(
+                    2,
+                    '0',
+                  )}
+                  title={item.title}
+                >
+                  {item.text}
+                </ApproachCard>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* CTA */}
+
+        <section className="mx-auto max-w-6xl px-6 pb-12 pt-4 md:px-8 md:pb-14">
           <Reveal>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="border-b" style={{ borderColor: '#3a3530' }}>
-                    <th className="py-4 pr-4 text-sm font-normal" style={{ ...sans, color: '#C9C2B5' }}></th>
-                    <th className="py-4 px-4 text-base font-normal" style={{ color: C.ochre }}>КПТ</th>
-                    <th className="py-4 px-4 text-base font-normal" style={{ color: C.ochre }}>Схема-терапия</th>
-                  </tr>
-                </thead>
-                <tbody className="text-[15px]">
-                  {comparison.map((row, i) => (
-                    <tr key={i} className="border-b transition-colors" style={{ borderColor: '#3a3530' }}>
-                      <td className="py-4 pr-4 text-sm" style={{ ...sans, color: '#C9C2B5' }}>{row[0]}</td>
-                      <td className="py-4 px-4 leading-relaxed" style={{ color: C.bg }}>{row[1]}</td>
-                      <td className="py-4 px-4 leading-relaxed" style={{ color: C.bg }}>{row[2]}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div
+              className="grid gap-6 px-6 py-7 md:grid-cols-[1fr_auto] md:items-center md:px-8 md:py-8"
+              style={{
+                backgroundColor: C.ink,
+                color: C.bg,
+                borderRadius: radius.lg,
+                boxShadow: shadow.soft,
+              }}
+            >
+              <div>
+                <Eyebrow>Запись</Eyebrow>
+
+                <h2 className="mt-3 text-[28px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[34px]">
+                  Выбирать между КПТ и схема-терапией заранее
+                  не нужно
+                </h2>
+
+                <p
+                  className="mt-3 max-w-2xl text-[13px] leading-[1.6] md:text-[14px]"
+                  style={{
+                    ...sans,
+                    color: '#C9C2B5',
+                  }}
+                >
+                  Можно прийти со своей ситуацией, даже если
+                  вы пока не знаете, как ее правильно
+                  назвать. Разбираться, какой способ работы
+                  здесь полезнее, уже моя часть работы.
+                </p>
+              </div>
+
+              <Link
+                href="/book"
+                className="inline-flex justify-center px-7 py-3 text-[13px] font-medium transition-all duration-300 hover:-translate-y-0.5"
+                style={{
+                  ...sans,
+                  backgroundColor: C.bg,
+                  color: C.ink,
+                  borderRadius: radius.pill,
+                }}
+              >
+                Оставить заявку
+              </Link>
             </div>
           </Reveal>
-        </div>
-      </section>
-
-      <section className="max-w-4xl mx-auto px-6 py-24 md:py-32">
-        <Reveal>
-          <Eyebrow>Развенчиваем мифы</Eyebrow>
-          <h2 className="text-3xl md:text-4xl leading-tight font-normal mb-16">Что часто понимают неправильно</h2>
-        </Reveal>
-        <div className="space-y-px">
-          {myth.map((item, i) => (
-            <Reveal key={i} delay={i * 80}>
-              <details className="group border-t py-6" style={{ borderColor: C.line }}>
-                <summary className="flex items-start gap-6 cursor-pointer list-none">
-                  <span className="text-sm pt-1 shrink-0 w-8" style={{ ...sans, color: C.terracotta }}>{String(i + 1).padStart(2, '0')}</span>
-                  <span className="text-xl leading-snug flex-1">{item.q}</span>
-                  <span className="text-xl shrink-0 transition-transform duration-300 group-open:rotate-45" style={{ color: C.terracotta }}>+</span>
-                </summary>
-                <p className="text-[16px] leading-relaxed mt-4 pl-14 pr-10" style={{ color: C.inkSoft }}>{item.a}</p>
-              </details>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      <section className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
-        <Reveal>
-          <div className="rounded-sm p-12 md:p-20 text-center" style={{ backgroundColor: C.ink, color: C.bg }}>
-            <h2 className="text-3xl md:text-5xl leading-tight font-normal mb-8 max-w-3xl mx-auto">Не уверены, какой подход подойдёт?</h2>
-            <p className="text-lg leading-relaxed max-w-xl mx-auto mb-10" style={{ color: '#C9C2B5' }}>Это нормально. Первая сессия как раз для того, чтобы вместе понять, с чем вы пришли и что будет работать.</p>
-            <Link href="/book" className="inline-block px-8 py-4 rounded-full text-base transition-all duration-300 hover:scale-[1.04] hover:shadow-2xl" style={{ ...sans, backgroundColor: C.ochre, color: C.ink }}>Записаться на консультацию</Link>
-            <p className="text-sm mt-6" style={{ ...sans, color: '#C9C2B5' }}>Онлайн · 50 минут · 3 500 ₽</p>
-          </div>
-        </Reveal>
-      </section>
+        </section>
+      </main>
 
       <Footer />
+    </div>
+  );
+}
+
+function IntroCard({
+  number,
+  title,
+  children,
+}: {
+  number: string;
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      className="h-full px-5 py-5"
+      style={{
+        backgroundColor: C.surface,
+        borderRadius: radius.md,
+      }}
+    >
+      <span
+        className="text-[10px]"
+        style={{
+          ...sans,
+          color: C.terracotta,
+        }}
+      >
+        {number}
+      </span>
+
+      <h2 className="mt-2 text-[18px] leading-[1.2]">
+        {title}
+      </h2>
+
+      <p
+        className="mt-2 text-[12.5px] leading-[1.58]"
+        style={{
+          ...sans,
+          color: C.inkSoft,
+        }}
+      >
+        {children}
+      </p>
+    </div>
+  );
+}
+
+function ApproachCard({
+  number,
+  title,
+  children,
+}: {
+  number: string;
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <article
+      className="h-full border px-5 py-5"
+      style={{
+        borderColor: C.line,
+        backgroundColor:
+          'rgba(255,255,255,0.12)',
+        borderRadius: radius.md,
+      }}
+    >
+      <div className="flex items-start gap-3">
+        <span
+          className="min-w-[26px] pt-0.5 text-[10px]"
+          style={{
+            ...sans,
+            color: C.terracotta,
+          }}
+        >
+          {number}
+        </span>
+
+        <div>
+          <h3 className="text-[18px] leading-[1.25]">
+            {title}
+          </h3>
+
+          <p
+            className="mt-2 text-[13px] leading-[1.6]"
+            style={{
+              ...sans,
+              color: C.inkSoft,
+            }}
+          >
+            {children}
+          </p>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function Perspective({
+  eyebrow,
+  title,
+  border = false,
+  children,
+}: {
+  eyebrow: string;
+  title: string;
+  border?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      className={[
+        'px-5 py-5 md:px-7 md:py-6',
+        border
+          ? 'border-t md:border-l md:border-t-0'
+          : '',
+      ].join(' ')}
+      style={{
+        borderColor: C.line,
+      }}
+    >
+      <p
+        className="text-[10px] uppercase tracking-[0.14em]"
+        style={{
+          ...sans,
+          color: C.terracotta,
+        }}
+      >
+        {eyebrow}
+      </p>
+
+      <h3 className="mt-2 text-[18px] leading-[1.25]">
+        {title}
+      </h3>
+
+      <p
+        className="mt-3 text-[13px] leading-[1.65]"
+        style={{
+          ...sans,
+          color: C.inkSoft,
+        }}
+      >
+        {children}
+      </p>
     </div>
   );
 }
