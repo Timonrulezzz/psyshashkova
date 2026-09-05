@@ -25,12 +25,44 @@ import {
 
 type ContactMethod = 'telegram' | 'max' | 'email';
 
+const topicOptions = [
+  {
+    value: 'relationships',
+    label: 'Отношения и личные границы',
+  },
+  {
+    value: 'self',
+    label: 'Отношение к себе и самокритика',
+  },
+  {
+    value: 'emotions',
+    label: 'Эмоции и привычные реакции',
+  },
+  {
+    value: 'work',
+    label: 'Работа, нагрузка и выгорание',
+  },
+  {
+    value: 'decisions',
+    label: 'Решения, действия и избегание',
+  },
+  {
+    value: 'other',
+    label: 'Другое / пока сложно определить',
+  },
+] as const;
+
+type TopicValue =
+  (typeof topicOptions)[number]['value'];
+
 type FormErrors = {
   name?: string;
   contact?: string;
   adult?: string;
-  request?: string;
-  agreed?: string;
+  topic?: string;
+  comment?: string;
+  termsAgreed?: string;
+  personalDataConsent?: string;
 };
 
 const contactOptions: {
@@ -44,22 +76,37 @@ const contactOptions: {
 
 export default function Book() {
   const [name, setName] = useState('');
+
   const [contactMethod, setContactMethod] =
     useState<ContactMethod>('telegram');
+
   const [contact, setContact] = useState('');
   const [adult, setAdult] = useState(false);
-  const [request, setRequest] = useState('');
-  const [agreed, setAgreed] = useState(false);
 
-  // Honeypot для простых ботов.
+  const [topic, setTopic] =
+    useState<TopicValue | ''>('');
+
+  const [comment, setComment] = useState('');
+
+  const [termsAgreed, setTermsAgreed] =
+    useState(false);
+
+  const [
+    personalDataConsent,
+    setPersonalDataConsent,
+  ] = useState(false);
+
   const [website, setWebsite] = useState('');
 
   const [errors, setErrors] =
     useState<FormErrors>({});
+
   const [submitError, setSubmitError] =
     useState('');
+
   const [submitting, setSubmitting] =
     useState(false);
+
   const [submitted, setSubmitted] =
     useState(false);
 
@@ -67,12 +114,14 @@ export default function Book() {
 
   const session = site.practice.session;
 
-  const price = new Intl.NumberFormat('ru-RU').format(
-    session.priceRub,
-  );
+  const price = new Intl.NumberFormat(
+    'ru-RU',
+  ).format(session.priceRub);
 
   const markApplicationStarted = () => {
-    if (applicationStarted.current) return;
+    if (applicationStarted.current) {
+      return;
+    }
 
     applicationStarted.current = true;
 
@@ -116,9 +165,13 @@ export default function Book() {
           'Укажите имя пользователя в Telegram, например @username';
       }
     } else if (contactMethod === 'max') {
-      const digits = trimmedContact.replace(/\D/g, '');
+      const digits =
+        trimmedContact.replace(/\D/g, '');
 
-      if (digits.length < 10 || digits.length > 15) {
+      if (
+        digits.length < 10 ||
+        digits.length > 15
+      ) {
         nextErrors.contact =
           'Проверьте, пожалуйста, номер телефона';
       }
@@ -129,14 +182,24 @@ export default function Book() {
         'Для записи нужно подтвердить, что вам уже исполнилось 18 лет';
     }
 
-    if (request.trim().length < 50) {
-      nextErrors.request =
-        'Напишите, пожалуйста, еще пару предложений, чтобы я могла немного понять ситуацию';
+    if (!topic) {
+      nextErrors.topic =
+        'Выберите, пожалуйста, наиболее близкую тему';
     }
 
-    if (!agreed) {
-      nextErrors.agreed =
-        'Для отправки заявки нужно согласие с условиями и обработкой данных';
+    if (comment.length > 500) {
+      nextErrors.comment =
+        'Комментарий должен быть не длиннее 500 символов';
+    }
+
+    if (!termsAgreed) {
+      nextErrors.termsAgreed =
+        'Подтвердите, пожалуйста, что вы ознакомились с условиями работы';
+    }
+
+    if (!personalDataConsent) {
+      nextErrors.personalDataConsent =
+        'Для отправки заявки необходимо согласие на обработку персональных данных';
     }
 
     setErrors(nextErrors);
@@ -151,7 +214,9 @@ export default function Book() {
 
     setSubmitError('');
 
-    if (!validate()) return;
+    if (!validate()) {
+      return;
+    }
 
     setSubmitting(true);
 
@@ -168,8 +233,10 @@ export default function Book() {
             contactMethod,
             contact,
             adult,
-            request,
-            agreed,
+            topic,
+            comment,
+            termsAgreed,
+            personalDataConsent,
             website,
           }),
         },
@@ -293,8 +360,6 @@ export default function Book() {
       <Nav active="/book" />
 
       <main>
-        {/* HERO */}
-
         <section className="mx-auto max-w-6xl px-6 pb-7 pt-10 md:px-8 md:pb-9 md:pt-14">
           <div className="max-w-4xl">
             <Reveal>
@@ -315,10 +380,11 @@ export default function Book() {
               >
                 Здесь можно оставить короткую заявку на
                 встречу. Ниже собраны основные
-                условия работы, а в форме можно немного
-                рассказать о том, с чем хотите прийти.
-                После этого я свяжусь с вами, и мы
-                договоримся о следующих шагах.
+                условия работы, а в форме достаточно
+                оставить контакт и выбрать, к какой теме
+                ближе то, с чем вы хотите прийти. После
+                этого я свяжусь с вами, и мы договоримся
+                о следующих шагах.
               </p>
             </Reveal>
           </div>
@@ -343,8 +409,6 @@ export default function Book() {
             </div>
           </Reveal>
         </section>
-
-        {/* CONDITIONS */}
 
         <section className="mx-auto max-w-6xl px-6 py-6 md:px-8 md:py-8">
           <Reveal>
@@ -432,8 +496,6 @@ export default function Book() {
           </Reveal>
         </section>
 
-        {/* FORM */}
-
         <section
           id="application-form"
           className="mx-auto max-w-6xl scroll-mt-24 px-6 pb-12 pt-6 md:px-8 md:pb-14 md:pt-8"
@@ -446,7 +508,7 @@ export default function Book() {
                     <Eyebrow>Короткая заявка</Eyebrow>
 
                     <h2 className="mt-3 text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
-                      Расскажите, с чем хотите прийти
+                      С чем вы хотите поработать
                     </h2>
 
                     <p
@@ -457,10 +519,9 @@ export default function Book() {
                       }}
                     >
                       Здесь не нужно подробно описывать свою
-                      историю. Достаточно оставить контакт и
-                      в нескольких предложениях рассказать,
-                      что сейчас происходит и с чем хотелось
-                      бы поработать.
+                      историю. Оставьте контакт, выберите
+                      наиболее близкую тему и при желании
+                      добавьте короткий комментарий.
                     </p>
                   </div>
                 </Reveal>
@@ -478,8 +539,6 @@ export default function Book() {
                       boxShadow: shadow.soft,
                     }}
                   >
-                    {/* HONEYPOT */}
-
                     <div
                       aria-hidden="true"
                       className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden"
@@ -500,8 +559,6 @@ export default function Book() {
                         }
                       />
                     </div>
-
-                    {/* NAME */}
 
                     <FormField>
                       <FieldLabel htmlFor="name">
@@ -539,8 +596,6 @@ export default function Book() {
                       )}
                     </FormField>
 
-                    {/* CONTACT METHOD */}
-
                     <FormField>
                       <FieldLabel>
                         Как вам удобнее получить ответ
@@ -567,9 +622,7 @@ export default function Book() {
                               role="radio"
                               aria-checked={active}
                               onClick={() =>
-                                selectContactMethod(
-                                  option.value,
-                                )
+                                selectContactMethod(option.value)
                               }
                               className="min-h-10 px-3 py-2 text-[13px] font-medium transition"
                               style={{
@@ -589,8 +642,6 @@ export default function Book() {
                         })}
                       </div>
                     </FormField>
-
-                    {/* CONTACT */}
 
                     <FormField>
                       <FieldLabel htmlFor="contact">
@@ -659,8 +710,6 @@ export default function Book() {
                       )}
                     </FormField>
 
-                    {/* AGE */}
-
                     <FormField>
                       <CheckRow
                         checked={adult}
@@ -684,72 +733,156 @@ export default function Book() {
                       )}
                     </FormField>
 
-                    {/* REQUEST */}
+                    <FormField>
+                      <FieldLabel>
+                        Какая тема ближе всего к тому, с чем
+                        вы хотите прийти?
+                      </FieldLabel>
+
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        {topicOptions.map((option) => {
+                          const selected =
+                            topic === option.value;
+
+                          return (
+                            <label
+                              key={option.value}
+                              className="flex min-h-[58px] cursor-pointer items-center gap-3 px-4 py-3 transition"
+                              style={{
+                                ...sans,
+                                backgroundColor: selected
+                                  ? 'rgba(184, 92, 60, 0.08)'
+                                  : C.bg,
+                                border: `1px solid ${
+                                  selected
+                                    ? C.terracotta
+                                    : C.line
+                                }`,
+                                borderRadius: radius.sm,
+                                color: C.ink,
+                              }}
+                            >
+                              <input
+                                type="radio"
+                                name="topic"
+                                value={option.value}
+                                checked={selected}
+                                onChange={() => {
+                                  setTopic(option.value);
+
+                                  setErrors((current) => ({
+                                    ...current,
+                                    topic: undefined,
+                                  }));
+                                }}
+                                className="h-4 w-4 shrink-0"
+                                style={{
+                                  accentColor:
+                                    C.terracotta,
+                                }}
+                              />
+
+                              <span className="text-[13px] leading-[1.45]">
+                                {option.label}
+                              </span>
+                            </label>
+                          );
+                        })}
+                      </div>
+
+                      {errors.topic && (
+                        <FieldError>
+                          {errors.topic}
+                        </FieldError>
+                      )}
+                    </FormField>
 
                     <FormField>
-                      <FieldLabel htmlFor="request">
-                        С чем хотите обратиться?
+                      <FieldLabel htmlFor="comment">
+                        Хотите что-то добавить?{' '}
+                        <span
+                          style={{
+                            color: C.inkSoft,
+                            fontWeight: 400,
+                          }}
+                        >
+                          Необязательно
+                        </span>
                       </FieldLabel>
 
                       <textarea
-                        id="request"
-                        name="request"
-                        rows={5}
-                        value={request}
+                        id="comment"
+                        name="comment"
+                        rows={4}
+                        maxLength={500}
+                        value={comment}
                         onChange={(event) => {
-                          setRequest(event.target.value);
+                          setComment(event.target.value);
 
                           if (
-                            event.target.value.trim().length >=
-                            50
+                            event.target.value.length <= 500
                           ) {
                             setErrors((current) => ({
                               ...current,
-                              request: undefined,
+                              comment: undefined,
                             }));
                           }
                         }}
-                        placeholder="Расскажите в нескольких предложениях, что сейчас происходит и с чем хотелось бы поработать. Подробно описывать всю историю не нужно."
-                        className="w-full resize-y px-4 py-4 outline-none transition"
+                        placeholder="Например, можно коротко уточнить, что для вас сейчас особенно важно или что хотелось бы обсудить на встрече."
+                        className="w-full resize-y px-4 py-3.5 outline-none transition"
                         style={{
                           ...inputStyle(
-                            Boolean(errors.request),
+                            Boolean(errors.comment),
                           ),
                           ...sans,
-                          minHeight: '145px',
+                          minHeight: '105px',
                           lineHeight: 1.6,
                         }}
                       />
 
-                      {errors.request ? (
-                        <FieldError>
-                          {errors.request}
-                        </FieldError>
-                      ) : (
+                      <div className="mt-2 flex items-start justify-between gap-4">
                         <p
-                          className="mt-2 text-[12px]"
+                          className="max-w-lg text-[11.5px] leading-[1.55]"
                           style={{
                             ...sans,
                             color: C.inkSoft,
                           }}
                         >
-                          Обычно достаточно 2–5 предложений.
+                          Не указывайте здесь диагнозы,
+                          сведения о здоровье, лечении,
+                          принимаемых препаратах или другие
+                          чувствительные данные. Их при
+                          необходимости можно обсудить лично.
                         </p>
+
+                        <span
+                          className="shrink-0 text-[11px]"
+                          style={{
+                            ...sans,
+                            color: C.inkSoft,
+                          }}
+                        >
+                          {comment.length}/500
+                        </span>
+                      </div>
+
+                      {errors.comment && (
+                        <FieldError>
+                          {errors.comment}
+                        </FieldError>
                       )}
                     </FormField>
 
-                    {/* CONSENT */}
-
                     <FormField>
                       <CheckRow
-                        checked={agreed}
+                        checked={termsAgreed}
                         onChange={(checked) => {
-                          setAgreed(checked);
+                          setTermsAgreed(checked);
 
                           if (checked) {
                             setErrors((current) => ({
                               ...current,
-                              agreed: undefined,
+                              termsAgreed: undefined,
                             }));
                           }
                         }}
@@ -762,16 +895,44 @@ export default function Book() {
                               style={inlineLinkStyle}
                             >
                               условиями работы
-                            </Link>
-                            ,{' '}
+                            </Link>{' '}
+                            и{' '}
                             <Link
-                              href="/legal/privacy"
+                              href="/legal/offer"
                               target="_blank"
                               style={inlineLinkStyle}
                             >
-                              политикой конфиденциальности
-                            </Link>{' '}
-                            и даю{' '}
+                              публичной офертой
+                            </Link>
+                            .
+                          </>
+                        }
+                      />
+
+                      {errors.termsAgreed && (
+                        <FieldError>
+                          {errors.termsAgreed}
+                        </FieldError>
+                      )}
+                    </FormField>
+
+                    <FormField>
+                      <CheckRow
+                        checked={personalDataConsent}
+                        onChange={(checked) => {
+                          setPersonalDataConsent(checked);
+
+                          if (checked) {
+                            setErrors((current) => ({
+                              ...current,
+                              personalDataConsent:
+                                undefined,
+                            }));
+                          }
+                        }}
+                        label={
+                          <>
+                            Я даю{' '}
                             <Link
                               href="/legal/consent"
                               target="_blank"
@@ -785,11 +946,30 @@ export default function Book() {
                         }
                       />
 
-                      {errors.agreed && (
+                      {errors.personalDataConsent && (
                         <FieldError>
-                          {errors.agreed}
+                          {errors.personalDataConsent}
                         </FieldError>
                       )}
+
+                      <p
+                        className="mt-2 pl-[30px] text-[11.5px] leading-[1.55]"
+                        style={{
+                          ...sans,
+                          color: C.inkSoft,
+                        }}
+                      >
+                        Подробнее о том, как обрабатываются
+                        данные, можно прочитать в{' '}
+                        <Link
+                          href="/legal/privacy"
+                          target="_blank"
+                          style={inlineLinkStyle}
+                        >
+                          политике конфиденциальности
+                        </Link>
+                        .
+                      </p>
                     </FormField>
 
                     <div

@@ -9,13 +9,27 @@ type ContactMethod =
   | 'max'
   | 'email';
 
+const allowedTopics = [
+  'relationships',
+  'self',
+  'emotions',
+  'work',
+  'decisions',
+  'other',
+] as const;
+
+type TopicValue =
+  (typeof allowedTopics)[number];
+
 type ApplicationBody = {
   name?: unknown;
   contactMethod?: unknown;
   contact?: unknown;
   adult?: unknown;
-  request?: unknown;
-  agreed?: unknown;
+  topic?: unknown;
+  comment?: unknown;
+  termsAgreed?: unknown;
+  personalDataConsent?: unknown;
   website?: unknown;
 };
 
@@ -23,8 +37,10 @@ type ValidationErrors = {
   name?: string;
   contact?: string;
   adult?: string;
-  request?: string;
-  agreed?: string;
+  topic?: string;
+  comment?: string;
+  termsAgreed?: string;
+  personalDataConsent?: string;
 };
 
 const RATE_LIMIT_WINDOW_MS =
@@ -36,6 +52,29 @@ const attempts = new Map<
   string,
   number[]
 >();
+
+const topicLabels: Record<
+  TopicValue,
+  string
+> = {
+  relationships:
+    'Отношения и личные границы',
+
+  self:
+    'Отношение к себе и самокритика',
+
+  emotions:
+    'Эмоции и привычные реакции',
+
+  work:
+    'Работа, нагрузка и выгорание',
+
+  decisions:
+    'Решения, действия и избегание',
+
+  other:
+    'Другое / пока сложно определить',
+};
 
 function getClientIp(
   request: Request,
@@ -114,6 +153,17 @@ function cleanString(
     .slice(0, maxLength);
 }
 
+function isTopicValue(
+  value: unknown,
+): value is TopicValue {
+  return (
+    typeof value === 'string' &&
+    allowedTopics.includes(
+      value as TopicValue,
+    )
+  );
+}
+
 function validateApplication(
   body: ApplicationBody,
 ) {
@@ -130,18 +180,30 @@ function validateApplication(
     150,
   );
 
-  const request = cleanString(
-    body.request,
-    3000,
-  );
+  const rawComment =
+    typeof body.comment === 'string'
+      ? body.comment
+      : '';
+
+  const comment =
+    cleanString(
+      body.comment,
+      500,
+    );
 
   const contactMethod =
     body.contactMethod ===
       'telegram' ||
-    body.contactMethod === 'max' ||
+    body.contactMethod ===
+      'max' ||
     body.contactMethod ===
       'email'
       ? body.contactMethod
+      : null;
+
+  const topic =
+    isTopicValue(body.topic)
+      ? body.topic
       : null;
 
   if (name.length < 2) {
@@ -170,8 +232,7 @@ function validateApplication(
         'Проверьте, пожалуйста, адрес email';
     }
   } else if (
-    contactMethod ===
-    'telegram'
+    contactMethod === 'telegram'
   ) {
     const normalizedUsername =
       contact.startsWith('@')
@@ -212,23 +273,40 @@ function validateApplication(
       'Для записи нужно подтвердить, что вам уже исполнилось 18 лет';
   }
 
-  if (request.length < 50) {
-    errors.request =
-      'Напишите, пожалуйста, еще пару предложений, чтобы я могла немного понять ситуацию';
+  if (!topic) {
+    errors.topic =
+      'Выберите, пожалуйста, наиболее близкую тему';
   }
 
-  if (body.agreed !== true) {
-    errors.agreed =
-      'Для отправки заявки нужно согласие с условиями и обработкой данных';
+  if (rawComment.length > 500) {
+    errors.comment =
+      'Комментарий должен быть не длиннее 500 символов';
+  }
+
+  if (
+    body.termsAgreed !== true
+  ) {
+    errors.termsAgreed =
+      'Подтвердите, пожалуйста, что вы ознакомились с условиями работы';
+  }
+
+  if (
+    body.personalDataConsent !==
+    true
+  ) {
+    errors.personalDataConsent =
+      'Для отправки заявки необходимо согласие на обработку персональных данных';
   }
 
   return {
     errors,
+
     data: {
       name,
       contactMethod,
       contact,
-      request,
+      topic,
+      comment,
     },
   };
 }
@@ -243,7 +321,9 @@ export async function POST(
       ) || 0,
     );
 
-  if (contentLength > 20_000) {
+  if (
+    contentLength > 20_000
+  ) {
     return NextResponse.json(
       {
         ok: false,
@@ -274,15 +354,6 @@ export async function POST(
     );
   }
 
-  /*
-    Honeypot.
-
-    Обычный посетитель этого поля
-    не видит. Если бот его заполнил,
-    внешне отвечаем успехом,
-    но письмо не отправляем.
-  */
-
   const website =
     cleanString(
       body.website,
@@ -297,12 +368,6 @@ export async function POST(
 
   const ip =
     getClientIp(request);
-
-  /*
-    Если платформа не передала IP,
-    не используем "unknown" как
-    общий ключ для всех посетителей.
-  */
 
   if (
     ip &&
@@ -389,11 +454,6 @@ export async function POST(
       host: smtpHost,
       port: smtpPort,
 
-      /*
-        465 использует TLS сразу.
-        587 начинает обычное соединение
-        и затем переходит на STARTTLS.
-      */
       secure:
         smtpPort === 465,
 
@@ -418,6 +478,9 @@ export async function POST(
   const contactMethod =
     data.contactMethod as ContactMethod;
 
+  const topic =
+    data.topic as TopicValue;
+
   const contactMethodLabels: Record<
     ContactMethod,
     string
@@ -433,7 +496,7 @@ export async function POST(
       ' ',
     );
 
-  const message = [
+  const messageParts = [
     'Новая заявка на первую встречу',
     '',
     `Имя: ${safeName}`,
@@ -441,27 +504,38 @@ export async function POST(
     `Удобный способ связи: ${contactMethodLabels[contactMethod]}`,
     `Контакт: ${data.contact}`,
     '',
-    'С чем хочет обратиться:',
-    data.request,
+    `Тема: ${topicLabels[topic]}`,
+  ];
+
+  if (data.comment) {
+    messageParts.push(
+      '',
+      'Дополнительный комментарий:',
+      data.comment,
+    );
+  }
+
+  messageParts.push(
+    '',
+    'Условия работы: ознакомление подтверждено',
+    'Согласие на обработку ПД: получено',
     '',
     'Источник: psyshashkova.ru/book',
-  ].join('\n');
+  );
+
+  const message =
+    messageParts.join('\n');
 
   try {
     await transporter.sendMail({
-      from: `"psyshashkova.ru" <${smtpUser}>`,
+      from:
+        `"psyshashkova.ru" <${smtpUser}>`,
 
       to:
         applicationEmailTo,
 
-      /*
-        Если человек выбрал Email,
-        обычная кнопка Reply в почте
-        будет отвечать сразу ему.
-      */
       replyTo:
-        contactMethod ===
-        'email'
+        contactMethod === 'email'
           ? data.contact
           : undefined,
 
