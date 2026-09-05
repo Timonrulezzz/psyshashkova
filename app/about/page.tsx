@@ -1,242 +1,800 @@
-'use client';
+import type { ReactNode } from 'react';
 
+import Image from 'next/image';
 import Link from 'next/link';
-import { C, serif, sans } from '@/app/lib/theme';
+
 import Nav from '@/app/components/Nav';
 import Footer from '@/app/components/Footer';
 import Eyebrow from '@/app/components/Eyebrow';
 import Reveal from '@/app/components/Reveal';
-import CountUp from '@/app/components/CountUp';
+import AnimatedRule from '@/app/components/AnimatedRule';
 
-const education = [
-  { year: '2022 — 2023', org: 'АНО ДПО «Институт прикладной психологии в социальной сфере»', program: 'Клиническая психология. Диагностика, коррекция и восстановление психической деятельности', hours: '1560 часов', result: 'Квалификация: клинический психолог' },
-  { year: '2023 — 2025', org: 'РАНХиГС', program: 'Специалист по развитию личной и профессиональной эффективности', hours: '496 часов', result: 'Квалификация: психолог в социальной сфере' },
-  { year: '2023 — 2024', org: 'ООО «Психодемия»', program: 'Когнитивно-поведенческая терапия', hours: '269 часов', result: 'Повышение квалификации' },
-  { year: '2024 — 2025', org: 'ООО «Психодемия»', program: 'Схема-терапия', hours: '—', result: 'Повышение квалификации' },
-  { year: '2022 — 2024', org: 'ООО «Психодемия»', program: 'Консультант в сфере сексуальных отношений', hours: '—', result: 'Профессиональная переподготовка' },
-  { year: '2024 — 2026', org: 'РАНХиГС, магистратура', program: 'Психология личности', hours: '—', result: 'В процессе, завершение в 2026' },
-];
+import {
+  site,
+  siteDisplay,
+} from '@/app/data/site';
 
-const principles = [
-  { title: 'Без оценки', text: 'У меня нет в голове шкалы, по которой клиент бывает правильным или неправильным, а причина прийти — достаточной или недостаточной. Если вы пришли, значит, это важно.' },
-  { title: 'Без советов', text: 'Моя работа — помочь вам найти свои ответы. Если у меня есть мысль про вашу ситуацию, я её скажу, но как версию, которую можно обсудить, а не как инструкцию.' },
-  { title: 'Честно', text: 'Если я с чем-то не согласна, я скажу. Если в нашей работе что-то застряло, я скажу. Если я не подхожу вам как специалист — порекомендую коллегу.' },
-  { title: 'Конфиденциально', text: 'Всё, что вы говорите на сессии, остаётся между нами. Исключения только стандартные: угроза вашей жизни или жизни других людей. Это мы обсудим на первой встрече.' },
-  { title: 'С опорой на доказательную базу', text: 'Я работаю в КПТ и схема-терапии — подходах с подтверждённой эффективностью. Не использую техники, у которых нет научного основания.' },
-];
+import {
+  C,
+  radius,
+  sans,
+  serif,
+  shadow,
+} from '@/app/lib/theme';
 
-export default function About() {
+import { createPageMetadata } from '@/app/lib/metadata';
+
+export const metadata =
+  createPageMetadata({
+    title: 'Обо мне',
+    description:
+      'Юлия Шашкова — клинический психолог. Образование, профессиональный опыт, супервизия и немного о том, какой я человек за пределами работы.',
+    path: '/about',
+  });
+
+export default function AboutPage() {
   return (
-    <div style={{ ...serif, backgroundColor: C.bg, color: C.ink }} className="min-h-screen">
+    <div
+      className="min-h-screen"
+      style={{
+        ...serif,
+        backgroundColor: C.bg,
+        color: C.ink,
+      }}
+    >
       <Nav active="/about" />
 
-      <section className="max-w-6xl mx-auto px-6 pt-20 pb-16 md:pt-28">
-        <div className="grid md:grid-cols-12 gap-12 items-start">
-          <div className="md:col-span-7">
-            <Reveal>
-              <Eyebrow>Обо мне</Eyebrow>
-              <h1 className="text-4xl md:text-6xl leading-[1.1] tracking-tight font-normal mb-8">
-                Юлия Шашкова. Клинический психолог
-              </h1>
-            </Reveal>
-            <Reveal delay={150}>
-              <p className="text-lg leading-relaxed mb-6" style={{ color: C.inkSoft }}>
-                До психологии я почти десять лет работала в IT на руководящих должностях. В какой-то момент стало ясно, что мне это не нравится. Я ушла и спросила себя, что мне на самом деле интересно изучать и читать. Ответом оказалась психология.
-              </p>
-            </Reveal>
-            <Reveal delay={250}>
-              <p className="text-lg leading-relaxed mb-6" style={{ color: C.inkSoft }}>
-                Я не пришла в эту профессию с идеей «помогать людям». Я пришла с интересом — к тому, как устроены люди, как устроена я, как из набора привычек, реакций и сценариев складывается то, что мы называем характером. И как с этим можно что-то делать, если хочется.
-              </p>
-            </Reveal>
-            <Reveal delay={350}>
-              <p className="text-lg leading-relaxed" style={{ color: C.inkSoft }}>
-                За время в IT я научилась внимательно слушать, видеть структуру там, где её на первый взгляд нет, и задавать вопросы, после которых разговор сдвигается. Эти навыки оказались полезными и в новой профессии.
-              </p>
-            </Reveal>
-          </div>
-          <div className="md:col-span-5">
-            <Reveal delay={200}>
-              <div
-                className="overflow-hidden transition-transform duration-700 hover:scale-[1.02]"
-                style={{
-                  borderRadius: '12px',
-                  boxShadow: '0 8px 32px rgba(31, 27, 22, 0.08)',
-                }}
-              >
-                <img
-                  src="/images/portrait-leisure.jpg"
-                  alt="Юлия Шашкова, клинический психолог"
-                  className="w-full h-auto block"
-                />
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
+      <main>
+        {/* HERO */}
 
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <Reveal>
-          <div className="border-t border-b py-12 grid grid-cols-2 md:grid-cols-4 gap-8" style={{ borderColor: C.line }}>
-            <div>
-              <p className="text-4xl mb-2" style={{ color: C.terracotta }}>
-                <CountUp end={2} suffix=",5 года" />
-              </p>
-              <p className="text-sm" style={{ ...sans, color: C.inkSoft }}>в практике</p>
-            </div>
-            <div>
-              <p className="text-4xl mb-2" style={{ color: C.terracotta }}>
-                <CountUp end={250} suffix="+" />
-              </p>
-              <p className="text-sm" style={{ ...sans, color: C.inkSoft }}>клиентов</p>
-            </div>
-            <div>
-              <p className="text-4xl mb-2" style={{ color: C.terracotta }}>
-                <CountUp end={2500} suffix="+" formatThousands />
-              </p>
-              <p className="text-sm" style={{ ...sans, color: C.inkSoft }}>часов работы</p>
-            </div>
-            <div>
-              <p className="text-4xl mb-2" style={{ color: C.terracotta }}>
-                <CountUp end={5} suffix="+ лет" />
-              </p>
-              <p className="text-sm" style={{ ...sans, color: C.inkSoft }}>в личной терапии</p>
-            </div>
-          </div>
-        </Reveal>
-      </section>
-
-      <section className="max-w-6xl mx-auto px-6 py-16 md:py-24">
-        <div className="grid md:grid-cols-12 gap-12">
-          <div className="md:col-span-4">
-            <Reveal>
-              <Eyebrow>Образование</Eyebrow>
-              <h2 className="text-3xl md:text-4xl leading-tight font-normal mb-6">Учусь и продолжаю учиться</h2>
-              <p className="text-base leading-relaxed mb-6" style={{ color: C.inkSoft }}>Все документы подтверждены и проверяемы. Я перечисляю не «прошла курс», а конкретные программы с часами и квалификациями.</p>
-              <p className="text-base leading-relaxed" style={{ color: C.inkSoft }}>В психологии много специалистов с двухмесячным курсом «коуч», и клиент имеет право знать, чему именно учился его терапевт.</p>
-            </Reveal>
-          </div>
-          <div className="md:col-span-8">
-            <div className="space-y-px">
-              {education.map((e, i) => (
-                <Reveal key={i} delay={i * 80}>
-                  <div className="p-6 transition-all duration-300 hover:translate-x-2 cursor-default" style={{ backgroundColor: i % 2 === 0 ? C.surface : C.bg, borderLeft: `2px solid ${C.line}` }}>
-                    <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-8">
-                      <p className="text-sm shrink-0 md:w-32 pt-1" style={{ ...sans, color: C.terracotta }}>{e.year}</p>
-                      <div className="flex-1">
-                        <p className="text-[15px] mb-2" style={{ ...sans, color: C.inkSoft }}>{e.org}</p>
-                        <h3 className="text-lg mb-2">{e.program}</h3>
-                        <p className="text-sm" style={{ ...sans, color: C.inkSoft }}>
-                          {e.hours !== '—' && <span>{e.hours} · </span>}{e.result}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section style={{ backgroundColor: C.ink, color: C.bg }}>
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32">
+        <section className="mx-auto max-w-6xl px-6 pb-7 pt-10 md:px-8 md:pb-9 md:pt-14">
           <Reveal>
-            <div className="max-w-2xl mb-16">
-              <p className="text-xs tracking-[0.2em] uppercase mb-4" style={{ ...sans, color: C.ochre }}>Принципы работы</p>
-              <h2 className="text-3xl md:text-4xl leading-tight font-normal mb-6">Чего вы можете от меня ожидать. И чего точно не дождётесь</h2>
-              <p className="text-base leading-relaxed" style={{ color: '#C9C2B5' }}>Это принципы, по которым я работаю.</p>
-            </div>
-          </Reveal>
-          <div className="grid md:grid-cols-2 gap-x-12 gap-y-10">
-            {principles.map((p, i) => (
-              <Reveal key={i} delay={i * 100}>
-                <div className="border-t pt-6" style={{ borderColor: '#3a3530' }}>
-                  <p className="text-sm mb-3" style={{ ...sans, color: C.ochre }}>0{i + 1}</p>
-                  <h3 className="text-xl mb-3">{p.title}</h3>
-                  <p className="text-[15px] leading-relaxed" style={{ color: '#C9C2B5' }}>{p.text}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+            <div className="grid gap-7 md:grid-cols-[1.12fr_0.88fr] md:items-stretch md:gap-10">
+              <div>
+                <Eyebrow>Обо мне</Eyebrow>
 
-      <section className="max-w-4xl mx-auto px-6 py-24 md:py-32">
-        <Reveal>
-          <div className="border-l-2 pl-8" style={{ borderColor: C.terracotta }}>
-            <Eyebrow>Личная работа</Eyebrow>
-            <h2 className="text-2xl md:text-3xl leading-tight font-normal mb-6">Я делаю то же, что прошу делать клиентов</h2>
-            <div className="space-y-5 text-[16px] leading-relaxed" style={{ color: C.inkSoft }}>
-              <p>Я в личной терапии больше пяти лет, с некоторыми паузами. Это продолжающаяся практика — для меня это часть работы.</p>
-              <p>Минимум раз в две недели хожу на супервизию: разбираю свою работу с более опытным коллегой. Так я проверяю, что не действую из своих слепых пятен и не упускаю важное.</p>
-              <p>Читаю исследования и хожу на профильные конференции. В моей области многое меняется, и я слежу за тем, что появляется нового.</p>
-            </div>
-          </div>
-        </Reveal>
-      </section>
+                <h1 className="mt-4 max-w-[720px] text-[37px] font-normal leading-[1.03] tracking-[-0.025em] md:text-[46px] lg:text-[50px]">
+                  Юлия Шашкова.
+                  <br />
+                  Клинический психолог
+                </h1>
 
-      <section style={{ backgroundColor: C.surface }}>
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32">
-          <div className="grid md:grid-cols-12 gap-12 items-center">
-            <div className="md:col-span-5">
-              <Reveal>
                 <div
-                  className="aspect-[3/4] overflow-hidden transition-transform duration-700 hover:scale-[1.02]"
+                  className="mt-5 max-w-[700px] space-y-4 text-[14px] leading-[1.68] md:text-[15px]"
                   style={{
-                    borderRadius: '12px',
-                    boxShadow: '0 8px 32px rgba(31, 27, 22, 0.08)',
+                    ...sans,
+                    color: C.inkSoft,
                   }}
                 >
-                  <img
-                    src="/images/portrait-outwork.jpg"
-                    alt="Юлия Шашкова"
-                    className="w-full h-full object-cover"
-                  />
+                  <p>
+                    Я практикую с 2023 года и работаю со
+                    взрослыми в КПТ и схема-терапии.
+                  </p>
+
+                  <p>
+                    В психологию я пришла не из идеи спасать
+                    людей. Меня гораздо сильнее зацепил
+                    другой вопрос: почему человек может
+                    прекрасно понимать, что ему мешает, и
+                    все равно снова делать тоже самое?
+                    Почему одни ситуации проходят мимо, а
+                    другие задевают так, будто попадают
+                    точно в старое больное место? И главное,
+                    что действительно помогает это менять,
+                    кроме самого понимания.
+                  </p>
+
+                  <p>
+                    До психологии я почти десять лет
+                    работала в корпоративной среде, в том
+                    числе руководила людьми и процессами.
+                    Думаю, оттуда в мою работу пришли любовь
+                    к структуре, прямые вопросы и привычка
+                    периодически проверять: то, что мы
+                    сейчас делаем, правда помогает или
+                    просто звучит убедительно.
+                  </p>
+
+                  <p>
+                    Мне интересна не только практика, но и
+                    психология как наука. Я постоянно читаю
+                    новые исследования, веду собственную
+                    исследовательскую работу и готовлюсь к
+                    будущей диссертации. Общаюсь с коллегами
+                    и исследователями из других стран —
+                    мне важно видеть, что происходит в
+                    профессиональном поле шире
+                    русскоязычной среды.
+                  </p>
                 </div>
-              </Reveal>
+              </div>
+
+              <div
+                className="relative min-h-[360px] overflow-hidden md:min-h-0"
+                style={{
+                  borderRadius: radius.lg,
+                  boxShadow: shadow.portrait,
+                }}
+              >
+                <Image
+                  src="/images/portrait-about.jpg"
+                  alt="Юлия Шашкова, клинический психолог"
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, 42vw"
+                  className="object-cover"
+                />
+              </div>
             </div>
-            <div className="md:col-span-7">
-              <Reveal delay={150}>
-                <Eyebrow>Когда не работаю</Eyebrow>
-                <h2 className="text-3xl md:text-4xl leading-tight font-normal mb-8">Я не «вся в работе»</h2>
-                <div className="space-y-5 text-[16px] leading-relaxed" style={{ color: C.inkSoft }}>
-                  <p>Пишу и читаю фэнтези. Учусь играть на барабанах. Хожу на концерты — много, разной музыки. Смотрю сериалы и аниме, играю в плейстейшн.</p>
-                  <p>Когда вы на сессии ссылаетесь на сериал, который вас зацепил, или на сюжет, в котором узнаёте себя, скорее всего, я пойму, о чём речь.</p>
-                </div>
-              </Reveal>
+          </Reveal>
+
+          <Reveal delay={100}>
+            <div
+              className="mt-7 grid grid-cols-2 overflow-hidden md:grid-cols-4"
+              style={{
+                backgroundColor: C.surface,
+                border: `1px solid ${C.line}`,
+                borderRadius: radius.lg,
+              }}
+            >
+              <Fact
+                value="С 2023 года"
+                label="в частной практике"
+                index={0}
+              />
+
+              <Fact
+                value={`${site.practice.clients.count}+`}
+                label="клиентов"
+                index={1}
+              />
+
+              <Fact
+                value={`${site.practice.hours.count.toLocaleString(
+                  'ru-RU',
+                )}+`}
+                label="часов консультаций"
+                index={2}
+              />
+
+              <Fact
+                value="Раз в неделю"
+                label="супервизия"
+                index={3}
+              />
             </div>
-          </div>
+          </Reveal>
+        </section>
+
+        <div className="mx-auto max-w-6xl px-6 md:px-8">
+          <AnimatedRule />
         </div>
-      </section>
 
-      <section className="max-w-4xl mx-auto px-6 py-24">
-        <Reveal>
-          <div className="text-center">
-            <Eyebrow>Telegram-канал</Eyebrow>
-            <h2 className="text-3xl md:text-4xl leading-tight font-normal mb-6">«Зашла однажды в БАР»</h2>
-            <p className="text-base leading-relaxed max-w-xl mx-auto mb-8" style={{ color: C.inkSoft }}>Мой личный канал. Заметки о психологии, наблюдения, иногда личное. Если хотите познакомиться со мной как с человеком — заходите.</p>
-            <a href="https://t.me/wentintoabar" className="inline-block px-7 py-3 rounded-full text-sm border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg" style={{ ...sans, borderColor: C.ink, color: C.ink }}>
-              t.me/wentintoabar →
-            </a>
-          </div>
-        </Reveal>
-      </section>
+        {/* WORK STYLE */}
 
-      <section className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
-        <Reveal>
-          <div className="rounded-sm p-12 md:p-20 text-center" style={{ backgroundColor: C.ink, color: C.bg }}>
-            <h2 className="text-3xl md:text-5xl leading-tight font-normal mb-8 max-w-3xl mx-auto">Решили, что хотите попробовать?</h2>
-            <p className="text-lg leading-relaxed max-w-xl mx-auto mb-10" style={{ color: '#C9C2B5' }}>Первая сессия — диагностическая. По её итогам сами решите, продолжать ли работу со мной.</p>
-            <Link href="/book" className="inline-block px-8 py-4 rounded-full text-base transition-all duration-300 hover:scale-[1.04] hover:shadow-2xl" style={{ ...sans, backgroundColor: C.ochre, color: C.ink }}>
-              Записаться на консультацию
-            </Link>
-            <p className="text-sm mt-6" style={{ ...sans, color: '#C9C2B5' }}>Онлайн · 50 минут · 3 500 ₽</p>
+        <section className="mx-auto max-w-6xl px-6 py-8 md:px-8 md:py-10">
+          <Reveal>
+            <div className="grid gap-y-3 md:grid-cols-[0.72fr_1.28fr] md:gap-x-10">
+              <div>
+                <Eyebrow>В работе</Eyebrow>
+              </div>
+
+              <div className="hidden md:block" />
+
+              <h2 className="text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
+                Как я веду встречи
+              </h2>
+
+              <p
+                className="text-[14px] leading-[1.65] md:text-[15px]"
+                style={{
+                  ...sans,
+                  color: C.inkSoft,
+                }}
+              >
+                У меня нет специального терапевтического
+                голоса и роли мудрого человека напротив.
+                Я разговариваю примерно так же, как в
+                обычной жизни: прямо, спокойно, иногда
+                с юмором. При этом это не просто разговор
+                обо всем подряд, у нашей встречи всегда
+                есть рабочая задача.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="mt-6 grid gap-3 md:grid-cols-2">
+            <Reveal delay={0}>
+              <InfoCard
+                number="01"
+                title="Люблю разбирать конкретные ситуации"
+              >
+                Если звучит «я всегда боюсь отказать» или
+                «я постоянно все порчу», скорее всего, я
+                попрошу вспомнить последний реальный эпизод.
+                Кто что сказал, что вы подумали, что
+                почувствовали и что сделали дальше. В
+                деталях обычно гораздо лучше видно, что
+                именно происходит.
+              </InfoCard>
+            </Reveal>
+
+            <Reveal delay={30}>
+              <InfoCard
+                number="02"
+                title="Говорю о том, что замечаю"
+              >
+                Если мне кажется важной какая-то связь,
+                реакция или противоречие, я не буду молча
+                ждать, пока вы сами к нему придете. Скажу,
+                что вижу, и предложу проверить. Иногда
+                окажется, что я попала точно, иногда нет.
+              </InfoCard>
+            </Reveal>
+
+            <Reveal delay={60}>
+              <InfoCard
+                number="03"
+                title="Не обязательно быть серьезными весь час"
+              >
+                Сложная тема не требует торжественного
+                выражения лица. На встречах мы можем
+                смеяться, шутить, вспоминать мемы,
+                обсуждать персонажей или ругаться матом.
+                Юмор вполне может соседствовать с
+                разговором о чем-то тяжелом.
+              </InfoCard>
+            </Reveal>
+
+            <Reveal delay={90}>
+              <InfoCard
+                number="04"
+                title="Можно сказать: «Я не хочу сейчас об этом»"
+              >
+                Вы не обязаны отвечать на каждый вопрос,
+                делать любое предложенное упражнение или
+                обсуждать тему, к которой сейчас не готовы.
+                Если что-то вызывает сопротивление, мы
+                можем отдельно посмотреть почему, но
+                продавливание через границы точно не
+                является методом терапии.
+              </InfoCard>
+            </Reveal>
           </div>
-        </Reveal>
-      </section>
+        </section>
+
+        {/* EDUCATION */}
+
+<section className="mx-auto max-w-6xl px-6 py-7 md:px-8 md:py-9">
+  <Reveal>
+    <div
+      className="overflow-hidden"
+      style={{
+        backgroundColor: C.surfaceWarm,
+        borderRadius: radius.lg,
+        boxShadow: shadow.soft,
+      }}
+    >
+      <div className="p-6 md:p-8 lg:p-9">
+        {/* HEADER */}
+
+        <div className="grid gap-y-3 md:grid-cols-[0.72fr_1.28fr] md:gap-x-10">
+          <div>
+            <Eyebrow>Образование</Eyebrow>
+          </div>
+
+          <div className="hidden md:block" />
+
+          <h2 className="text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
+            Профессиональная подготовка
+          </h2>
+
+          <p
+            className="max-w-2xl text-[13.5px] leading-[1.65] md:text-[14px]"
+            style={{
+              ...sans,
+              color: C.inkSoft,
+            }}
+          >
+            Моя подготовка складывалась постепенно:
+            клиническая психология, консультирование, КПТ,
+            схема-терапия и магистратура. Ниже — основные
+            программы, часы обучения и квалификации.
+          </p>
+        </div>
+
+        {/* CARDS */}
+
+        <div className="mt-6 flex flex-wrap justify-center gap-2.5">
+          {[
+            {
+              year: '2026',
+              hours: '1 414 ч',
+              title: 'Магистратура по психологии',
+              meta: 'РАНХиГС · Магистратура',
+              result: 'Квалификация: магистр психологии',
+            },
+            {
+              year: '2026',
+              hours: '2 412 ч',
+              title: 'Психология личности',
+              meta:
+                'ООО «Психодемия» · Профессиональная переподготовка',
+              result:
+                'Квалификация: психолог-консультант',
+            },
+            {
+              year: '2025',
+              hours: '496 ч',
+              title:
+                'Личная и профессиональная эффективность',
+              meta:
+                'РАНХиГС · Профессиональная переподготовка',
+              result:
+                'Квалификация: психолог в социальной сфере',
+            },
+            {
+              year: '2025',
+              hours: '254 ч',
+              title: 'Схема-терапия',
+              meta:
+                'ООО «Психодемия» · Дополнительное обучение',
+              result: null,
+            },
+            {
+              year: '2024',
+              hours: '269 ч',
+              title:
+                'Когнитивно-поведенческая терапия',
+              meta:
+                'ООО «Психодемия» · Дополнительное обучение',
+              result: null,
+            },
+            {
+              year: '2024',
+              hours: '1 194 ч',
+              title:
+                'Консультирование в сфере сексуальных отношений',
+              meta:
+                'ООО «Психодемия» · Профессиональная переподготовка',
+              result:
+                'Квалификация: психолог-консультант в сексуальной сфере',
+            },
+            {
+              year: '2023',
+              hours: '1 560 ч',
+              title: 'Клиническая психология',
+              meta:
+                'АНО ДПО «Институт прикладной психологии в социальной сфере» · Профессиональная переподготовка',
+              result:
+                'Диагностика, коррекция и восстановление психической деятельности · Квалификация: клинический психолог',
+            },
+          ].map((education, index) => (
+            <div
+              key={`${education.year}-${education.title}`}
+              className="w-full sm:w-[calc(50%-5px)] lg:w-[calc(25%-8px)]"
+            >
+              <Reveal delay={index * 20}>
+                <article
+                  className="h-auto min-h-[175px] px-4 py-4 sm:h-[190px] md:px-5"
+                  style={{
+                    backgroundColor:
+                      'rgba(247, 243, 236, 0.72)',
+                    borderRadius: radius.md,
+                  }}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <p
+                      className="text-[10px] uppercase tracking-[0.08em]"
+                      style={{
+                        ...sans,
+                        color: C.terracotta,
+                      }}
+                    >
+                      {education.year}
+                    </p>
+
+                    <p
+                      className="shrink-0 text-[10px]"
+                      style={{
+                        ...sans,
+                        color: C.inkSoft,
+                      }}
+                    >
+                      {education.hours}
+                    </p>
+                  </div>
+
+                  <h3 className="mt-3 text-[15px] leading-[1.28] md:text-[15.5px]">
+                    {education.title}
+                  </h3>
+
+                  <p
+                    className="mt-2 text-[10px] leading-[1.45]"
+                    style={{
+                      ...sans,
+                      color: C.inkSoft,
+                    }}
+                  >
+                    {education.meta}
+                  </p>
+
+                  {education.result && (
+                    <p
+                      className="mt-1.5 text-[10px] leading-[1.45]"
+                      style={{
+                        ...sans,
+                        color: C.inkSoft,
+                      }}
+                    >
+                      {education.result}
+                    </p>
+                  )}
+                </article>
+              </Reveal>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </Reveal>
+</section>
+
+        {/* PROFESSIONAL CARE */}
+
+        <section className="mx-auto max-w-6xl px-6 py-8 md:px-8 md:py-10">
+          <Reveal>
+            <div className="grid gap-y-3 md:grid-cols-[0.72fr_1.28fr] md:gap-x-10">
+              <div>
+                <Eyebrow>
+                  За пределами сессий
+                </Eyebrow>
+              </div>
+
+              <div className="hidden md:block" />
+
+              <h2 className="text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
+                Что еще входит в мою работу
+              </h2>
+
+              <p
+                className="text-[14px] leading-[1.65] md:text-[15px]"
+                style={{
+                  ...sans,
+                  color: C.inkSoft,
+                }}
+              >
+                Пятьдесят минут с клиентом — только видимая
+                часть работы. Между встречами я читаю,
+                думаю над сложными случаями, обсуждаю их
+                на супервизии и продолжаю учиться. Мне
+                важно не превращать несколько знакомых
+                техник в универсальный ответ на все.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="mt-6 grid gap-3 md:grid-cols-3">
+            <Reveal delay={0}>
+              <CareCard
+                number="01"
+                title="Раз в неделю хожу на супервизию"
+              >
+                Приношу туда места, где я сомневаюсь, где
+                работа застопорилась или где хочется
+                проверить свою версию происходящего.
+                Иногда после супервизии я возвращаюсь к
+                клиенту уже с другим взглядом на ситуацию.
+              </CareCard>
+            </Reveal>
+
+            <Reveal delay={35}>
+              <CareCard
+                number="02"
+                title="Сама знаю терапию с другой стороны"
+              >
+                Я много лет была в личной терапии, с
+                перерывами. Поэтому знаю не только то, как
+                выглядит процесс из кресла психолога, но и
+                каково сидеть напротив: не знать, что
+                сказать, злиться, сомневаться или
+                постепенно замечать изменения.
+              </CareCard>
+            </Reveal>
+
+            <Reveal delay={70}>
+              <CareCard
+                number="03"
+                title="Не полагаюсь только на то, чему меня когда-то учили"
+              >
+                В психологии постоянно появляются новые
+                данные, а часть привычных идей со временем
+                пересматривается. Поэтому я читаю
+                исследования, обзоры и рекомендации,
+                смотрю на методологию и ограничения, а не
+                только на выводы. Это помогает не тащить
+                в практику красивую концепцию только
+                потому, что она звучит убедительно.
+              </CareCard>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* OUTSIDE WORK */}
+
+        <section className="mx-auto max-w-6xl px-6 py-7 md:px-8 md:py-9">
+          <Reveal>
+            <div
+              className="grid gap-6 overflow-hidden md:grid-cols-[0.78fr_1.22fr] md:items-center"
+              style={{
+                backgroundColor: C.surface,
+                borderRadius: radius.lg,
+              }}
+            >
+              <div className="relative min-h-[330px] md:h-full md:min-h-[430px]">
+                <Image
+                  src="/images/portrait-outwork.jpg"
+                  alt="Юлия Шашкова вне работы"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 38vw"
+                  className="object-cover"
+                />
+              </div>
+
+              <div className="px-6 pb-7 pt-2 md:px-8 md:py-8 lg:px-10">
+                <Eyebrow>
+                  За пределами работы
+                </Eyebrow>
+
+                <h2 className="mt-3 text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
+                  Психология занимает много места в моей
+                  жизни. Но не все
+                </h2>
+
+                <div
+                  className="mt-4 max-w-xl space-y-3 text-[14px] leading-[1.68]"
+                  style={{
+                    ...sans,
+                    color: C.inkSoft,
+                  }}
+                >
+                  <p>
+                    Я пишу и читаю фэнтези, учусь играть
+                    на барабанах, хожу на концерты,
+                    смотрю сериалы и аниме и играю в
+                    PlayStation.
+                  </p>
+
+                  <p>
+                    Мне нравится, когда на сессии можно
+                    сослаться на сцену из фильма,
+                    персонажа или песню и не переводить
+                    это предварительно на психологический
+                    язык. Иногда художественная история
+                    описывает переживание точнее, чем
+                    десять терминов.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </section>
+
+        {/* CTA */}
+
+        <section className="mx-auto max-w-6xl px-6 pb-12 pt-5 md:px-8 md:pb-14">
+          <Reveal>
+            <div
+              className="grid gap-6 px-6 py-7 md:grid-cols-[1fr_auto] md:items-center md:px-8 md:py-8"
+              style={{
+                backgroundColor: C.ink,
+                color: C.bg,
+                borderRadius: radius.lg,
+                boxShadow: shadow.soft,
+              }}
+            >
+              <div>
+                <Eyebrow>Запись</Eyebrow>
+
+                <h2 className="mt-3 text-[28px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[34px]">
+                  Если хочется попробовать поработать
+                  вместе
+                </h2>
+
+                <p
+                  className="mt-3 max-w-2xl text-[13px] leading-[1.6] md:text-[14px]"
+                  style={{
+                    ...sans,
+                    color: '#C9C2B5',
+                  }}
+                >
+                  Можно оставить короткую заявку. Там
+                  не нужно подробно рассказывать всю
+                  историю — достаточно контакта,
+                  общей темы и комментария, если
+                  хочется что-то добавить.
+                </p>
+              </div>
+
+              <div className="md:text-right">
+                <Link
+                  href="/book"
+                  className="inline-flex justify-center px-7 py-3 text-[13px] font-medium transition-all duration-300 hover:-translate-y-0.5"
+                  style={{
+                    ...sans,
+                    backgroundColor: C.bg,
+                    color: C.ink,
+                    borderRadius: radius.pill,
+                  }}
+                >
+                  Оставить заявку
+                </Link>
+
+                <p
+                  className="mt-2 text-[11px]"
+                  style={{
+                    ...sans,
+                    color: '#C9C2B5',
+                  }}
+                >
+                  {siteDisplay.sessionDuration} ·{' '}
+                  {siteDisplay.sessionPrice}
+                </p>
+              </div>
+            </div>
+          </Reveal>
+        </section>
+      </main>
 
       <Footer />
     </div>
+  );
+}
+
+function Fact({
+  value,
+  label,
+  index,
+}: {
+  value: string;
+  label: string;
+  index: number;
+}) {
+  const mobileLeft =
+    index % 2 === 1
+      ? 'border-l'
+      : '';
+
+  const mobileTop =
+    index >= 2
+      ? 'border-t'
+      : '';
+
+  const desktopLeft =
+    index > 0
+      ? 'md:border-l'
+      : 'md:border-l-0';
+
+  return (
+    <div
+      className={[
+        'min-h-[86px] px-5 py-4 md:min-h-[92px] md:px-6',
+        mobileLeft,
+        mobileTop,
+        desktopLeft,
+        'md:border-t-0',
+      ].join(' ')}
+      style={{
+        borderColor: C.line,
+      }}
+    >
+      <p className="text-[17px] leading-[1.2] md:text-[18px]">
+        {value}
+      </p>
+
+      <p
+        className="mt-1.5 text-[11px] leading-[1.4]"
+        style={{
+          ...sans,
+          color: C.inkSoft,
+        }}
+      >
+        {label}
+      </p>
+    </div>
+  );
+}
+
+function InfoCard({
+  number,
+  title,
+  children,
+}: {
+  number: string;
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <article
+      className="h-full border px-5 py-5"
+      style={{
+        borderColor: C.line,
+        backgroundColor:
+          'rgba(255,255,255,0.12)',
+        borderRadius: radius.md,
+      }}
+    >
+      <div className="flex items-start gap-3">
+        <span
+          className="min-w-[26px] pt-0.5 text-[10px]"
+          style={{
+            ...sans,
+            color: C.terracotta,
+          }}
+        >
+          {number}
+        </span>
+
+        <div>
+          <h3 className="text-[18px] leading-[1.25]">
+            {title}
+          </h3>
+
+          <p
+            className="mt-2 text-[13px] leading-[1.62]"
+            style={{
+              ...sans,
+              color: C.inkSoft,
+            }}
+          >
+            {children}
+          </p>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function CareCard({
+  number,
+  title,
+  children,
+}: {
+  number: string;
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <article
+      className="h-full px-5 py-5"
+      style={{
+        backgroundColor: C.surface,
+        borderRadius: radius.md,
+      }}
+    >
+      <span
+        className="text-[10px]"
+        style={{
+          ...sans,
+          color: C.terracotta,
+        }}
+      >
+        {number}
+      </span>
+
+      <h3 className="mt-2 text-[18px] leading-[1.25]">
+        {title}
+      </h3>
+
+      <p
+        className="mt-2 text-[12.5px] leading-[1.62] md:text-[13px]"
+        style={{
+          ...sans,
+          color: C.inkSoft,
+        }}
+      >
+        {children}
+      </p>
+    </article>
   );
 }
