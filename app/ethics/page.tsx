@@ -684,21 +684,8 @@ export default function EthicsPage() {
                 <Eyebrow>Запись</Eyebrow>
 
                 <h2 className="mt-3 text-[28px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[34px]">
-                  Если условия вам подходят, можно оставить
-                  заявку
+                  Если условия вам подходят, то заполните форму
                 </h2>
-
-                <p
-                  className="mt-3 max-w-2xl text-[13px] leading-[1.6] md:text-[14px]"
-                  style={{
-                    ...sans,
-                    color: '#C9C2B5',
-                  }}
-                >
-                  А если вы пока не уверены, относится ли
-                  ваша ситуация к моей работе, определять
-                  это самостоятельно не обязательно.
-                </p>
               </div>
 
               <Link

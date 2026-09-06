@@ -1,520 +1,702 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { C, serif, sans } from '@/app/lib/theme';
+
 import Nav from '@/app/components/Nav';
 import Footer from '@/app/components/Footer';
 import Eyebrow from '@/app/components/Eyebrow';
 import Reveal from '@/app/components/Reveal';
+
 import {
-  needs,
+  C,
+  radius,
+  sans,
+  serif,
+  shadow,
+} from '@/app/lib/theme';
+
+import {
   domains,
-  schemas,
-  additionalSchemas,
-  getSchemasByDomain,
+  extraSchemas,
   getNeedByKey,
-  type SchemaKey,
+  getSchemasByDomain,
+  needs,
+  schemas,
   type DomainKey,
   type Schema,
+  type SchemaKey,
 } from './data';
 
 export default function SchemasAndNeedsMap() {
   const [openSchema, setOpenSchema] = useState<SchemaKey | null>(null);
   const [hoveredDomain, setHoveredDomain] = useState<DomainKey | null>(null);
 
-  // Открыть карточку при переходе по якорю
   useEffect(() => {
     const hash = window.location.hash.replace('#', '') as SchemaKey;
-    if (hash && schemas.some((s) => s.key === hash)) {
+
+    if (hash && schemas.some((schema) => schema.key === hash)) {
       setOpenSchema(hash);
-      setTimeout(() => {
-        const el = document.getElementById(hash);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+
+      window.setTimeout(() => {
+        document.getElementById(hash)?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
       }, 100);
     }
   }, []);
 
-  const toggleSchema = (key: SchemaKey) => {
-    setOpenSchema(openSchema === key ? null : key);
-  };
+  function toggleSchema(key: SchemaKey) {
+    setOpenSchema((current) => (current === key ? null : key));
+  }
 
-  const scrollToDomain = (domainKey: DomainKey) => {
-    setTimeout(() => {
-      const el = document.getElementById(`domain-${domainKey}`);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 50);
-  };
+  function scrollToDomain(key: DomainKey) {
+    window.setTimeout(() => {
+      document.getElementById(`domain-${key}`)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }, 40);
+  }
 
-  const classicNeeds = needs.filter((n) => n.isClassic);
-  const extendedNeeds = needs.filter((n) => !n.isClassic);
+  const classicNeeds = needs.filter((need) => need.isClassic);
+  const extendedNeeds = needs.filter((need) => !need.isClassic);
+
+  const classicNotMss = extraSchemas.filter(
+    (schema) => schema.type === 'classic_not_mss'
+  );
+
+  const reformulated = extraSchemas.filter(
+    (schema) => schema.type === 'reformulated'
+  );
 
   return (
-    <div style={{ ...serif, backgroundColor: C.bg, color: C.ink }} className="min-h-screen">
+    <div
+      className="min-h-screen"
+      style={{
+        ...serif,
+        backgroundColor: C.bg,
+        color: C.ink,
+      }}
+    >
       <Nav active="/tools" />
 
-      {/* HERO */}
-      <section className="max-w-3xl mx-auto px-6 pt-20 pb-12 md:pt-28">
-        <Reveal>
-          <Eyebrow>Инструмент · постоянно</Eyebrow>
-          <h1 className="text-4xl md:text-5xl leading-[1.1] tracking-tight font-normal mb-8">
-            Карта схем и потребностей
-          </h1>
-        </Reveal>
-        <Reveal delay={150}>
-          <p className="text-lg leading-relaxed mb-6" style={{ color: C.inkSoft }}>
-            У каждого человека есть пять базовых эмоциональных потребностей. Когда они удовлетворены в детстве — формируется здоровое функционирование. Когда какая-то из них фрустрируется — в этой области может развиться ранняя дезадаптивная схема: устойчивый паттерн мышления, чувствования и поведения, который продолжает работать во взрослой жизни.
-          </p>
-          <p className="text-base leading-relaxed mb-6" style={{ color: C.inkSoft }}>
-            На этой карте — пять областей жизни (доменов), 18 схем, связи с потребностями и три способа, которыми каждая схема может проживаться: капитуляция, избегание, гиперкомпенсация.
-          </p>
-          <p className="text-base leading-relaxed" style={{ color: C.inkSoft }}>
-            Кликните на любую схему — раскроется подробное описание: какая потребность не была удовлетворена, какой ранний опыт её сформировал, как она проживается через разные копинговые стратегии, и что делает в ответ Здоровый Взрослый.
-          </p>
-        </Reveal>
-      </section>
+      <main>
+        <section className="mx-auto max-w-6xl px-6 pb-7 pt-10 md:px-8 md:pb-9 md:pt-14">
+          <Reveal>
+            <Link
+              href="/tools"
+              className="mb-5 inline-block text-[12px] underline underline-offset-4"
+              style={{ ...sans, color: C.inkSoft }}
+            >
+              ← Все инструменты
+            </Link>
 
-      {/* SVG-КАРТА */}
-      <section className="max-w-4xl mx-auto px-6 py-8 md:py-12">
-        <Reveal>
-          <NeedsAndDomainsMap
-            hoveredDomain={hoveredDomain}
-            onHoverDomain={setHoveredDomain}
-            onClickDomain={scrollToDomain}
-          />
-        </Reveal>
-      </section>
+            <Eyebrow>Интерактивная карта · схема-терапия</Eyebrow>
 
-      {/* БАЗОВЫЕ ПОТРЕБНОСТИ */}
-      <section className="max-w-4xl mx-auto px-6 py-12 md:py-16">
-        <Reveal>
-          <div className="mb-10">
-            <Eyebrow>Базовые потребности</Eyebrow>
-            <h2 className="text-2xl md:text-3xl leading-tight font-normal mb-5">
-              Пять опор здорового развития
-            </h2>
-            <p className="text-base leading-relaxed max-w-2xl" style={{ color: C.inkSoft }}>
-              Когда эти потребности удовлетворены в детстве — у человека есть фундамент. Когда какая-то из них хронически фрустрируется — в соответствующей области могут развиться дезадаптивные схемы.
+            <h1 className="mt-4 w-full text-[38px] font-normal leading-[1.04] tracking-[-0.025em] md:text-[48px]">
+              Карта схем и потребностей
+            </h1>
+
+            <p
+              className="mt-5 max-w-[930px] text-[15px] leading-[1.7] md:text-[16px]"
+              style={{ ...sans, color: C.inkSoft }}
+            >
+              Схема — это устойчивый способ ожидать, объяснять и переживать
+              определенные ситуации. Она может быстро подсказывать знакомый
+              вывод: меня бросят, я не справлюсь, мои желания менее важны или
+              ошибка недопустима.
             </p>
-          </div>
-        </Reveal>
+          </Reveal>
 
-        <div className="space-y-5">
-          {classicNeeds.map((need, i) => (
-            <Reveal key={need.key} delay={i * 60}>
-              <div className="p-7 rounded-sm" style={{ backgroundColor: C.surface }}>
-                <div className="flex items-baseline gap-3 mb-3 flex-wrap">
-                  <h3 className="text-xl">{need.name}</h3>
-                  <span className="text-xs" style={{ ...sans, color: C.inkSoft }}>
-                    {need.nameEn}
-                  </span>
-                </div>
-                <p className="text-base leading-relaxed mb-5" style={{ color: C.ink }}>
-                  {need.description}
-                </p>
-                <div className="grid md:grid-cols-2 gap-5">
-                  <div className="p-4 rounded-sm" style={{ backgroundColor: C.bg, borderLeft: `2px solid ${C.moss}` }}>
-                    <p className="text-xs tracking-widest uppercase mb-2" style={{ ...sans, color: C.moss }}>
-                      Когда удовлетворена
-                    </p>
-                    <p className="text-[14px] leading-relaxed" style={{ color: C.ink }}>
-                      {need.metMeans}
-                    </p>
-                  </div>
-                  <div className="p-4 rounded-sm" style={{ backgroundColor: C.bg, borderLeft: `2px solid ${C.terracotta}` }}>
-                    <p className="text-xs tracking-widest uppercase mb-2" style={{ ...sans, color: C.terracotta }}>
-                      Когда фрустрирована
-                    </p>
-                    <p className="text-[14px] leading-relaxed" style={{ color: C.ink }}>
-                      {need.unmetMeans}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* КАРТОЧКИ СХЕМ ПО ДОМЕНАМ */}
-      {domains.map((domain, idx) => {
-        const domainSchemas = getSchemasByDomain(domain.key);
-        const need = getNeedByKey(domain.needKey);
-        return (
-          <section
-            key={domain.key}
-            id={`domain-${domain.key}`}
-            className="max-w-4xl mx-auto px-6 py-12 md:py-16 scroll-mt-20"
-          >
-            <Reveal>
-              <div className="mb-10">
-                <p
-                  className="text-xs tracking-widest uppercase mb-3"
-                  style={{ ...sans, color: domain.color }}
-                >
-                  Домен {idx + 1} из 5
-                </p>
-                <h2 className="text-2xl md:text-3xl leading-tight font-normal mb-3">
-                  {domain.name}
-                </h2>
-                <p className="text-sm mb-5" style={{ ...sans, color: C.inkSoft }}>
-                  {domain.nameEn}
-                </p>
-                <p className="text-base leading-relaxed mb-5 max-w-2xl" style={{ color: C.inkSoft }}>
-                  {domain.shortDescription}
-                </p>
-                {need && (
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full" style={{ backgroundColor: C.surface }}>
-                    <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: domain.color }} />
-                    <span className="text-sm" style={{ ...sans, color: C.ink }}>
-                      Фрустрированная потребность: {need.name}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </Reveal>
-
-            <div className="space-y-4">
-              {domainSchemas.map((schema, i) => (
-                <Reveal key={schema.key} delay={i * 50}>
-                  <SchemaCard
-                    schema={schema}
-                    domainColor={domain.color}
-                    isOpen={openSchema === schema.key}
-                    onToggle={() => toggleSchema(schema.key)}
-                  />
-                </Reveal>
-              ))}
+          <Reveal delay={40}>
+            <div className="mt-7 grid gap-3 md:grid-cols-3">
+              <InfoCard
+                title="19 тем MSS-YSQ"
+                text="Названия основной карты полностью совпадают с результатами опросника MSS-YSQ на этом сайте."
+              />
+              <InfoCard
+                title="Схема — не тип личности"
+                text="У одного человека могут откликаться разные схемы, а их сила и проявления меняются в зависимости от ситуации."
+              />
+              <InfoCard
+                title="Три способа совладания"
+                text="В карточках показано, как одну и ту же тему можно поддерживать через капитуляцию, избегание или гиперкомпенсацию."
+              />
             </div>
-          </section>
-        );
-      })}
+          </Reveal>
+        </section>
 
-      {/* РАСШИРЕННАЯ КЛАССИФИКАЦИЯ */}
-      <section className="max-w-4xl mx-auto px-6 py-12 md:py-16">
-        <Reveal>
-          <div className="mb-10">
-            <Eyebrow>Расширенная классификация</Eyebrow>
-            <h2 className="text-2xl md:text-3xl leading-tight font-normal mb-5">
-              Две новые потребности и три новых схемы
-            </h2>
-            <p className="text-base leading-relaxed mb-3 max-w-2xl" style={{ color: C.inkSoft }}>
-              В классической модели Янга — пять потребностей и 18 схем. В работе Arntz, Rijkeboer и коллег (Cognitive Therapy and Research, 2021) предложено расширение теории: две дополнительные потребности и три новые схемы.
-            </p>
-            <p className="text-base leading-relaxed max-w-2xl" style={{ color: C.inkSoft }}>
-              Эти концепции пока не входят в YSQ-S3, но используются в современной клинической работе — особенно при работе с тяжёлой травмой, диссоциацией, экзистенциальными темами.
-            </p>
-          </div>
-        </Reveal>
+        <section className="mx-auto max-w-6xl px-6 pb-7 md:px-8">
+          <Reveal delay={60}>
+            <div
+              className="grid gap-5 px-5 py-5 md:grid-cols-[0.78fr_1.22fr] md:gap-9 md:px-6"
+              style={{
+                backgroundColor: C.surfaceWarm,
+                borderRadius: radius.lg,
+              }}
+            >
+              <div>
+                <Eyebrow>Важный нюанс</Eyebrow>
+                <h2 className="mt-3 text-[26px] leading-[1.1] md:text-[31px]">
+                  Схемы не сводятся к одному событию из детства
+                </h2>
+              </div>
 
-        <Reveal>
-          <p className="text-xs tracking-widest uppercase mb-5" style={{ ...sans, color: C.inkSoft }}>
-            Дополнительные потребности
-          </p>
-        </Reveal>
-        <div className="space-y-4 mb-10">
-          {extendedNeeds.map((need, i) => (
-            <Reveal key={need.key} delay={i * 60}>
-              <div className="p-6 rounded-sm" style={{ backgroundColor: C.surface }}>
-                <div className="flex items-baseline gap-3 mb-3 flex-wrap">
-                  <h3 className="text-lg">{need.name}</h3>
-                  <span className="text-xs" style={{ ...sans, color: C.inkSoft }}>
-                    {need.nameEn}
-                  </span>
-                </div>
-                <p className="text-[15px] leading-relaxed" style={{ color: C.ink }}>
-                  {need.description}
+              <div
+                className="space-y-3 text-[12.5px] leading-[1.68] md:text-[13.5px]"
+                style={{ ...sans, color: C.ink }}
+              >
+                <p>
+                  В схема-терапии предполагается, что ранний опыт,
+                  темперамент и повторяющиеся отношения могут влиять на
+                  формирование устойчивых схем. Но по одному результату нельзя
+                  достоверно восстановить, почему конкретная схема возникла
+                  именно у этого человека.
+                </p>
+                <p>
+                  Поэтому в карточках раздел «Что могло повлиять» — это
+                  гипотезы для размышления, а не готовое объяснение вашей
+                  биографии.
                 </p>
               </div>
-            </Reveal>
-          ))}
-        </div>
+            </div>
+          </Reveal>
+        </section>
 
-        <Reveal>
-          <p className="text-xs tracking-widest uppercase mb-5" style={{ ...sans, color: C.inkSoft }}>
-            Дополнительные схемы
-          </p>
-        </Reveal>
-        <div className="space-y-4">
-          {additionalSchemas.map((schema, i) => {
-            const need = getNeedByKey(schema.needKey);
-            return (
-              <Reveal key={schema.key} delay={i * 50}>
-                <div className="p-6 rounded-sm" style={{ backgroundColor: C.surface }}>
-                  <div className="flex items-baseline gap-3 mb-3 flex-wrap">
-                    <h3 className="text-lg">{schema.name}</h3>
-                    <span className="text-xs" style={{ ...sans, color: C.inkSoft }}>
-                      {schema.nameEn}
-                    </span>
-                  </div>
-                  <p className="text-[15px] leading-relaxed mb-4" style={{ color: C.ink }}>
-                    {schema.description}
-                  </p>
-                  {need && (
-                    <p className="text-xs" style={{ ...sans, color: C.inkSoft }}>
-                      Связь с потребностью: {need.name}
+        <section className="mx-auto max-w-5xl px-6 py-7 md:px-8 md:py-9">
+          <Reveal>
+            <div className="mb-5 text-center">
+              <Eyebrow>Пять областей</Eyebrow>
+              <h2 className="mt-3 text-[29px] leading-[1.08] md:text-[36px]">
+                Как схемы связаны с потребностями
+              </h2>
+              <p
+                className="mx-auto mt-3 max-w-[760px] text-[12.5px] leading-[1.65]"
+                style={{ ...sans, color: C.inkSoft }}
+              >
+                Нажмите на область, чтобы перейти к связанным с ней схемам.
+                Это карта теоретических связей модели, а не причинная диаграмма
+                конкретного человека.
+              </p>
+            </div>
+
+            <NeedsMap
+              hoveredDomain={hoveredDomain}
+              onHover={setHoveredDomain}
+              onClick={scrollToDomain}
+            />
+          </Reveal>
+        </section>
+
+        <section className="mx-auto max-w-5xl px-6 py-7 md:px-8 md:py-9">
+          <Reveal>
+            <div className="grid gap-y-3 md:grid-cols-[0.72fr_1.28fr] md:gap-x-10">
+              <div><Eyebrow>Эмоциональные потребности</Eyebrow></div>
+              <div className="hidden md:block" />
+
+              <h2 className="text-[29px] leading-[1.08] md:text-[35px]">
+                Пять классических областей
+              </h2>
+
+              <p
+                className="text-[13px] leading-[1.65]"
+                style={{ ...sans, color: C.inkSoft }}
+              >
+                В классической теории схема-терапии выделяют пять широких
+                потребностей. Их не нужно понимать как чек-лист, который обязан
+                быть идеально закрыт: важнее достаточно устойчивый опыт
+                безопасности, автономии, выражения себя, спонтанности и разумных
+                границ.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="mt-6 space-y-3">
+            {classicNeeds.map((need, index) => (
+              <Reveal key={need.key} delay={index * 35}>
+                <NeedCard need={need} />
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {domains.map((domain, index) => {
+          const domainSchemas = getSchemasByDomain(domain.key);
+          const need = getNeedByKey(domain.needKey);
+
+          return (
+            <section
+              key={domain.key}
+              id={`domain-${domain.key}`}
+              className="mx-auto max-w-5xl scroll-mt-20 px-6 py-7 md:px-8 md:py-9"
+            >
+              <Reveal>
+                <div className="grid gap-y-3 md:grid-cols-[0.72fr_1.28fr] md:gap-x-10">
+                  <div>
+                    <p
+                      className="text-[10px] uppercase tracking-[0.11em]"
+                      style={{ ...sans, color: domain.color }}
+                    >
+                      Область {index + 1} из 5
                     </p>
-                  )}
+                  </div>
+                  <div className="hidden md:block" />
+
+                  <div>
+                    <h2 className="text-[29px] leading-[1.08] md:text-[35px]">
+                      {domain.name}
+                    </h2>
+                    <p
+                      className="mt-1 text-[10.5px]"
+                      style={{ ...sans, color: C.inkSoft }}
+                    >
+                      {domain.nameEn}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p
+                      className="text-[13px] leading-[1.65]"
+                      style={{ ...sans, color: C.inkSoft }}
+                    >
+                      {domain.shortDescription}
+                    </p>
+
+                    {need && (
+                      <div
+                        className="mt-3 inline-flex items-center gap-2 px-3 py-2"
+                        style={{
+                          backgroundColor: C.surface,
+                          borderRadius: radius.pill,
+                        }}
+                      >
+                        <span
+                          className="h-1.5 w-1.5 rounded-full"
+                          style={{ backgroundColor: domain.color }}
+                        />
+                        <span
+                          className="text-[10.5px]"
+                          style={{ ...sans, color: C.ink }}
+                        >
+                          Связано с потребностью: {need.name}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </Reveal>
-            );
-          })}
-        </div>
-      </section>
 
-      {/* CTA */}
-      <section className="max-w-6xl mx-auto px-6 py-16 md:py-24">
-        <Reveal>
-          <div className="rounded-sm p-12 md:p-20 text-center" style={{ backgroundColor: C.ink, color: C.bg }}>
-            <h2 className="text-3xl md:text-4xl leading-tight font-normal mb-8 max-w-3xl mx-auto">
-              Знание схем не отменяет их работы
-            </h2>
-            <p className="text-lg leading-relaxed max-w-xl mx-auto mb-10" style={{ color: '#C9C2B5' }}>
-              Понять схему — первый шаг. Изменить её — работа годами, в которой важен живой контакт, опыт коррекции, новые отношения. Это то, что мы делаем в схема-терапии.
-            </p>
-            <Link
-              href="/book"
-              className="inline-block px-8 py-4 rounded-full text-base transition-all duration-300 hover:scale-[1.04] hover:shadow-2xl"
-              style={{ ...sans, backgroundColor: C.ochre, color: C.ink }}
+              <div className="mt-5 space-y-3">
+                {domainSchemas.map((schema, schemaIndex) => (
+                  <Reveal key={schema.key} delay={schemaIndex * 30}>
+                    <SchemaCard
+                      schema={schema}
+                      domainColor={domain.color}
+                      isOpen={openSchema === schema.key}
+                      onToggle={() => toggleSchema(schema.key)}
+                    />
+                  </Reveal>
+                ))}
+              </div>
+            </section>
+          );
+        })}
+        <section className="mx-auto max-w-5xl px-6 py-7 md:px-8 md:py-9">
+          <Reveal>
+            <div
+              className="grid gap-5 px-5 py-5 md:grid-cols-[0.78fr_1.22fr] md:gap-9 md:px-6"
+              style={{
+                backgroundColor: C.surface,
+                borderRadius: radius.lg,
+              }}
             >
-              Записаться на сессию
-            </Link>
-          </div>
-        </Reveal>
-      </section>
+              <div>
+                <Eyebrow>Почему не ровно 18 схем</Eyebrow>
+                <h2 className="mt-3 text-[25px] leading-[1.1] md:text-[30px]">
+                  Карта синхронизирована с MSS-YSQ
+                </h2>
+              </div>
 
-      {/* Связанные инструменты */}
-      <section className="max-w-4xl mx-auto px-6 pb-24 text-center">
-        <Reveal>
-          <p className="text-sm mb-4" style={{ ...sans, color: C.inkSoft }}>
-            Связанные инструменты
-          </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link
-              href="/tools/schema-test"
-              className="px-6 py-3 rounded-full text-sm transition-all hover:-translate-y-0.5"
-              style={{ ...sans, backgroundColor: C.surface, color: C.ink, border: `1px solid ${C.line}` }}
-            >
-              Тест на схемы YSQ-S3 →
-            </Link>
-            <Link
-              href="/tools/schema-modes"
-              className="px-6 py-3 rounded-full text-sm transition-all hover:-translate-y-0.5"
-              style={{ ...sans, backgroundColor: C.surface, color: C.ink, border: `1px solid ${C.line}` }}
-            >
-              Карта режимов →
-            </Link>
-            <Link
-              href="/tools/schema-modes-test"
-              className="px-6 py-3 rounded-full text-sm transition-all hover:-translate-y-0.5"
-              style={{ ...sans, backgroundColor: C.surface, color: C.ink, border: `1px solid ${C.line}` }}
-            >
-              Опросник режимов SMI →
-            </Link>
+              <div
+                className="space-y-3 text-[12.5px] leading-[1.65]"
+                style={{ ...sans, color: C.inkSoft }}
+              >
+                <p>
+                  В классической модели Янга обычно говорят о 18 схемах.
+                  MSS-YSQ устроен немного иначе: отдельно оценивает
+                  пунитивность к себе и к другим, добавляет тему низкой
+                  самоэффективности и не использует Недостаточный самоконтроль
+                  как отдельную шкалу.
+                </p>
+
+                {classicNotMss.map((schema) => (
+                  <div
+                    key={schema.key}
+                    className="mt-3 px-4 py-4"
+                    style={{
+                      backgroundColor: C.bg,
+                      borderRadius: radius.md,
+                    }}
+                  >
+                    <h3 className="text-[15px] leading-[1.3]">
+                      {schema.name}
+                    </h3>
+                    <p
+                      className="mt-2 text-[11.5px] leading-[1.58]"
+                      style={{ ...sans, color: C.inkSoft }}
+                    >
+                      {schema.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+        </section>
+
+        <section className="mx-auto max-w-5xl px-6 py-7 md:px-8 md:py-9">
+          <Reveal>
+            <div className="grid gap-y-3 md:grid-cols-[0.72fr_1.28fr] md:gap-x-10">
+              <div><Eyebrow>Развитие модели</Eyebrow></div>
+              <div className="hidden md:block" />
+
+              <h2 className="text-[29px] leading-[1.08] md:text-[35px]">
+                Что предложили добавить позже
+              </h2>
+
+              <p
+                className="text-[13px] leading-[1.65]"
+                style={{ ...sans, color: C.inkSoft }}
+              >
+                В 2021 году международная рабочая группа предложила
+                расширить теорию двумя потребностями и тремя схемами. Я
+                отделяю это развитие модели от основной карты и от результатов
+                MSS-YSQ, чтобы не смешивать разные версии классификации.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="mt-6 grid gap-3 md:grid-cols-2">
+            {extendedNeeds.map((need) => (
+              <div
+                key={need.key}
+                className="px-5 py-5"
+                style={{
+                  backgroundColor: C.surfaceWarm,
+                  borderRadius: radius.md,
+                }}
+              >
+                <p
+                  className="text-[9.5px] uppercase tracking-[0.1em]"
+                  style={{ ...sans, color: C.terracotta }}
+                >
+                  Дополнительная потребность
+                </p>
+                <h3 className="mt-2 text-[17px] leading-[1.25]">
+                  {need.name}
+                </h3>
+                <p
+                  className="mt-2 text-[11.5px] leading-[1.58]"
+                  style={{ ...sans, color: C.inkSoft }}
+                >
+                  {need.description}
+                </p>
+              </div>
+            ))}
           </div>
-        </Reveal>
-      </section>
+
+          <div className="mt-3 grid gap-3 md:grid-cols-3">
+            {reformulated.map((schema) => (
+              <div
+                key={schema.key}
+                className="px-5 py-5"
+                style={{
+                  backgroundColor: C.surface,
+                  borderRadius: radius.md,
+                }}
+              >
+                <p
+                  className="text-[9.5px] uppercase tracking-[0.1em]"
+                  style={{ ...sans, color: C.inkSoft }}
+                >
+                  Предложенная схема
+                </p>
+                <h3 className="mt-2 text-[16px] leading-[1.3]">
+                  {schema.name}
+                </h3>
+                <p
+                  className="mt-2 text-[11.5px] leading-[1.58]"
+                  style={{ ...sans, color: C.inkSoft }}
+                >
+                  {schema.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-6 pb-3 pt-4 md:px-8">
+          <Reveal>
+            <div
+              className="grid gap-6 px-6 py-7 md:grid-cols-[1fr_auto] md:items-center md:px-8 md:py-8"
+              style={{
+                backgroundColor: C.ink,
+                color: C.bg,
+                borderRadius: radius.lg,
+                boxShadow: shadow.soft,
+              }}
+            >
+              <div>
+                <Eyebrow>Если узнаете знакомый паттерн</Eyebrow>
+                <h2 className="mt-3 max-w-3xl text-[28px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[34px]">
+                  Можно проверить его на конкретных ситуациях, а не только на описании
+                </h2>
+                <p
+                  className="mt-3 max-w-2xl text-[13px] leading-[1.6]"
+                  style={{ ...sans, color: '#C9C2B5' }}
+                >
+                  На встрече мы можем разобрать, когда этот паттерн
+                  включается, какие выводы появляются автоматически, как вы
+                  обычно справляетесь и что можно менять дальше.
+                </p>
+              </div>
+
+              <Link
+                href="/book"
+                className="inline-flex justify-center px-7 py-3 text-[13px] font-medium transition-all duration-300 hover:-translate-y-0.5"
+                style={{
+                  ...sans,
+                  backgroundColor: C.bg,
+                  color: C.ink,
+                  borderRadius: radius.pill,
+                }}
+              >
+                Оставить заявку
+              </Link>
+            </div>
+          </Reveal>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-6 pb-12 pt-4 md:px-8 md:pb-14">
+          <Reveal>
+            <div
+              className="flex flex-wrap items-center justify-between gap-4 px-5 py-4"
+              style={{
+                backgroundColor: C.surface,
+                borderRadius: radius.md,
+              }}
+            >
+              <div>
+                <p className="text-[14px]">
+                  Хотите сначала посмотреть на свой профиль?
+                </p>
+                <p
+                  className="mt-1 text-[11.5px] leading-[1.5]"
+                  style={{ ...sans, color: C.inkSoft }}
+                >
+                  Можно пройти MSS-YSQ или открыть карту режимов, которые
+                  описывают уже не устойчивую тему, а состояние в конкретный
+                  момент.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-4">
+                <Link
+                  href="/tools/schema-test"
+                  className="text-[12px] underline underline-offset-4"
+                  style={{ ...sans, color: C.ink }}
+                >
+                  Опросник схем MSS-YSQ →
+                </Link>
+                <Link
+                  href="/tools/schema-modes"
+                  className="text-[12px] underline underline-offset-4"
+                  style={{ ...sans, color: C.ink }}
+                >
+                  Карта режимов →
+                </Link>
+              </div>
+            </div>
+          </Reveal>
+        </section>
+      </main>
 
       <Footer />
     </div>
   );
 }
 
-// ============================================================
-// SVG-карта
-// ============================================================
-
-function NeedsAndDomainsMap({
+function NeedsMap({
   hoveredDomain,
-  onHoverDomain,
-  onClickDomain,
+  onHover,
+  onClick,
 }: {
   hoveredDomain: DomainKey | null;
-  onHoverDomain: (key: DomainKey | null) => void;
-  onClickDomain: (key: DomainKey) => void;
+  onHover: (key: DomainKey | null) => void;
+  onClick: (key: DomainKey) => void;
 }) {
-  const cx = 350;
-  const cy = 350;
-  const centerR = 70;
-  const islandR = 95;
-  const orbitR = 220;
-
-  const positions = domains.map((d, i) => {
-    const angle = (i * (2 * Math.PI)) / 5 - Math.PI / 2;
-    return {
-      x: cx + orbitR * Math.cos(angle),
-      y: cy + orbitR * Math.sin(angle),
-      domain: d,
-    };
-  });
+  const positions: Record<DomainKey, { x: number; y: number; w: number; h: number }> = {
+    disconnection: { x: 35, y: 55, w: 215, h: 125 },
+    impairedAutonomy: { x: 275, y: 30, w: 210, h: 125 },
+    otherDirectedness: { x: 510, y: 70, w: 215, h: 125 },
+    overvigilance: { x: 110, y: 290, w: 230, h: 125 },
+    impairedLimits: { x: 420, y: 300, w: 230, h: 125 },
+  };
 
   return (
-    <div className="w-full">
-      <div className="text-center mb-6">
-        <p className="text-xs tracking-widest uppercase" style={{ ...sans, color: C.inkSoft }}>
-          Пять доменов жизни
-        </p>
-      </div>
+    <div
+      className="overflow-hidden px-3 py-4 sm:px-5"
+      style={{ backgroundColor: C.surface, borderRadius: radius.lg }}
+    >
+      <svg
+        viewBox="0 0 760 500"
+        className="h-auto w-full"
+        role="img"
+        aria-label="Карта пяти областей схем и связанных эмоциональных потребностей"
+      >
+        {domains.map((domain) => {
+          const position = positions[domain.key];
+          const active = hoveredDomain === domain.key;
+          const need = getNeedByKey(domain.needKey);
+          const words = domain.name.split(' ');
+          const line1 = domain.name.length > 24 ? words.slice(0, 2).join(' ') : domain.name;
+          const line2 = domain.name.length > 24 ? words.slice(2).join(' ') : '';
 
-      <svg viewBox="0 0 700 700" className="w-full h-auto" style={{ maxHeight: '700px' }}>
-        <defs>
-          <filter id="soft-shadow-needs" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
-            <feOffset dx="0" dy="2" result="offsetblur" />
-            <feComponentTransfer>
-              <feFuncA type="linear" slope="0.18" />
-            </feComponentTransfer>
-            <feMerge>
-              <feMergeNode />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        {positions.map((p) => {
-          const dx = p.x - cx;
-          const dy = p.y - cy;
-          const len = Math.sqrt(dx * dx + dy * dy);
-          const ux = dx / len;
-          const uy = dy / len;
-          const x1 = cx + ux * centerR;
-          const y1 = cy + uy * centerR;
-          const x2 = p.x - ux * islandR;
-          const y2 = p.y - uy * islandR;
-          const isHovered = hoveredDomain === p.domain.key;
-          return (
-            <line
-              key={`line-${p.domain.key}`}
-              x1={x1}
-              y1={y1}
-              x2={x2}
-              y2={y2}
-              stroke={isHovered ? p.domain.color : C.line}
-              strokeWidth={isHovered ? 2 : 1}
-              opacity={isHovered ? 0.8 : 0.5}
-              style={{ transition: 'all 0.2s' }}
-            />
-          );
-        })}
-
-        <g>
-          <circle
-            cx={cx}
-            cy={cy}
-            r={centerR}
-            fill={C.moss}
-            opacity={0.9}
-            stroke={C.bg}
-            strokeWidth="3"
-            filter="url(#soft-shadow-needs)"
-          />
-          <text x={cx} y={cy - 10} textAnchor="middle" fontSize="14" fill={C.bg} style={{ ...serif }}>
-            5 базовых
-          </text>
-          <text x={cx} y={cy + 10} textAnchor="middle" fontSize="14" fill={C.bg} style={{ ...serif }}>
-            потребностей
-          </text>
-        </g>
-
-        {positions.map((p) => {
-          const isHovered = hoveredDomain === p.domain.key;
-          const schemasCount = getSchemasByDomain(p.domain.key).length;
           return (
             <g
-              key={p.domain.key}
-              style={{ cursor: 'pointer' }}
-              onMouseEnter={() => onHoverDomain(p.domain.key)}
-              onMouseLeave={() => onHoverDomain(null)}
-              onClick={() => onClickDomain(p.domain.key)}
+              key={domain.key}
+              role="button"
+              tabIndex={0}
+              aria-label={domain.name}
+              style={{ cursor: 'pointer', outline: 'none' }}
+              onMouseEnter={() => onHover(domain.key)}
+              onMouseLeave={() => onHover(null)}
+              onClick={() => onClick(domain.key)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  onClick(domain.key);
+                }
+              }}
             >
-              <circle
-                cx={p.x}
-                cy={p.y}
-                r={islandR}
-                fill={p.domain.color}
-                opacity={isHovered ? 0.95 : 0.85}
-                stroke={C.bg}
-                strokeWidth="3"
-                filter="url(#soft-shadow-needs)"
-                style={{ transition: 'opacity 0.2s' }}
+              <rect
+                x={position.x}
+                y={position.y}
+                width={position.w}
+                height={position.h}
+                rx="26"
+                fill={active ? domain.color : C.bg}
+                stroke={domain.color}
+                strokeWidth={active ? 2 : 1.2}
               />
-              <DomainLabel x={p.x} y={p.y} name={p.domain.name} schemasCount={schemasCount} />
+
+              <foreignObject
+  x={position.x + 14}
+  y={position.y + 14}
+  width={position.w - 28}
+  height={position.h - 28}
+  style={{ pointerEvents: 'none' }}
+>
+  <div
+    xmlns="http://www.w3.org/1999/xhtml"
+    style={{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textAlign: 'center',
+    }}
+  >
+    <div
+      style={{
+        ...serif,
+        color: active ? C.bg : C.ink,
+        fontSize: '15px',
+        lineHeight: 1.18,
+      }}
+    >
+      {domain.name}
+    </div>
+
+    <div
+      style={{
+        ...sans,
+        marginTop: '14px',
+        maxWidth: '180px',
+        color: active ? C.bg : C.inkSoft,
+        fontSize: '10.5px',
+        lineHeight: 1.35,
+      }}
+    >
+      {need?.name ?? ''}
+    </div>
+  </div>
+</foreignObject>
             </g>
           );
         })}
 
-        <text
-          x={cx}
-          y={680}
-          textAnchor="middle"
-          fontSize="11"
-          fill={C.inkSoft}
-          style={{ ...sans, letterSpacing: '0.05em' }}
-        >
-          Кликните на домен, чтобы перейти к его схемам
+        <circle cx="380" cy="245" r="58" fill={C.surfaceWarm} stroke={C.line} strokeWidth="1" />
+        <text x="380" y="239" textAnchor="middle" fontSize="13" fill={C.ink} style={{ ...serif }}>
+          потребности
+        </text>
+        <text x="380" y="258" textAnchor="middle" fontSize="11" fill={C.inkSoft} style={{ ...sans }}>
+          и устойчивые схемы
         </text>
       </svg>
     </div>
   );
 }
 
-function DomainLabel({ x, y, name, schemasCount }: { x: number; y: number; name: string; schemasCount: number }) {
-  const words = name.split(' ');
-  const lines: string[] = [];
-  if (words.length <= 2) {
-    lines.push(...words);
-  } else {
-    if (words[0].length + words[1].length < 18) {
-      lines.push(words[0] + ' ' + words[1]);
-      lines.push(words.slice(2).join(' '));
-    } else {
-      lines.push(words[0]);
-      lines.push(words.slice(1).join(' '));
-    }
-  }
-
-  const lineHeight = 18;
-  const totalHeight = lines.length * lineHeight;
-  const startY = y - totalHeight / 2 + lineHeight / 2 - 6;
-
+function NeedCard({ need }: { need: (typeof needs)[number] }) {
   return (
-    <>
-      {lines.map((line, i) => (
-        <text
-          key={i}
-          x={x}
-          y={startY + i * lineHeight}
-          textAnchor="middle"
-          fontSize="13"
-          fill={C.bg}
-          style={{ ...serif, pointerEvents: 'none' }}
+    <div
+      className="px-5 py-5 md:px-6"
+      style={{ backgroundColor: C.surface, borderRadius: radius.lg }}
+    >
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <h3 className="text-[18px] leading-[1.3]">{need.name}</h3>
+        <span className="text-[10.5px]" style={{ ...sans, color: C.inkSoft }}>
+          {need.nameEn}
+        </span>
+      </div>
+
+      <p className="mt-3 text-[12.5px] leading-[1.62]" style={{ ...sans, color: C.inkSoft }}>
+        {need.description}
+      </p>
+
+      <div className="mt-4 grid gap-3 md:grid-cols-2">
+        <div
+          className="px-4 py-4"
+          style={{ backgroundColor: C.bg, borderRadius: radius.md, borderLeft: `3px solid ${C.moss}` }}
         >
-          {line}
-        </text>
-      ))}
-      <text
-        x={x}
-        y={y + totalHeight / 2 + 14}
-        textAnchor="middle"
-        fontSize="10"
-        fill={C.bg}
-        opacity={0.85}
-        style={{ ...sans, letterSpacing: '0.1em', pointerEvents: 'none' }}
-      >
-        {schemasCount} {schemasCount === 1 ? 'схема' : schemasCount < 5 ? 'схемы' : 'схем'}
-      </text>
-    </>
+          <p className="text-[9.5px] uppercase tracking-[0.1em]" style={{ ...sans, color: C.moss }}>
+            Когда есть достаточно поддержки
+          </p>
+          <p className="mt-2 text-[11.5px] leading-[1.58]" style={{ ...sans, color: C.inkSoft }}>
+            {need.whenSupported}
+          </p>
+        </div>
+
+        <div
+          className="px-4 py-4"
+          style={{ backgroundColor: C.bg, borderRadius: radius.md, borderLeft: `3px solid ${C.terracotta}` }}
+        >
+          <p className="text-[9.5px] uppercase tracking-[0.1em]" style={{ ...sans, color: C.terracotta }}>
+            Когда этого долго не хватает
+          </p>
+          <p className="mt-2 text-[11.5px] leading-[1.58]" style={{ ...sans, color: C.inkSoft }}>
+            {need.whenMissing}
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }
-
-// ============================================================
-// Раскрывающаяся карточка схемы
-// ============================================================
-
 function SchemaCard({
   schema,
   domainColor,
@@ -529,86 +711,111 @@ function SchemaCard({
   return (
     <div
       id={schema.key}
-      className="rounded-sm overflow-hidden scroll-mt-24"
-      style={{ backgroundColor: C.surface }}
+      className="scroll-mt-24 overflow-hidden"
+      style={{
+        backgroundColor: C.surface,
+        borderRadius: radius.lg,
+        boxShadow: isOpen ? shadow.soft : 'none',
+      }}
     >
       <button
+        type="button"
         onClick={onToggle}
-        className="w-full text-left p-7 flex items-start gap-5 transition-colors"
-        style={{ backgroundColor: 'transparent' }}
+        className="flex w-full items-start gap-4 px-5 py-5 text-left md:px-6"
       >
-        <div
-          className="shrink-0 w-2 h-2 rounded-full mt-3"
+        <span
+          className="mt-2.5 h-2 w-2 shrink-0 rounded-full"
           style={{ backgroundColor: domainColor }}
         />
+
         <div className="flex-1">
-          <div className="flex items-baseline gap-3 mb-2 flex-wrap">
-            <h3 className="text-xl md:text-2xl">{schema.name}</h3>
-            <span className="text-xs" style={{ ...sans, color: C.inkSoft }}>
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <h3 className="text-[19px] leading-[1.25] md:text-[21px]">
+              {schema.name}
+            </h3>
+            <span className="text-[10.5px]" style={{ ...sans, color: C.inkSoft }}>
               {schema.nameEn}
             </span>
           </div>
-          <p className="text-[15px] italic leading-relaxed" style={{ color: C.inkSoft }}>
-            {schema.motto}
+
+          <p className="mt-2 text-[12.5px] leading-[1.6]" style={{ ...sans, color: C.inkSoft }}>
+            {schema.shortDescription}
           </p>
         </div>
-        <div
-          className="shrink-0 text-2xl leading-none mt-2 transition-transform duration-300"
+
+        <span
+          className="mt-1 shrink-0 text-[22px] leading-none transition-transform duration-200"
           style={{
             color: C.inkSoft,
             transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
           }}
         >
           +
-        </div>
+        </span>
       </button>
 
       {isOpen && (
-        <div className="px-7 pb-8 pt-2" style={{ borderTop: `1px solid ${C.line}` }}>
-          {/* Короткое описание из теста — как первый абзац-вход */}
-          <div className="pt-6 mb-6 pl-6 border-l-2" style={{ borderColor: domainColor }}>
-            <p className="text-[17px] leading-relaxed" style={{ color: C.ink }}>
-              {schema.shortDescription}
-            </p>
-          </div>
-
-          {/* Подробное описание */}
-          <div className="mb-8">
-            {schema.description.split('\n\n').map((para, i) => (
-              <p key={i} className="text-base leading-relaxed mb-4 last:mb-0" style={{ color: C.ink }}>
-                {para}
+        <div
+          className="px-5 pb-6 pt-1 md:px-6 md:pb-7"
+          style={{ borderTop: `1px solid ${C.line}` }}
+        >
+          <div className="pt-5">
+            {schema.description.split('\n\n').map((paragraph) => (
+              <p
+                key={paragraph}
+                className="mb-3 text-[13.5px] leading-[1.68] last:mb-0"
+                style={{ ...sans, color: C.ink }}
+              >
+                {paragraph}
               </p>
             ))}
           </div>
 
-          {/* Ранний опыт */}
-          <div className="mb-8">
-            <p className="text-xs tracking-widest uppercase mb-3" style={{ ...sans, color: C.inkSoft }}>
-              Типичный ранний опыт
+          <div
+            className="mt-6 px-4 py-4"
+            style={{ backgroundColor: C.surfaceWarm, borderRadius: radius.md }}
+          >
+            <p className="text-[9.5px] uppercase tracking-[0.11em]" style={{ ...sans, color: C.terracotta }}>
+              Как это может звучать
             </p>
-            <p className="text-base leading-relaxed" style={{ color: C.ink }}>
-              {schema.earlyExperience}
+            <p className="mt-2 text-[15px] leading-[1.5]">
+              {schema.howItMaySound}
             </p>
           </div>
 
-          {/* Три копинговые стратегии */}
-          <div className="mb-8">
-            <p className="text-xs tracking-widest uppercase mb-5" style={{ ...sans, color: C.inkSoft }}>
-              Три способа проживания схемы
+          <div className="mt-6">
+            <p className="text-[9.5px] uppercase tracking-[0.11em]" style={{ ...sans, color: C.inkSoft }}>
+              Что могло повлиять
             </p>
-            <div className="grid md:grid-cols-3 gap-4">
-              <CopingBox title="Капитуляция" titleEn="Surrender" description={schema.copingSurrender} color={domainColor} />
-              <CopingBox title="Избегание" titleEn="Avoidance" description={schema.copingAvoidance} color={domainColor} />
-              <CopingBox title="Гиперкомпенсация" titleEn="Overcompensation" description={schema.copingOvercompensation} color={domainColor} />
+            <p className="mt-2 text-[12.5px] leading-[1.64]" style={{ ...sans, color: C.inkSoft }}>
+              {schema.possibleOrigins}
+            </p>
+          </div>
+
+          <div className="mt-6">
+            <p className="text-[9.5px] uppercase tracking-[0.11em]" style={{ ...sans, color: C.inkSoft }}>
+              Как с этой темой иногда справляются
+            </p>
+
+            <div className="mt-3 grid gap-3 md:grid-cols-3">
+              <CopingCard title="Капитуляция" text={schema.copingSurrender} />
+              <CopingCard title="Избегание" text={schema.copingAvoidance} />
+              <CopingCard title="Гиперкомпенсация" text={schema.copingOvercompensation} />
             </div>
           </div>
 
-          {/* Здоровый Взрослый */}
-          <div className="p-6 rounded-sm" style={{ backgroundColor: C.bg, borderLeft: `3px solid ${C.moss}` }}>
-            <p className="text-xs tracking-widest uppercase mb-3" style={{ ...sans, color: C.moss }}>
-              Что делает Здоровый Взрослый
+          <div
+            className="mt-6 px-5 py-5"
+            style={{
+              backgroundColor: C.bg,
+              borderRadius: radius.md,
+              borderLeft: `3px solid ${C.moss}`,
+            }}
+          >
+            <p className="text-[9.5px] uppercase tracking-[0.11em]" style={{ ...sans, color: C.moss }}>
+              Что можно проверять вместо автоматического сценария
             </p>
-            <p className="text-base leading-relaxed" style={{ color: C.ink }}>
+            <p className="mt-2 text-[13px] leading-[1.65]" style={{ ...sans, color: C.ink }}>
               {schema.healthyAdultResponse}
             </p>
           </div>
@@ -618,29 +825,29 @@ function SchemaCard({
   );
 }
 
-function CopingBox({
-  title,
-  titleEn,
-  description,
-  color,
-}: {
-  title: string;
-  titleEn: string;
-  description: string;
-  color: string;
-}) {
+function CopingCard({ title, text }: { title: string; text: string }) {
   return (
-    <div className="p-5 rounded-sm" style={{ backgroundColor: C.bg }}>
-      <div className="mb-3 pb-3" style={{ borderBottom: `1px solid ${C.line}` }}>
-        <p className="text-sm mb-1" style={{ color, fontWeight: 500 }}>
-          {title}
-        </p>
-        <p className="text-[11px] tracking-wider uppercase" style={{ ...sans, color: C.inkSoft }}>
-          {titleEn}
-        </p>
-      </div>
-      <p className="text-[14px] leading-relaxed" style={{ color: C.ink }}>
-        {description}
+    <div
+      className="px-4 py-4"
+      style={{ backgroundColor: C.bg, borderRadius: radius.md }}
+    >
+      <h4 className="text-[13.5px] leading-[1.3]">{title}</h4>
+      <p className="mt-2 text-[11.5px] leading-[1.58]" style={{ ...sans, color: C.inkSoft }}>
+        {text}
+      </p>
+    </div>
+  );
+}
+
+function InfoCard({ title, text }: { title: string; text: string }) {
+  return (
+    <div
+      className="px-5 py-5"
+      style={{ backgroundColor: C.surface, borderRadius: radius.md }}
+    >
+      <h2 className="text-[15px] leading-[1.3]">{title}</h2>
+      <p className="mt-2 text-[11.5px] leading-[1.55]" style={{ ...sans, color: C.inkSoft }}>
+        {text}
       </p>
     </div>
   );
