@@ -600,8 +600,7 @@ function NeedsMap({
   style={{ pointerEvents: 'none' }}
 >
   <div
-    xmlns="http://www.w3.org/1999/xhtml"
-    style={{
+  style={{
       width: '100%',
       height: '100%',
       display: 'flex',
