@@ -213,7 +213,7 @@ export default async function ArticlePage({
               </h2>
 
               <p
-                className="mt-3 max-w-2xl text-[13px] leading-[1.6]"
+                className="mt-3 max-w-3xl text-[13px] leading-[1.6]"
                 style={{ ...sans, color: '#C9C2B5' }}
               >
                 На встрече мы посмотрим, как именно трудность проявляется

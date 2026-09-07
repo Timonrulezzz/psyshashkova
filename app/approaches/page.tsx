@@ -115,12 +115,12 @@ export default function ApproachesPage() {
             <div className="max-w-4xl">
               <Eyebrow>Подходы</Eyebrow>
 
-              <h1 className="mt-4 max-w-[850px] text-[37px] font-normal leading-[1.03] tracking-[-0.025em] md:text-[46px] lg:text-[50px]">
+              <h1 className="mt-4 max-w-[920px] text-[37px] font-normal leading-[1.03] tracking-[-0.025em] md:text-[46px] lg:text-[50px]">
                 КПТ и схема-терапия: два способа смотреть на одну ситуацию
               </h1>
 
               <p
-                className="mt-4 max-w-[760px] text-[15px] leading-[1.65] md:text-[16px]"
+                className="mt-4 max-w-[920px] text-[15px] leading-[1.65] md:text-[16px]"
                 style={{
                   ...sans,
                   color: C.inkSoft,
@@ -158,8 +158,7 @@ export default function ApproachesPage() {
                 number="03"
                 title="Изменение"
               >
-                Что можно попробовать делать, переживать или
-                понимать иначе.
+                Что можно попробовать делать иначе и как по-новому понимать происходящее.
               </IntroCard>
             </div>
           </Reveal>
@@ -195,7 +194,7 @@ export default function ApproachesPage() {
                 </p>
 
                 <p>
-                  Часто какой-то способ действительно помогает
+                  Часто какой-то способ помогает
                   в моменте, но одновременно поддерживает
                   трудность дальше. Например, избегание быстро
                   снижает тревогу, поэтому хочется избегать
@@ -247,7 +246,7 @@ export default function ApproachesPage() {
                   КПТ не про позитивное мышление.
                 </strong>{' '}
                 Мы не заменяем неприятную мысль на красивую.
-                Иногда вывод действительно оказывается
+                Иногда вывод оказывается
                 слишком категоричным. Иногда он вполне
                 реалистичен. Нам важнее научиться замечать,
                 проверять и выбирать, что делать дальше.
@@ -419,30 +418,30 @@ export default function ApproachesPage() {
 
 <section className="mx-auto max-w-6xl px-6 py-8 md:px-8 md:py-10">
   <Reveal>
-    <div className="grid gap-y-2 md:grid-cols-[0.72fr_1.28fr] md:gap-x-10">
-      <div>
-        <Eyebrow>Вместе</Eyebrow>
-      </div>
-
-      <div className="hidden md:block" />
-
-      <h2 className="text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
-        Одна ситуация, две перспективы
-      </h2>
-
-      <p
-        className="text-[14px] leading-[1.65] md:text-[15px]"
-        style={{
-          ...sans,
-          color: C.inkSoft,
-        }}
-      >
-        В реальной работе КПТ и схема-терапия не разделены
-        четкой чертой. Одну и ту же ситуацию бывает полезно
-        посмотреть с двух сторон.
-      </p>
+  <div className="grid gap-y-2 md:grid-cols-2">
+    <div>
+      <Eyebrow>Вместе</Eyebrow>
     </div>
-  </Reveal>
+
+    <div className="hidden md:block" />
+
+    <h2 className="max-w-[430px] text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
+      Одна ситуация, две перспективы
+    </h2>
+
+    <p
+      className="max-w-[500px] self-start pl-0 text-[14px] leading-[1.65] md:pl-7 md:text-[15px]"
+      style={{
+        ...sans,
+        color: C.inkSoft,
+      }}
+    >
+      В реальной работе КПТ и схема-терапия не разделены
+      четкой чертой. Одну и ту же ситуацию бывает полезно
+      посмотреть с двух сторон.
+    </p>
+  </div>
+</Reveal>
 
   <Reveal delay={50}>
     <div
@@ -577,7 +576,7 @@ export default function ApproachesPage() {
               </h2>
 
               <p
-                className="mt-3 max-w-2xl text-[14px] leading-[1.65]"
+                className="mt-3 max-w-[820px] text-[14px] leading-[1.65]"
                 style={{
                   ...sans,
                   color: C.inkSoft,

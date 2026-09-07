@@ -28,10 +28,27 @@ import {
   computeAllResults,
   levelLabels,
   modes,
-  questions,
+  questions as rawQuestions,
   type ModeCategory,
   type ModeResult,
 } from './data';
+
+function stripTrailingPeriod(text: string) {
+  const trimmed = text.trim();
+
+  if (
+    trimmed.endsWith('.') &&
+    !trimmed.endsWith('...')
+  ) {
+    return trimmed.slice(0, -1);
+  }
+
+  return trimmed;
+}
+
+const questions = rawQuestions.map(
+  stripTrailingPeriod
+);
 
 type Stage = 'intro' | 'quiz' | 'results';
 type Answers = Record<number, number>;
@@ -597,8 +614,8 @@ function Quiz({
   const progress = ((currentIndex + 1) / questions.length) * 100;
 
   return (
-    <section className="ym-hide-content ym-disable-clickmap mx-auto max-w-4xl px-6 pb-20 pt-10 md:px-8 md:pt-14">
-      <div className="mb-9">
+    <section className="ym-hide-content ym-disable-clickmap mx-auto max-w-4xl px-6 pb-12 pt-7 md:px-8 md:pt-8">
+      <div className="mb-5">
         <div className="mb-3 flex items-center justify-between gap-4">
           <p
             className="text-[12px]"
@@ -645,11 +662,11 @@ function Quiz({
           Насколько часто это было похоже на вас за последние полгода?
         </p>
 
-        <h1 className="mt-4 max-w-[820px] text-[29px] font-normal leading-[1.14] tracking-[-0.02em] md:text-[37px]">
+        <h1 className="mt-3 max-w-[820px] text-[26px] font-normal leading-[1.1] tracking-[-0.02em] md:text-[32px]">
           {questions[currentIndex]}
         </h1>
 
-        <div className="mt-8 space-y-2.5">
+        <div className="mt-5 space-y-2">
           {answerOptions.map((option) => {
             const active = currentAnswer === option.value;
 
@@ -659,7 +676,7 @@ function Quiz({
                 type="button"
                 disabled={transitioning}
                 onClick={() => onAnswer(option.value)}
-                className="group flex w-full items-center gap-4 px-5 py-4 text-left transition-all duration-200 hover:translate-x-1 disabled:pointer-events-none"
+                className="group flex w-full items-center gap-3 px-4 py-3 text-left transition-all duration-200 hover:translate-x-1 disabled:pointer-events-none"
                 style={{
                   backgroundColor: active ? C.surfaceWarm : C.surface,
                   borderRadius: radius.md,
@@ -667,7 +684,7 @@ function Quiz({
                 }}
               >
                 <span
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[12px]"
+                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px]"
                   style={{
                     ...sans,
                     color: active ? C.bg : C.terracotta,
@@ -693,7 +710,7 @@ function Quiz({
           })}
         </div>
 
-        <div className="mt-6 flex items-center justify-between gap-4">
+        <div className="mt-4 flex items-center justify-between gap-4">
           {currentIndex > 0 ? (
             <button
               type="button"
@@ -1074,13 +1091,12 @@ function Results({
             </h2>
 
             <p
-              className="mt-3 max-w-2xl text-[13px] leading-[1.6]"
+  className="mt-3 max-w-3xl text-[13px] leading-[1.6]"
               style={{ ...sans, color: '#C9C2B5' }}
             >
-              На встрече можно взять несколько реальных ситуаций и
-              посмотреть, что запускало переключение, какие схемы были
-              активны и что помогло бы Здоровому Взрослому реагировать
-              иначе.
+              На встрече разберем несколько реальных ситуаций: что запускало
+переключение, какие схемы были активны и что помогло бы Здоровому
+Взрослому реагировать иначе.
             </p>
           </div>
 

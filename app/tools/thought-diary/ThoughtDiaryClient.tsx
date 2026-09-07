@@ -989,47 +989,40 @@ function Intro({
               borderRadius: radius.lg,
             }}
           >
-            <div className="grid gap-5 md:grid-cols-[0.7fr_1.3fr] md:gap-10">
-              <div>
-                <Eyebrow>
-                  Перед началом
-                </Eyebrow>
+            <div className="grid gap-y-3 md:grid-cols-[0.7fr_1.3fr] md:gap-x-10">
+  <div>
+    <Eyebrow>
+      Перед началом
+    </Eyebrow>
+  </div>
 
-                <h2 className="mt-3 text-[28px] leading-[1.08] md:text-[34px]">
-                  Что происходит с вашими
-                  записями
-                </h2>
-              </div>
+  <div className="hidden md:block" />
 
-              <div
-                className="space-y-3 text-[13px] leading-[1.65] md:text-[14px]"
-                style={{
-                  ...sans,
-                  color: C.ink,
-                }}
-              >
-                <p>
-                  Записи сохраняются в
-                  локальном хранилище
-                  браузера на этом
-                  устройстве. На другом
-                  устройстве или в другом
-                  браузере они
-                  автоматически не
-                  появятся.
-                </p>
+  <h2 className="text-[28px] leading-[1.08] md:text-[34px]">
+    Что происходит с вашими
+    записями
+  </h2>
 
-                
-                <p>
-                  Если этим устройством
-                  пользуется кто-то еще,
-                  учитывайте, что человек
-                  с доступом к этому же
-                  браузеру сможет открыть
-                  сохраненную историю.
-                </p>
-              </div>
-            </div>
+  <div
+    className="space-y-3 text-[13px] leading-[1.65] md:pt-[4px] md:text-[14px]"
+    style={{
+      ...sans,
+      color: C.ink,
+    }}
+  >
+    <p>
+      Записи сохраняются в локальном хранилище браузера на этом
+      устройстве. На другом устройстве или в другом браузере они
+      автоматически не появятся.
+    </p>
+
+    <p>
+      Если этим устройством пользуется кто-то еще, учитывайте, что
+      человек с доступом к этому же браузеру сможет открыть
+      сохраненную историю.
+    </p>
+  </div>
+</div>
           </div>
         </Reveal>
       </section>
@@ -1063,8 +1056,8 @@ function FillMode({
   onExit: () => void;
 }) {
   return (
-    <section className="mx-auto max-w-4xl px-6 pb-20 pt-10 md:px-8 md:pt-14">
-      <div className="mb-8">
+    <section className="mx-auto max-w-4xl px-6 pb-10 pt-6 md:px-8 md:pt-7">
+  <div className="mb-5">
         <div className="mb-3 flex items-center justify-between gap-4">
           <p
             className="text-[12px]"
@@ -1108,7 +1101,7 @@ function FillMode({
       </div>
 
       <div
-        className="px-5 py-6 md:px-7 md:py-7"
+  className="px-5 py-5 md:px-6 md:py-5"
         style={{
           backgroundColor:
             'rgba(237, 229, 214, 0.58)',
@@ -1122,7 +1115,7 @@ function FillMode({
         />
       </div>
 
-      <div className="mt-5 flex items-center justify-between gap-4">
+      <div className="mt-4 flex items-center justify-between gap-4">
         {step > 0 ? (
           <button
             type="button"
@@ -1231,7 +1224,7 @@ function StepContent({
             })
           }
           placeholder="Например: тревога, стыд, злость, грусть..."
-          minHeight={110}
+          minHeight={90}
         />
       </StepText>
     );
@@ -1261,7 +1254,7 @@ function StepContent({
       <StepText
         eyebrow="Реакция"
         title="Что вы сделали после этого?"
-        help="Отдельно можно записать то, что вы действительно сделали, и импульс, который возник, даже если вы ему не последовали."
+        help="Отдельно можно записать то, что вы сделали, и импульс, который возник, даже если вы ему не последовали."
       >
         <div className="grid gap-4 md:grid-cols-2">
           <PrivateTextarea
@@ -1273,7 +1266,7 @@ function StepContent({
               })
             }
             placeholder="Например: быстро убрала осколки и продолжила ругать себя."
-            minHeight={150}
+            minHeight={110}
           />
 
           <PrivateTextarea
@@ -1285,7 +1278,7 @@ function StepContent({
               })
             }
             placeholder="Например: спрятаться, уйти, позвонить кому-то."
-            minHeight={150}
+            minHeight={110}
           />
         </div>
       </StepText>
@@ -1309,7 +1302,7 @@ function StepContent({
               })
             }
             placeholder="Какие факты делают эту мысль убедительной?"
-            minHeight={175}
+            minHeight={120}
           />
 
           <PrivateTextarea
@@ -1323,7 +1316,7 @@ function StepContent({
               })
             }
             placeholder="Какие факты она не учитывает? Есть ли другие объяснения?"
-            minHeight={175}
+            minHeight={120}
           />
         </div>
       </StepText>
@@ -1335,7 +1328,7 @@ function StepContent({
       <StepText
         eyebrow="Более точная мысль"
         title="Как теперь можно сформулировать эту мысль?"
-        help="Не обязательно делать ее позитивной или успокаивающей. Попробуйте просто учесть больше фактов и убрать то, для чего у вас нет оснований."
+        help="Необязательно делать ее позитивной или успокаивающей. Попробуйте просто учесть больше фактов и убрать то, для чего у вас нет оснований."
         example="Например: я уронила чашку. Это неприятно, но один такой эпизод не доказывает, что я растяпа."
       >
         <PrivateTextarea
@@ -1408,12 +1401,12 @@ function StepText({
         {eyebrow}
       </p>
 
-      <h1 className="mt-3 max-w-[760px] text-[28px] font-normal leading-[1.12] tracking-[-0.02em] md:text-[36px]">
-        {title}
-      </h1>
+      <h1 className="mt-2.5 max-w-[760px] text-[26px] font-normal leading-[1.1] tracking-[-0.02em] md:text-[31px]">
+  {title}
+</h1>
 
-      <p
-        className="mt-3 max-w-[760px] text-[13px] leading-[1.62] md:text-[14px]"
+<p
+  className="mt-2 max-w-[760px] text-[13px] leading-[1.58] md:text-[13.5px]"
         style={{
           ...sans,
           color: C.inkSoft,
@@ -1424,7 +1417,7 @@ function StepText({
 
       {example && (
         <p
-          className="mt-2 max-w-[760px] text-[11.5px] leading-[1.55]"
+          className="mt-1.5 max-w-[760px] text-[11.5px] leading-[1.5]"
           style={{
             ...sans,
             color: C.inkSoft,
@@ -1434,7 +1427,7 @@ function StepText({
         </p>
       )}
 
-      <div className="mt-6">
+      <div className="mt-4">
         {children}
       </div>
     </>
@@ -1446,7 +1439,7 @@ function PrivateTextarea({
   onChange,
   placeholder,
   label,
-  minHeight = 150,
+  minHeight = 115,
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -1458,7 +1451,7 @@ function PrivateTextarea({
     <label className="block">
       {label && (
         <span
-          className="mb-2 block text-[11px] font-medium"
+          className="mb-1.5 block text-[11px] font-medium"
           style={{
             ...sans,
             color: C.ink,
@@ -1474,7 +1467,7 @@ function PrivateTextarea({
           onChange(event.target.value)
         }
         placeholder={placeholder}
-        className="ym-disable-keys w-full resize-none border-0 px-4 py-4 text-[14px] leading-[1.6] outline-none"
+        className="ym-disable-keys w-full resize-none border-0 px-4 py-3 text-[13.5px] leading-[1.55] outline-none"
         style={{
           ...sans,
           minHeight,
@@ -1498,7 +1491,7 @@ function IntensitySlider({
 }) {
   return (
     <div
-      className="px-5 py-5"
+      className="px-4 py-4"
       style={{
         backgroundColor: C.bg,
         borderRadius: radius.md,
@@ -1516,7 +1509,7 @@ function IntensitySlider({
         </span>
 
         <span
-          className="text-[42px] leading-none"
+          className="text-[36px] leading-none"
           style={{
             color: C.terracotta,
           }}
@@ -1546,7 +1539,7 @@ function IntensitySlider({
             Number(event.target.value)
           )
         }
-        className="ym-disable-keys mt-5 w-full"
+        className="ym-disable-keys mt-3 w-full"
         style={{
           accentColor: C.terracotta,
         }}

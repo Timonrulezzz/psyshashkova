@@ -426,26 +426,28 @@ export default function ToolsLibrary() {
         <section className="mx-auto max-w-6xl px-6 py-7 md:px-8 md:py-9">
           <Reveal>
             <div className="grid gap-y-3 md:grid-cols-[0.72fr_1.28fr] md:gap-x-10">
-              <div>
-                <Eyebrow>Доступно сейчас</Eyebrow>
-              </div>
+  <div>
+    <Eyebrow>Доступно сейчас</Eyebrow>
+  </div>
 
-              <div className="hidden md:block" />
+  <div className="hidden md:block" />
 
-              <h2 className="text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
-                Что уже можно использовать
-              </h2>
+  <h2 className="text-[30px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[38px]">
+    Что уже можно использовать
+  </h2>
 
-              <p
-                className="text-[14px] leading-[1.65] md:text-[15px]"
-                style={{
-                  ...sans,
-                  color: C.inkSoft,
-                }}
-              >
-                Выберите инструмент под ту задачу, которая сейчас для вас актуальна. Необязательно проходить все подряд: иногда одного подходящего разбора достаточно, чтобы заметить что-то важное.
-              </p>
-            </div>
+  <p
+    className="text-[14px] leading-[1.65] md:pt-[5px] md:text-[15px]"
+    style={{
+      ...sans,
+      color: C.inkSoft,
+    }}
+  >
+    Выберите инструмент под ту задачу, которая сейчас для вас актуальна.
+    Необязательно проходить все подряд: иногда одного подходящего разбора
+    достаточно, чтобы заметить что-то важное.
+  </p>
+</div>
           </Reveal>
 
           <div
@@ -582,7 +584,7 @@ export default function ToolsLibrary() {
               </h2>
 
               <p
-                className="mt-3 max-w-2xl text-[13px] leading-[1.6] md:text-[14px]"
+                className="mt-3 max-w-3xl text-[13px] leading-[1.6] md:text-[14px]"
                 style={{
                   ...sans,
                   color: '#C9C2B5',

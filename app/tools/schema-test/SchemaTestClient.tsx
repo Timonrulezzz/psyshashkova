@@ -26,12 +26,34 @@ import {
 import {
   ANSWER_OPTIONS,
   NEED_GROUPS,
-  QUESTIONS,
+  QUESTIONS as RAW_QUESTIONS,
   SCHEMAS,
   answerLabel,
   scoredValue,
   type MssSchema,
 } from './mssData';
+
+function stripTrailingPeriod(text: string) {
+  const trimmed = text.trim();
+
+  if (
+    trimmed.endsWith('.') &&
+    !trimmed.endsWith('...')
+  ) {
+    return trimmed.slice(0, -1);
+  }
+
+  return trimmed;
+}
+
+const QUESTIONS = RAW_QUESTIONS.map(
+  (question) => ({
+    ...question,
+    text: stripTrailingPeriod(
+      question.text
+    ),
+  })
+);
 
 type Stage = 'intro' | 'test' | 'result';
 type Answers = Record<number, number>;
@@ -587,7 +609,7 @@ function Test({
   const progress = ((current + 1) / QUESTIONS.length) * 100;
 
   return (
-    <section className="ym-hide-content ym-disable-clickmap mx-auto max-w-4xl px-6 pb-20 pt-10 md:px-8 md:pt-14">
+    <section className="ym-hide-content ym-disable-clickmap mx-auto max-w-4xl px-6 pb-12 pt-7 md:px-8 md:pt-8">
       <div>
         <div className="mb-3 flex items-center justify-between gap-4">
           <p
@@ -621,7 +643,7 @@ function Test({
         </div>
       </div>
 
-      <div className="mt-10">
+      <div className="mt-6">
         <p
           className="text-[10px] uppercase tracking-[0.12em]"
           style={{ ...sans, color: C.terracotta }}
@@ -629,11 +651,11 @@ function Test({
           Насколько это похоже на ваш опыт?
         </p>
 
-        <h1 className="mt-4 max-w-[820px] text-[29px] font-normal leading-[1.14] tracking-[-0.02em] md:text-[37px]">
+        <h1 className="mt-3 max-w-[820px] text-[26px] font-normal leading-[1.1] tracking-[-0.02em] md:text-[32px]">
           {question.text}
         </h1>
 
-        <div className="mt-8 space-y-2.5">
+        <div className="mt-5 space-y-2">
           {ANSWER_OPTIONS.map((option) => {
             const active = selected === option.value;
 
@@ -642,7 +664,7 @@ function Test({
                 key={option.value}
                 type="button"
                 onClick={() => onAnswer(option.value)}
-                className="group flex w-full items-center gap-4 px-5 py-4 text-left transition-all duration-200 hover:translate-x-1"
+                className="group flex w-full items-center gap-3 px-4 py-3 text-left transition-all duration-200 hover:translate-x-1"
                 style={{
                   backgroundColor: active ? C.surfaceWarm : C.surface,
                   borderRadius: radius.md,
@@ -650,7 +672,7 @@ function Test({
                 }}
               >
                 <span
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[12px]"
+                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px]"
                   style={{
                     ...sans,
                     color: active ? C.bg : C.terracotta,
@@ -676,7 +698,7 @@ function Test({
           })}
         </div>
 
-        <div className="mt-6 flex items-center justify-between gap-4">
+        <div className="mt-4 flex items-center justify-between gap-4">
           {current > 0 ? (
             <button
               type="button"
@@ -1006,15 +1028,15 @@ function Result({
       </h2>
 
       <p
-        className="mt-3 max-w-2xl text-[13px] leading-[1.6] md:text-[14px]"
+  className="mt-3 max-w-3xl text-[13px] leading-[1.6] md:text-[14px]"
         style={{
           ...sans,
           color: '#C9C2B5',
         }}
       >
-        На встрече можно посмотреть на результат вместе с конкретными
-        ситуациями из вашей жизни: когда эти паттерны включаются, как вы
-        обычно реагируете и что поддерживает их сейчас.
+        На встрече свяжем результат с конкретными ситуациями из вашей
+жизни: когда эти темы особенно проявляются, как вы обычно
+реагируете и что помогает им повторяться снова.
       </p>
     </div>
 

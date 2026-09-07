@@ -358,7 +358,7 @@ export default function Home() {
           className="text-[12.5px] leading-relaxed"
           style={{ color: C.berry }}
         >
-          Не обязательно заранее понимать, к какому пункту относится
+          Необязательно заранее понимать, к какому пункту относится
           ваша ситуация. Это можно выяснить вместе.
         </p>
       </div>
@@ -386,65 +386,67 @@ export default function Home() {
   </div>
 </section>
 
-        {/* МЕХАНИЗМЫ */}
-<section className="mx-auto max-w-[1240px] px-4 py-5 md:px-6 md:py-6">
-  <div
-    className="mx-auto max-w-6xl px-6 py-8 md:px-8 md:py-10"
-    style={{
-      backgroundColor: C.surface,
-      borderRadius: radius.lg,
-      boxShadow: shadow.soft,
-    }}
-  >
-    <Reveal>
-      <div className="mb-7 grid gap-5 md:grid-cols-[1.15fr_0.85fr] md:items-end">
-        <div>
-          <Eyebrow>Один пример</Eyebrow>
+                {/* МЕХАНИЗМЫ */}
+        <section className="mx-auto max-w-[1240px] px-4 py-5 md:px-6 md:py-6">
+          <div
+            className="mx-auto max-w-6xl px-6 py-8 md:px-8 md:py-10"
+            style={{
+              backgroundColor: C.surface,
+              borderRadius: radius.lg,
+              boxShadow: shadow.soft,
+            }}
+          >
+            <Reveal>
+              <div className="mb-7 grid gap-y-2 md:grid-cols-[1.15fr_0.85fr] md:gap-x-10">
+                <div>
+                  <Eyebrow>Один пример</Eyebrow>
+                </div>
 
-          <h2 className="max-w-[720px] text-3xl font-normal leading-[1.04] tracking-[-0.02em] md:text-[42px]">
-            Одна ситуация — разные причины реакции
-          </h2>
-        </div>
+                <div className="hidden md:block" />
 
-        <div>
-  <p
-    className="text-[15px] leading-[1.6]"
-    style={{ color: C.inkSoft }}
-  >
-    Посмотрите, как одна и та же пауза в переписке может
-    вызывать совсем разные мысли и реакции.
-  </p>
-</div>
-      </div>
-    </Reveal>
+                <h2 className="max-w-[720px] text-3xl font-normal leading-[1.04] tracking-[-0.02em] md:text-[42px]">
+                  Одна ситуация — разные причины реакции
+                </h2>
 
-    <Reveal delay={80}>
-      <MechanismExplorer />
-    </Reveal>
-  </div>
-</section>
+                <p
+                  className="text-[15px] leading-[1.6]"
+                  style={{ color: C.inkSoft }}
+                >
+                  Посмотрите, как одна и та же пауза в переписке может
+                  вызывать совсем разные мысли и реакции.
+                </p>
+              </div>
+            </Reveal>
+
+            <Reveal delay={80}>
+              <MechanismExplorer />
+            </Reveal>
+          </div>
+        </section>
 
         {/* КАК РАБОТАЮ */}
 <section className="mx-auto max-w-6xl px-6 py-9 md:py-11">
   <Reveal>
-    <div className="mb-5 grid gap-4 md:grid-cols-[0.8fr_1.2fr] md:items-end">
-      <div>
-        <Eyebrow>Как проходит работа</Eyebrow>
+    <div className="mb-5 grid gap-y-2 md:grid-cols-[0.8fr_1.2fr] md:gap-x-10">
+  <div>
+    <Eyebrow>Как проходит работа</Eyebrow>
+  </div>
 
-        <h2 className="max-w-xl text-3xl font-normal leading-[1.06] md:text-[38px]">
-          От конкретной ситуации к изменениям в жизни
-        </h2>
-      </div>
+  <div className="hidden md:block" />
 
-      <p
-        className="max-w-xl justify-self-end text-[14px] leading-[1.6]"
-        style={{ color: C.inkSoft }}
-      >
-        Мы не пытаемся охватить всю вашу жизнь за одну встречу.
-        Обычно выбираем то, что сейчас важнее, и разбираем несколько
-        конкретных ситуаций достаточно подробно.
-      </p>
-    </div>
+  <h2 className="max-w-xl text-3xl font-normal leading-[1.06] md:text-[38px]">
+    От конкретной ситуации к изменениям в жизни
+  </h2>
+
+  <p
+    className="max-w-xl text-[14px] leading-[1.6]"
+    style={{ color: C.inkSoft }}
+  >
+    Мы не пытаемся охватить всю вашу жизнь за одну встречу.
+    Обычно выбираем то, что сейчас важнее, и разбираем несколько
+    конкретных ситуаций достаточно подробно.
+  </p>
+</div>
   </Reveal>
 
   <AnimatedRule />
@@ -795,25 +797,27 @@ export default function Home() {
 >
   <div className="mx-auto max-w-6xl px-6 py-10 md:py-12">
     <Reveal>
-      <div className="mb-5 grid gap-4 md:grid-cols-[1fr_0.9fr] md:items-end">
-        <div>
-          <Eyebrow>Что важно знать о процессе</Eyebrow>
+      <div className="mb-5 grid gap-y-2 md:grid-cols-[1fr_0.9fr] md:gap-x-10">
+  <div>
+    <Eyebrow>Что важно знать о процессе</Eyebrow>
+  </div>
 
-          <h2 className="max-w-3xl text-3xl font-normal leading-[1.06] md:text-[38px]">
-            Сколько длится работа и как выглядит результат
-          </h2>
-        </div>
+  <div className="hidden md:block" />
 
-        <p
-          className="max-w-lg text-[14px] leading-[1.6]"
-          style={{ color: C.inkSoft }}
-        >
-          Универсального срока нет. Некоторые изменения становятся
-заметны довольно быстро, для других нужно больше времени и
-повторения. Поэтому заранее определить точное количество
-встреч обычно невозможно.
-        </p>
-      </div>
+  <h2 className="max-w-3xl text-3xl font-normal leading-[1.06] md:text-[38px]">
+    Как идет работа и что меняется со временем
+  </h2>
+
+  <p
+    className="max-w-lg text-[14px] leading-[1.6]"
+    style={{ color: C.inkSoft }}
+  >
+    Универсального срока нет. Некоторые изменения становятся
+    заметны довольно быстро, для других нужно больше времени и
+    повторения. Поэтому заранее определить точное количество
+    встреч обычно невозможно.
+  </p>
+</div>
     </Reveal>
 
     <AnimatedRule />
@@ -953,7 +957,7 @@ export default function Home() {
           className="mb-5 max-w-2xl text-[15px] leading-[1.65]"
           style={{ color: C.inkSoft }}
         >
-          Магистр психологии, клинический психолог. Дополнительно обучалась КПТ и
+          Магистр психологии, клинический психолог, консультант в сфере сексуальных отношений. Дополнительно обучалась КПТ и
           схема-терапии.
         </p>
       </Reveal>
@@ -1068,24 +1072,25 @@ export default function Home() {
         {/* МОЖНО НЕ ЗАПИСЫВАТЬСЯ */}
         <section className="mx-auto max-w-6xl px-6 py-9 md:py-11">
   <Reveal>
-    <div className="mb-5 grid gap-4 md:grid-cols-[0.8fr_1.2fr] md:items-end">
-      <div>
-        <Eyebrow>Не обязательно сразу записываться</Eyebrow>
+    <div className="grid gap-y-2 md:grid-cols-[0.8fr_1.2fr] md:gap-x-10">
+  <div>
+    <Eyebrow>Необязательно сразу записываться</Eyebrow>
+  </div>
 
-<h2 className="max-w-xl text-3xl font-normal leading-[1.06] md:text-[38px]">
-  Можно сначала присмотреться
-</h2>
-      </div>
+  <div className="hidden md:block" />
 
-      <p
-        className="max-w-xl justify-self-end text-[14px] leading-[1.6]"
-        style={{ color: C.inkSoft }}
-      >
-        Можно попробовать инструмент, почитать о близкой вам теме
-или подробнее посмотреть, как устроены подходы, с которыми
-я работаю.
-      </p>
-    </div>
+  <h2 className="text-3xl font-normal leading-[1.06] md:text-[38px]">
+    Можно сначала присмотреться
+  </h2>
+
+  <p
+    className="max-w-xl text-[14px] leading-[1.6]"
+    style={{ color: C.inkSoft }}
+  >
+    Можно попробовать инструмент, почитать о близкой вам теме или подробнее
+    посмотреть, как устроены подходы, с которыми я работаю.
+  </p>
+</div>
   </Reveal>
 
   <AnimatedRule />
@@ -1244,23 +1249,25 @@ export default function Home() {
     }}
   >
     <Reveal>
-      <div className="mb-5 grid gap-4 md:grid-cols-[0.8fr_1.2fr] md:items-end">
-        <div>
-          <Eyebrow>Как начинается работа</Eyebrow>
+      <div className="grid gap-y-2 md:grid-cols-[0.9fr_1.1fr] md:gap-x-10">
+  <div>
+    <Eyebrow>Как начинается работа</Eyebrow>
+  </div>
 
-          <h2 className="max-w-xl text-3xl font-normal leading-[1.06] md:text-[38px]">
-            Что будет на первой встрече
-          </h2>
-        </div>
+  <div className="hidden md:block" />
 
-        <p
-          className="max-w-xl justify-self-end text-[14px] leading-[1.6]"
-          style={{ color: C.inkSoft }}
-        >
-          Ее задача не решить все за 50 минут, а понять, с чем вы
-          пришли, что сейчас важнее всего и как можно двигаться дальше.
-        </p>
-      </div>
+  <h2 className="text-3xl font-normal leading-[1.06] md:text-[38px]">
+    Что будет на первой встрече
+  </h2>
+
+  <p
+    className="max-w-xl text-[14px] leading-[1.6]"
+    style={{ color: C.inkSoft }}
+  >
+    Ее задача не решить все за 50 минут, а понять, с чем вы пришли,
+    что сейчас важнее всего и как можно двигаться дальше.
+  </p>
+</div>
     </Reveal>
 
     <div
@@ -1280,7 +1287,7 @@ export default function Home() {
           number: '02',
           title: 'Уточним, чего хочется изменить',
           text:
-            'Не обязательно сразу иметь четкую цель. Попробуем вместе сделать ее понятнее.',
+            'Необязательно сразу иметь четкую цель. Попробуем вместе сделать ее понятнее.',
         },
         {
           number: '03',

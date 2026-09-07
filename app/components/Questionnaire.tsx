@@ -99,11 +99,33 @@ function formatDate() {
   );
 }
 
+function stripTrailingPeriod(text: string) {
+  const trimmed = text.trim();
+
+  if (
+    trimmed.endsWith('.') &&
+    !trimmed.endsWith('...')
+  ) {
+    return trimmed.slice(0, -1);
+  }
+
+  return trimmed;
+}
+
 export default function Questionnaire({
-  config,
+  config: rawConfig,
 }: {
   config: QuestionnaireConfig;
 }) {
+  const config = useMemo(
+    () => ({
+      ...rawConfig,
+      questions: rawConfig.questions.map(
+        stripTrailingPeriod
+      ),
+    }),
+    [rawConfig]
+  );
   const [stage, setStage] =
     useState<Stage>('intro');
 
@@ -457,7 +479,7 @@ export default function Questionnaire({
           </h1>
 
           <div
-            className="mt-5 max-w-[850px] space-y-3 text-[14px] leading-[1.7] md:text-[15px]"
+  className="mt-5 max-w-[980px] space-y-3 text-[14px] leading-[1.7] md:text-[15px]"
             style={{
               ...sans,
               color: C.inkSoft,
@@ -545,8 +567,8 @@ export default function Questionnaire({
       {/* TEST */}
 
       {stage === 'test' && (
-        <section className="ym-hide-content ym-disable-clickmap mx-auto max-w-4xl px-6 pb-20 pt-10 md:px-8 md:pt-14">
-          <div className="mb-8">
+        <section className="ym-hide-content ym-disable-clickmap mx-auto max-w-4xl px-6 pb-12 pt-7 md:px-8 md:pt-8">
+          <div className="mb-5">
             <div className="mb-3 flex items-center justify-between gap-4">
               <p
                 className="text-[12px]"
@@ -616,11 +638,11 @@ export default function Questionnaire({
               {config.questionPrompt}
             </p>
 
-            <h1 className="mt-4 max-w-[760px] text-[28px] font-normal leading-[1.12] tracking-[-0.02em] md:text-[36px]">
+            <h1 className="mt-3 max-w-[760px] text-[26px] font-normal leading-[1.1] tracking-[-0.02em] md:text-[32px]">
               {config.questions[current]}
             </h1>
 
-            <div className="mt-7 space-y-2.5">
+            <div className="mt-5 space-y-2">
               {config.options.map(
                 (option) => {
                   const selected =
@@ -639,7 +661,7 @@ export default function Questionnaire({
                           option.value
                         )
                       }
-                      className="group flex w-full items-center gap-4 px-5 py-4 text-left transition-all duration-200 hover:translate-x-1 disabled:pointer-events-none"
+                      className="group flex w-full items-center gap-3 px-4 py-3 text-left transition-all duration-200 hover:translate-x-1 disabled:pointer-events-none"
                       style={{
                         backgroundColor:
                           selected
@@ -656,7 +678,7 @@ export default function Questionnaire({
                       }}
                     >
                       <span
-                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[12px]"
+                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px]"
                         style={{
                           ...sans,
 
@@ -695,7 +717,7 @@ export default function Questionnaire({
               )}
             </div>
 
-            <div className="mt-6">
+            <div className="mt-4">
               {current > 0 && (
                 <button
                   type="button"
@@ -718,7 +740,7 @@ export default function Questionnaire({
 
       {stage === 'followup' &&
         config.followUp && (
-          <section className="ym-hide-content ym-disable-clickmap mx-auto max-w-4xl px-6 pb-20 pt-10 md:px-8 md:pt-14">
+          <section className="ym-hide-content ym-disable-clickmap mx-auto max-w-4xl px-6 pb-12 pt-7 md:px-8 md:pt-8">
             <div className="mb-8">
               <div className="mb-3 flex items-center justify-between">
                 <p
@@ -763,7 +785,7 @@ export default function Questionnaire({
                 'Как это влияет на жизнь'}
             </p>
 
-            <h1 className="mt-4 max-w-[780px] text-[28px] font-normal leading-[1.12] tracking-[-0.02em] md:text-[36px]">
+            <h1 className="mt-3 max-w-[780px] text-[26px] font-normal leading-[1.1] tracking-[-0.02em] md:text-[32px]">
               {config.followUp.prompt}
             </h1>
 
@@ -1317,7 +1339,7 @@ export default function Questionnaire({
                 </h2>
 
                 <p
-                  className="mt-3 max-w-2xl text-[13px] leading-[1.6] md:text-[14px]"
+                  className="mt-3 max-w-3xl text-[13px] leading-[1.6] md:text-[14px]"
                   style={{
                     ...sans,
                     color: '#C9C2B5',

@@ -42,9 +42,9 @@ export default function ArticlesPage() {
             </h1>
 
             <p
-              className="mt-5 max-w-[900px] text-[15px] leading-[1.7] md:text-[16px]"
-              style={{ ...sans, color: C.inkSoft }}
-            >
+  className="mt-5 max-w-[980px] text-[15px] leading-[1.7] md:text-[16px]"
+  style={{ ...sans, color: C.inkSoft }}
+>
               Здесь я разбираю темы, которые часто появляются в работе:
               тревогу, самокритику, отношения, повторяющиеся сценарии и сам
               процесс терапии. Не в формате «пять признаков того, что с вами
@@ -78,69 +78,72 @@ export default function ArticlesPage() {
             </div>
 
             <Link
-              href={`/articles/${featured.slug}`}
-              className="group grid gap-6 px-6 py-7 transition-transform duration-300 hover:-translate-y-1 md:grid-cols-[0.72fr_1.28fr] md:items-end md:px-8 md:py-8"
-              style={{
-                backgroundColor: C.surfaceWarm,
-                borderRadius: radius.lg,
-                boxShadow: shadow.soft,
-              }}
-            >
-              <div>
-                <p
-                  className="text-[10px] uppercase tracking-[0.11em]"
-                  style={{ ...sans, color: C.terracotta }}
-                >
-                  {featured.category} · {featured.readTime}
-                </p>
+  href={`/articles/${featured.slug}`}
+  className="group grid gap-y-3 px-6 py-7 transition-transform duration-300 hover:-translate-y-1 md:grid-cols-2 md:gap-x-10 md:px-8 md:py-8"
+  style={{
+    backgroundColor: C.surfaceWarm,
+    borderRadius: radius.lg,
+    boxShadow: shadow.soft,
+  }}
+>
+  <div>
+    <p
+      className="text-[10px] uppercase tracking-[0.11em]"
+      style={{ ...sans, color: C.terracotta }}
+    >
+      {featured.category} · {featured.readTime}
+    </p>
+  </div>
 
-                <h2 className="mt-3 text-[29px] leading-[1.08] tracking-[-0.02em] md:text-[37px]">
-                  {featured.title}
-                </h2>
-              </div>
+  <div className="hidden md:block" />
 
-              <div>
-                <p
-                  className="text-[13px] leading-[1.65]"
-                  style={{ ...sans, color: C.inkSoft }}
-                >
-                  {featured.description}
-                </p>
+  <h2 className="max-w-[470px] text-[29px] leading-[1.08] tracking-[-0.02em] md:text-[35px]">
+    {featured.title}
+  </h2>
 
-                <span
-                  className="mt-5 inline-flex items-center gap-2 text-[12px] underline underline-offset-4"
-                  style={{ ...sans, color: C.ink }}
-                >
-                  Читать статью
-                  <span className="transition-transform duration-200 group-hover:translate-x-1">
-                    →
-                  </span>
-                </span>
-              </div>
-            </Link>
+  <div className="self-start md:pt-[5px]">
+    <p
+      className="max-w-[500px] text-[13px] leading-[1.65]"
+      style={{ ...sans, color: C.inkSoft }}
+    >
+      {featured.description}
+    </p>
+
+    <span
+      className="mt-5 inline-flex items-center gap-2 text-[12px] underline underline-offset-4"
+      style={{ ...sans, color: C.ink }}
+    >
+      Читать статью
+      <span className="transition-transform duration-200 group-hover:translate-x-1">
+        →
+      </span>
+    </span>
+  </div>
+</Link>
           </Reveal>
         </section>
 
         <section className="mx-auto max-w-6xl px-6 py-7 md:px-8 md:py-9">
           <Reveal>
-            <div className="grid gap-y-3 md:grid-cols-[0.72fr_1.28fr] md:gap-x-10">
-              <div>
-                <Eyebrow>Все статьи</Eyebrow>
-              </div>
-              <div className="hidden md:block" />
+            <div className="grid gap-y-3 md:grid-cols-2 md:gap-x-3">
+  <div>
+    <Eyebrow>Все статьи</Eyebrow>
+  </div>
 
-              <h2 className="text-[29px] leading-[1.08] md:text-[36px]">
-                Читать по ситуации
-              </h2>
+  <div className="hidden md:block" />
 
-              <p
-                className="text-[13px] leading-[1.65]"
-                style={{ ...sans, color: C.inkSoft }}
-              >
-                Можно идти не по порядку. Выберите тему, которая сейчас
-                ближе к тому, что происходит у вас.
-              </p>
-            </div>
+  <h2 className="text-[29px] leading-[1.08] md:text-[36px]">
+    Читать по ситуации
+  </h2>
+
+  <p
+    className="text-[13px] leading-[1.65] md:pt-[5px]"
+    style={{ ...sans, color: C.inkSoft }}
+  >
+    Можно идти не по порядку. Выберите тему, которая сейчас
+    ближе к тому, что происходит у вас.
+  </p>
+</div>
           </Reveal>
 
           <div className="mt-6 grid gap-3 md:grid-cols-2">
