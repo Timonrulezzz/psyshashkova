@@ -100,30 +100,32 @@ export default function SchemasAndNeedsMap() {
             </h1>
 
             <p
-              className="mt-5 max-w-[930px] text-[15px] leading-[1.7] md:text-[16px]"
-              style={{ ...sans, color: C.inkSoft }}
-            >
-              Схема — это устойчивый способ ожидать, объяснять и переживать
-              определенные ситуации. Она может быстро подсказывать знакомый
-              вывод: меня бросят, я не справлюсь, мои желания менее важны или
-              ошибка недопустима.
-            </p>
+  className="mt-5 w-full text-[15px] leading-[1.7] md:text-[16px]"
+  style={{ ...sans, color: C.inkSoft }}
+>
+  Схема — это устойчивый способ воспринимать и объяснять происходящее,
+  ожидать определенного развития событий и реагировать на него. В знакомой
+  ситуации быстро появляется привычный вывод: меня бросят, я не справлюсь,
+  мои желания менее важны или ошибка недопустима.
+</p>
           </Reveal>
 
           <Reveal delay={40}>
             <div className="mt-7 grid gap-3 md:grid-cols-3">
               <InfoCard
-                title="19 тем MSS-YSQ"
-                text="Названия основной карты полностью совпадают с результатами опросника MSS-YSQ на этом сайте."
-              />
-              <InfoCard
-                title="Схема — не тип личности"
-                text="У одного человека могут откликаться разные схемы, а их сила и проявления меняются в зависимости от ситуации."
-              />
-              <InfoCard
-                title="Три способа совладания"
-                text="В карточках показано, как одну и ту же тему можно поддерживать через капитуляцию, избегание или гиперкомпенсацию."
-              />
+  title="19 тем MSS-YSQ"
+  text="Названия 19 схем в карте совпадают с названиями шкал опросника MSS-YSQ на этом сайте."
+/>
+
+<InfoCard
+  title="Схема — не тип личности"
+  text="У одного человека могут проявляться разные схемы, а их выраженность и влияние меняются в зависимости от ситуации."
+/>
+
+<InfoCard
+  title="Три способа совладания"
+  text="В карточках показано, как одна и та же схема может поддерживаться через капитуляцию, избегание или гиперкомпенсацию."
+/>
             </div>
           </Reveal>
         </section>
@@ -131,37 +133,39 @@ export default function SchemasAndNeedsMap() {
         <section className="mx-auto max-w-6xl px-6 pb-7 md:px-8">
           <Reveal delay={60}>
             <div
-              className="grid gap-5 px-5 py-5 md:grid-cols-[0.78fr_1.22fr] md:gap-9 md:px-6"
-              style={{
-                backgroundColor: C.surfaceWarm,
-                borderRadius: radius.lg,
-              }}
-            >
-              <div>
-                <Eyebrow>Важный нюанс</Eyebrow>
-                <h2 className="mt-3 text-[26px] leading-[1.1] md:text-[31px]">
-                  Схемы не сводятся к одному событию из детства
-                </h2>
-              </div>
+  className="grid gap-y-3 px-5 py-5 md:grid-cols-[0.78fr_1.22fr] md:gap-x-9 md:px-6"
+  style={{
+    backgroundColor: C.surfaceWarm,
+    borderRadius: radius.lg,
+  }}
+>
+  <div>
+    <Eyebrow>Важный нюанс</Eyebrow>
+  </div>
 
-              <div
-                className="space-y-3 text-[12.5px] leading-[1.68] md:text-[13.5px]"
-                style={{ ...sans, color: C.ink }}
-              >
-                <p>
-                  В схема-терапии предполагается, что ранний опыт,
-                  темперамент и повторяющиеся отношения могут влиять на
-                  формирование устойчивых схем. Но по одному результату нельзя
-                  достоверно восстановить, почему конкретная схема возникла
-                  именно у этого человека.
-                </p>
-                <p>
-                  Поэтому в карточках раздел «Что могло повлиять» — это
-                  гипотезы для размышления, а не готовое объяснение вашей
-                  биографии.
-                </p>
-              </div>
-            </div>
+  <div className="hidden md:block" />
+
+  <h2 className="text-[26px] leading-[1.1] md:text-[31px]">
+    Схемы не сводятся к одному событию из детства
+  </h2>
+
+  <div
+    className="space-y-3 text-[12.5px] leading-[1.68] md:pt-[4px] md:text-[13.5px]"
+    style={{ ...sans, color: C.ink }}
+  >
+    <p>
+      В схема-терапии предполагается, что на формирование устойчивых схем
+      могут влиять ранний опыт, темперамент и повторяющиеся отношения.
+      Но по одному результату нельзя достоверно определить, почему
+      конкретная схема возникла именно у этого человека.
+    </p>
+
+    <p>
+      Поэтому раздел «Что могло повлиять» в карточках — это гипотезы
+      для размышления, а не готовое объяснение вашей биографии.
+    </p>
+  </div>
+</div>
           </Reveal>
         </section>
 
@@ -193,24 +197,27 @@ export default function SchemasAndNeedsMap() {
         <section className="mx-auto max-w-5xl px-6 py-7 md:px-8 md:py-9">
           <Reveal>
             <div className="grid gap-y-3 md:grid-cols-[0.72fr_1.28fr] md:gap-x-10">
-              <div><Eyebrow>Эмоциональные потребности</Eyebrow></div>
-              <div className="hidden md:block" />
+  <div>
+    <Eyebrow>Эмоциональные потребности</Eyebrow>
+  </div>
 
-              <h2 className="text-[29px] leading-[1.08] md:text-[35px]">
-                Пять классических областей
-              </h2>
+  <div className="hidden md:block" />
 
-              <p
-                className="text-[13px] leading-[1.65]"
-                style={{ ...sans, color: C.inkSoft }}
-              >
-                В классической теории схема-терапии выделяют пять широких
-                потребностей. Их не нужно понимать как чек-лист, который обязан
-                быть идеально закрыт: важнее достаточно устойчивый опыт
-                безопасности, автономии, выражения себя, спонтанности и разумных
-                границ.
-              </p>
-            </div>
+  <h2 className="text-[29px] leading-[1.08] md:text-[35px]">
+    Пять классических областей
+  </h2>
+
+  <p
+    className="text-[13px] leading-[1.65] md:pt-[4px]"
+    style={{ ...sans, color: C.inkSoft }}
+  >
+    В классической теории схема-терапии выделяют пять широких
+    областей эмоциональных потребностей. Речь не о списке, где
+    каждый пункт должен быть закрыт на сто процентов, а о достаточно
+    устойчивом опыте безопасности, автономии, возможности выражать
+    себя, спонтанности и понятных границ.
+  </p>
+</div>
           </Reveal>
 
           <div className="mt-6 space-y-3">
@@ -256,35 +263,36 @@ export default function SchemasAndNeedsMap() {
                     </p>
                   </div>
 
-                  <div>
-                    <p
-                      className="text-[13px] leading-[1.65]"
-                      style={{ ...sans, color: C.inkSoft }}
-                    >
-                      {domain.shortDescription}
-                    </p>
+                  <div className="md:pt-[4px]">
+  <p
+    className="text-[13px] leading-[1.65]"
+    style={{ ...sans, color: C.inkSoft }}
+  >
+    {domain.shortDescription}
+  </p>
 
-                    {need && (
-                      <div
-                        className="mt-3 inline-flex items-center gap-2 px-3 py-2"
-                        style={{
-                          backgroundColor: C.surface,
-                          borderRadius: radius.pill,
-                        }}
-                      >
-                        <span
-                          className="h-1.5 w-1.5 rounded-full"
-                          style={{ backgroundColor: domain.color }}
-                        />
-                        <span
-                          className="text-[10.5px]"
-                          style={{ ...sans, color: C.ink }}
-                        >
-                          Связано с потребностью: {need.name}
-                        </span>
-                      </div>
-                    )}
-                  </div>
+  {need && (
+    <div
+      className="mt-3 inline-flex items-center gap-2 px-3 py-2"
+      style={{
+        backgroundColor: C.surface,
+        borderRadius: radius.pill,
+      }}
+    >
+      <span
+        className="h-1.5 w-1.5 rounded-full"
+        style={{ backgroundColor: domain.color }}
+      />
+
+      <span
+        className="text-[10.5px]"
+        style={{ ...sans, color: C.ink }}
+      >
+        Связано с потребностью: {need.name}
+      </span>
+    </div>
+  )}
+</div>
                 </div>
               </Reveal>
 
@@ -306,23 +314,26 @@ export default function SchemasAndNeedsMap() {
         <section className="mx-auto max-w-5xl px-6 py-7 md:px-8 md:py-9">
           <Reveal>
             <div
-              className="grid gap-5 px-5 py-5 md:grid-cols-[0.78fr_1.22fr] md:gap-9 md:px-6"
-              style={{
-                backgroundColor: C.surface,
-                borderRadius: radius.lg,
-              }}
-            >
-              <div>
-                <Eyebrow>Почему не ровно 18 схем</Eyebrow>
-                <h2 className="mt-3 text-[25px] leading-[1.1] md:text-[30px]">
-                  Карта синхронизирована с MSS-YSQ
-                </h2>
-              </div>
+  className="grid gap-y-3 px-5 py-5 md:grid-cols-[0.78fr_1.22fr] md:gap-x-9 md:px-6"
+  style={{
+    backgroundColor: C.surface,
+    borderRadius: radius.lg,
+  }}
+>
+  <div>
+    <Eyebrow>Почему не ровно 18 схем</Eyebrow>
+  </div>
 
-              <div
-                className="space-y-3 text-[12.5px] leading-[1.65]"
-                style={{ ...sans, color: C.inkSoft }}
-              >
+  <div className="hidden md:block" />
+
+  <h2 className="text-[25px] leading-[1.1] md:text-[30px]">
+    Карта синхронизирована с MSS-YSQ
+  </h2>
+
+  <div
+    className="space-y-3 text-[12.5px] leading-[1.65] md:pt-[4px]"
+    style={{ ...sans, color: C.inkSoft }}
+  >
                 <p>
                   В классической модели Янга обычно говорят о 18 схемах.
                   MSS-YSQ устроен немного иначе: отдельно оценивает
@@ -359,23 +370,26 @@ export default function SchemasAndNeedsMap() {
         <section className="mx-auto max-w-5xl px-6 py-7 md:px-8 md:py-9">
           <Reveal>
             <div className="grid gap-y-3 md:grid-cols-[0.72fr_1.28fr] md:gap-x-10">
-              <div><Eyebrow>Развитие модели</Eyebrow></div>
-              <div className="hidden md:block" />
+  <div>
+    <Eyebrow>Развитие модели</Eyebrow>
+  </div>
 
-              <h2 className="text-[29px] leading-[1.08] md:text-[35px]">
-                Что предложили добавить позже
-              </h2>
+  <div className="hidden md:block" />
 
-              <p
-                className="text-[13px] leading-[1.65]"
-                style={{ ...sans, color: C.inkSoft }}
-              >
-                В 2021 году международная рабочая группа предложила
-                расширить теорию двумя потребностями и тремя схемами. Я
-                отделяю это развитие модели от основной карты и от результатов
-                MSS-YSQ, чтобы не смешивать разные версии классификации.
-              </p>
-            </div>
+  <h2 className="text-[29px] leading-[1.08] md:text-[35px]">
+    Что предложили добавить позже
+  </h2>
+
+  <p
+    className="text-[13px] leading-[1.65] md:pt-[4px]"
+    style={{ ...sans, color: C.inkSoft }}
+  >
+    В 2021 году международная рабочая группа предложила
+    расширить теорию двумя потребностями и тремя схемами.
+    Я отделяю это развитие модели от основной карты и результатов
+    MSS-YSQ, чтобы не смешивать разные версии классификации.
+  </p>
+</div>
           </Reveal>
 
           <div className="mt-6 grid gap-3 md:grid-cols-2">
@@ -451,15 +465,15 @@ export default function SchemasAndNeedsMap() {
               <div>
                 <Eyebrow>Если узнаете знакомый паттерн</Eyebrow>
                 <h2 className="mt-3 max-w-3xl text-[28px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[34px]">
-                  Можно проверить его на конкретных ситуациях, а не только на описании
+                  Знакомый паттерн стоит проверять на конкретных ситуациях
                 </h2>
                 <p
                   className="mt-3 max-w-2xl text-[13px] leading-[1.6]"
                   style={{ ...sans, color: '#C9C2B5' }}
                 >
-                  На встрече мы можем разобрать, когда этот паттерн
-                  включается, какие выводы появляются автоматически, как вы
-                  обычно справляетесь и что можно менять дальше.
+                  На встрече разберем, когда этот паттерн включается, какие выводы
+появляются автоматически, как вы обычно реагируете и что помогает
+ему повторяться.
                 </p>
               </div>
 
@@ -641,7 +655,7 @@ function NeedsMap({
 
         <circle cx="380" cy="245" r="58" fill={C.surfaceWarm} stroke={C.line} strokeWidth="1" />
         <text x="380" y="239" textAnchor="middle" fontSize="13" fill={C.ink} style={{ ...serif }}>
-          потребности
+          Потребности
         </text>
         <text x="380" y="258" textAnchor="middle" fontSize="11" fill={C.inkSoft} style={{ ...sans }}>
           и устойчивые схемы
@@ -674,7 +688,7 @@ function NeedCard({ need }: { need: (typeof needs)[number] }) {
           style={{ backgroundColor: C.bg, borderRadius: radius.md, borderLeft: `3px solid ${C.moss}` }}
         >
           <p className="text-[9.5px] uppercase tracking-[0.1em]" style={{ ...sans, color: C.moss }}>
-            Когда есть достаточно поддержки
+            Когда этого достаточно
           </p>
           <p className="mt-2 text-[11.5px] leading-[1.58]" style={{ ...sans, color: C.inkSoft }}>
             {need.whenSupported}

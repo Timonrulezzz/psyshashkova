@@ -464,11 +464,11 @@ function Intro({
   onReset: () => void;
 }) {
   return (
-    <section className="mx-auto max-w-6xl px-6 pb-12 pt-10 md:px-8 md:pt-14">
+    <section className="mx-auto max-w-6xl px-6 pb-8 pt-7 md:px-8 md:pt-9">
       <Reveal>
         <Link
           href="/tools"
-          className="mb-5 inline-block text-[12px] underline underline-offset-4"
+          className="mb-4 inline-block text-[12px] underline underline-offset-4"
           style={{ ...sans, color: C.inkSoft }}
         >
           ← Все инструменты
@@ -476,12 +476,12 @@ function Intro({
 
         <Eyebrow>Опросник · около 20–25 минут</Eyebrow>
 
-        <h1 className="mt-4 w-full text-[38px] font-normal leading-[1.04] tracking-[-0.025em] md:text-[48px]">
+        <h1 className="mt-3 w-full text-[34px] font-normal leading-[1.04] tracking-[-0.025em] md:text-[42px]">
           Опросник режимов схема-терапии SMI
         </h1>
 
         <p
-          className="mt-5 max-w-[940px] text-[15px] leading-[1.7]"
+          className="mt-3 w-full text-[14px] leading-[1.65] md:text-[15px]"
           style={{ ...sans, color: C.inkSoft }}
         >
           124 утверждения о состояниях и способах реагирования,
@@ -492,7 +492,7 @@ function Intro({
       </Reveal>
 
       <Reveal delay={40}>
-        <div className="mt-7 grid gap-3 md:grid-cols-3">
+        <div className="mt-5 grid gap-3 md:grid-cols-3">
           <InfoCard
             title="124 утверждения"
             text="На каждый пункт нужно выбрать частоту — от «никогда или почти никогда» до «всегда»."
@@ -503,27 +503,27 @@ function Intro({
           />
           <InfoCard
             title="Можно сделать перерыв"
-            text="Ответы сохраняются только в этом браузере. Можно выйти и продолжить позже."
+            text="Ответы сохраняются в этом браузере на этом устройстве, поэтому к прохождению можно вернуться позже. Если этим устройством пользуется кто-то еще, сохраненные ответы могут быть доступны и ему."
           />
         </div>
       </Reveal>
 
       <Reveal delay={70}>
         <div
-          className="mt-5 grid gap-4 px-5 py-5 md:grid-cols-[0.72fr_1.28fr] md:gap-8 md:px-6"
+          className="mt-4 grid gap-y-3 px-5 py-4 md:grid-cols-[0.72fr_1.28fr] md:gap-x-8 md:px-6"
           style={{
             backgroundColor: C.surfaceWarm,
             borderRadius: radius.lg,
           }}
         >
           <div>
-            <h2 className="text-[20px] leading-[1.2]">
-              Что такое режим
-            </h2>
-          </div>
+  <h2 className="text-[20px] leading-[1.2]">
+    Что такое режим
+  </h2>
+</div>
 
-          <div
-            className="space-y-3 text-[12.5px] leading-[1.65]"
+<div
+  className="space-y-2.5 text-[12.5px] leading-[1.6] md:pt-[2px]"
             style={{ ...sans, color: C.ink }}
           >
             <p>
@@ -576,7 +576,7 @@ function Intro({
       )}
 
       <Reveal delay={110}>
-        <div className="mt-7">
+        <div className="mt-5">
           <button
             type="button"
             onClick={onStart}
@@ -614,9 +614,9 @@ function Quiz({
   const progress = ((currentIndex + 1) / questions.length) * 100;
 
   return (
-    <section className="ym-hide-content ym-disable-clickmap mx-auto max-w-4xl px-6 pb-12 pt-7 md:px-8 md:pt-8">
-      <div className="mb-5">
-        <div className="mb-3 flex items-center justify-between gap-4">
+    <section className="ym-hide-content ym-disable-clickmap mx-auto max-w-4xl px-6 pb-8 pt-5 md:px-8 md:pt-6">
+      <div className="mb-4">
+        <div className="mb-2.5 flex items-center justify-between gap-4">
           <p
             className="text-[12px]"
             style={{ ...sans, color: C.inkSoft }}
@@ -662,11 +662,11 @@ function Quiz({
           Насколько часто это было похоже на вас за последние полгода?
         </p>
 
-        <h1 className="mt-3 max-w-[820px] text-[26px] font-normal leading-[1.1] tracking-[-0.02em] md:text-[32px]">
+        <h1 className="mt-2.5 max-w-[820px] text-[24px] font-normal leading-[1.1] tracking-[-0.02em] md:text-[29px]">
           {questions[currentIndex]}
         </h1>
 
-        <div className="mt-5 space-y-2">
+        <div className="mt-4 space-y-1.5">
           {answerOptions.map((option) => {
             const active = currentAnswer === option.value;
 
@@ -676,7 +676,7 @@ function Quiz({
                 type="button"
                 disabled={transitioning}
                 onClick={() => onAnswer(option.value)}
-                className="group flex w-full items-center gap-3 px-4 py-3 text-left transition-all duration-200 hover:translate-x-1 disabled:pointer-events-none"
+                className="group flex w-full items-center gap-3 px-4 py-2.5 text-left transition-all duration-200 hover:translate-x-1 disabled:pointer-events-none"
                 style={{
                   backgroundColor: active ? C.surfaceWarm : C.surface,
                   borderRadius: radius.md,
@@ -684,7 +684,7 @@ function Quiz({
                 }}
               >
                 <span
-                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px]"
+                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10.5px]"
                   style={{
                     ...sans,
                     color: active ? C.bg : C.terracotta,
@@ -695,7 +695,7 @@ function Quiz({
                   {option.value}
                 </span>
 
-                <span className="flex-1 text-[14px] leading-[1.4] md:text-[15px]">
+                <span className="flex-1 text-[13.5px] leading-[1.4] md:text-[14px]">
                   {option.label}
                 </span>
 
@@ -710,7 +710,7 @@ function Quiz({
           })}
         </div>
 
-        <div className="mt-4 flex items-center justify-between gap-4">
+        <div className="mt-3 flex items-center justify-between gap-4">
           {currentIndex > 0 ? (
             <button
               type="button"
@@ -784,14 +784,14 @@ function Results({
         </h1>
 
         <p
-          className="mt-4 max-w-[900px] text-[13.5px] leading-[1.65]"
-          style={{ ...sans, color: C.inkSoft }}
-        >
-          У режима нет статуса «хороший человек» или «плохой человек».
-          Профиль показывает, какие состояния и способы реагирования
-          чаще откликались в ваших ответах. Значение результата лучше
-          проверять на реальных ситуациях, а не только по цифре.
-        </p>
+  className="mt-4 w-full text-[13.5px] leading-[1.65]"
+  style={{ ...sans, color: C.inkSoft }}
+>
+  У режима нет статуса «хороший человек» или «плохой человек».
+  Профиль показывает, какие состояния и способы реагирования
+  чаще откликались в ваших ответах. Значение результата лучше
+  проверять на реальных ситуациях, а не только по цифрам.
+</p>
 
         <div className="mt-7 grid gap-3 md:grid-cols-3">
           {topDysfunctional.map((result, index) => (
@@ -805,26 +805,27 @@ function Results({
       </section>
 
       <section className="ym-hide-content ym-disable-clickmap mx-auto max-w-6xl px-6 py-7 md:px-8 md:py-9">
-        <div className="grid gap-y-3 md:grid-cols-[0.72fr_1.28fr] md:gap-x-10">
-          <div>
-            <Eyebrow>Здоровые режимы</Eyebrow>
-          </div>
-          <div className="hidden md:block" />
+        <div className="grid gap-y-3 md:grid-cols-2 md:gap-x-3">
+  <div>
+    <Eyebrow>Здоровые режимы</Eyebrow>
+  </div>
 
-          <h2 className="text-[29px] leading-[1.08] md:text-[36px]">
-            Не только то, что мешает
-          </h2>
+  <div className="hidden md:block" />
 
-          <p
-            className="text-[13px] leading-[1.65]"
-            style={{ ...sans, color: C.inkSoft }}
-          >
-            SMI отдельно оценивает Счастливого Ребенка и Здорового
-            Взрослого. Их показатели полезно смотреть рядом с
-            дисфункциональными режимами, а не как противоположный
-            «итоговый балл здоровья».
-          </p>
-        </div>
+  <h2 className="text-[29px] leading-[1.08] md:text-[36px]">
+    Не только то, что мешает
+  </h2>
+
+  <p
+    className="text-[13px] leading-[1.65] md:pt-[4px]"
+    style={{ ...sans, color: C.inkSoft }}
+  >
+    SMI отдельно оценивает Счастливого Ребенка и Здорового
+    Взрослого. Их показатели полезно смотреть рядом с
+    дисфункциональными режимами, а не воспринимать как
+    противоположный «итоговый балл здоровья».
+  </p>
+</div>
 
         <div className="mt-6 grid gap-3 md:grid-cols-2">
           {healthyResults.map((result) => (
@@ -838,26 +839,27 @@ function Results({
       </section>
 
       <section className="ym-hide-content ym-disable-clickmap mx-auto max-w-6xl px-6 py-7 md:px-8 md:py-9">
-        <div className="grid gap-y-3 md:grid-cols-[0.72fr_1.28fr] md:gap-x-10">
-          <div>
-            <Eyebrow>Все режимы</Eyebrow>
-          </div>
-          <div className="hidden md:block" />
+        <div className="grid gap-y-3 md:grid-cols-[0.38fr_0.62fr] md:gap-x-8">
+  <div>
+    <Eyebrow>Все режимы</Eyebrow>
+  </div>
 
-          <h2 className="text-[29px] leading-[1.08] md:text-[36px]">
-            Весь профиль
-          </h2>
+  <div className="hidden md:block" />
 
-          <p
-            className="text-[13px] leading-[1.65]"
-            style={{ ...sans, color: C.inkSoft }}
-          >
-            Средний балл каждого режима находится в диапазоне от 1 до 6.
-            Подпись уровня — дополнительный ориентир по используемым
-            нормативам; важнее смотреть на соотношение режимов и
-            узнаваемость описаний в собственной жизни.
-          </p>
-        </div>
+  <h2 className="text-[29px] leading-[1.08] md:text-[36px]">
+    Весь профиль
+  </h2>
+
+  <p
+    className="text-[13px] leading-[1.65] md:pt-[4px]"
+    style={{ ...sans, color: C.inkSoft }}
+  >
+    Средний балл каждого режима находится в диапазоне от 1 до 6.
+    Подпись уровня — дополнительный ориентир по используемым
+    нормативам. Важнее смотреть на соотношение режимов и узнавать
+    эти состояния в конкретных ситуациях своей жизни.
+  </p>
+</div>
 
         <div className="mt-6 space-y-6">
           {groupedResults.map((group) => (
@@ -1083,22 +1085,22 @@ function Results({
             boxShadow: shadow.soft,
           }}
         >
-          <div>
-            <Eyebrow>Если хочется разобраться глубже</Eyebrow>
+          <div className="max-w-3xl">
+  <Eyebrow>Если хочется разобраться глубже</Eyebrow>
 
-            <h2 className="mt-3 max-w-3xl text-[28px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[34px]">
-              Профиль показывает режимы, но не объясняет, почему они включаются
-            </h2>
+  <h2 className="mt-3 text-[28px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[34px]">
+    Профиль показывает режимы, но не объясняет, почему они включаются
+  </h2>
 
-            <p
-  className="mt-3 max-w-3xl text-[13px] leading-[1.6]"
-              style={{ ...sans, color: '#C9C2B5' }}
-            >
-              На встрече разберем несколько реальных ситуаций: что запускало
-переключение, какие схемы были активны и что помогло бы Здоровому
-Взрослому реагировать иначе.
-            </p>
-          </div>
+  <p
+    className="mt-3 text-[13px] leading-[1.6]"
+    style={{ ...sans, color: '#C9C2B5' }}
+  >
+    На встрече разберем несколько реальных ситуаций: что запускало
+    переключение, какие схемы были активны и как в этих обстоятельствах
+    можно было бы реагировать более гибко.
+  </p>
+</div>
 
           <Link
             href="/book"
@@ -1273,7 +1275,7 @@ function InfoCard({
 }) {
   return (
     <div
-      className="px-5 py-5"
+      className="px-5 py-4"
       style={{
         backgroundColor: C.surface,
         borderRadius: radius.md,

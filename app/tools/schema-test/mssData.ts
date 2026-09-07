@@ -200,82 +200,419 @@ export const NEED_GROUPS: NeedGroup[] = [
 ];
 
 export const QUESTIONS: MssQuestion[] = [
-  { id: 1, schemaKey: 'abandonment', text: 'Я боюсь, что важные для меня отношения могут неожиданно закончиться.' },
-  { id: 2, schemaKey: 'abandonment', text: 'Я переживаю, что люди, которых я люблю, не смогут оставаться рядом со мной надежно и надолго.' },
-  { id: 3, schemaKey: 'abandonment', text: 'Я уверен(а), что другие люди будут рядом, когда мне понадобится их поддержка.', reverse: true },
-  { id: 4, schemaKey: 'abandonment', text: 'Я боюсь потерять людей, на которых полагаюсь.' },
-  { id: 5, schemaKey: 'emotional_deprivation', text: 'В моей жизни есть люди, на которых я могу опереться за советом и эмоциональной поддержкой.', reverse: true },
-  { id: 6, schemaKey: 'emotional_deprivation', text: 'Если у меня случатся серьезные неприятности, я не буду знать, кому позвонить.' },
-  { id: 7, schemaKey: 'emotional_deprivation', text: 'Другим людям нет дела до моих эмоциональных потребностей.' },
-  { id: 8, schemaKey: 'emotional_deprivation', text: 'Я не чувствую поддержки со стороны других, поэтому не стал(а) бы делиться с ними своими чувствами.' },
-  { id: 9, schemaKey: 'mistrust', text: 'Люди обычно скрывают свои настоящие намерения.' },
-  { id: 10, schemaKey: 'mistrust', text: 'Я не доверяю людям.' },
-  { id: 11, schemaKey: 'mistrust', text: 'Мне трудно верить людям на слово.' },
-  { id: 12, schemaKey: 'mistrust', text: 'Обычно люди говорят правду.', reverse: true },
-  { id: 13, schemaKey: 'social_isolation', text: 'По своей сути я сильно отличаюсь от других людей.' },
-  { id: 14, schemaKey: 'social_isolation', text: 'Я не встречал(а) людей, которые думают так же, как я.' },
-  { id: 15, schemaKey: 'social_isolation', text: 'Обычно другие люди принимают меня.', reverse: true },
-  { id: 16, schemaKey: 'social_isolation', text: 'Я чувствую себя чужим(ой).' },
-  { id: 17, schemaKey: 'defectiveness', text: 'Если бы люди узнали меня настоящего(ую), я бы им не понравился(ась).' },
-  { id: 18, schemaKey: 'defectiveness', text: 'В глубине души я чувствую, что со мной что-то фундаментально не так.' },
-  { id: 19, schemaKey: 'defectiveness', text: 'Из-за моих недостатков меня невозможно по-настоящему любить.' },
-  { id: 20, schemaKey: 'defectiveness', text: 'У меня есть причины стыдиться себя и своего характера.' },
-  { id: 21, schemaKey: 'vulnerability', text: 'Мне страшно далеко выходить за пределы привычного, потому что вокруг происходит слишком много плохого.' },
-  { id: 22, schemaKey: 'vulnerability', text: 'Мир в целом безопасен для меня.', reverse: true },
-  { id: 23, schemaKey: 'vulnerability', text: 'Мир опасен и не прощает ошибок, и я боюсь, что все может обернуться катастрофой.' },
-  { id: 24, schemaKey: 'vulnerability', text: 'Мир — опасное место, которое может причинить мне вред.' },
-  { id: 25, schemaKey: 'dependence', text: 'Я не могу позаботиться о себе сам(а), поэтому мне нужно, чтобы обо мне заботились другие.' },
-  { id: 26, schemaKey: 'dependence', text: 'Мне кажется, что я не справляюсь с повседневными делами без помощи других.' },
-  { id: 27, schemaKey: 'dependence', text: 'Я часто сомневаюсь в собственных решениях и предпочитаю, чтобы кто-то другой решал за меня.' },
-  { id: 28, schemaKey: 'dependence', text: 'Я уверенно принимаю решения самостоятельно.', reverse: true },
-  { id: 29, schemaKey: 'failure', text: 'Если задача трудная, скорее всего, я с ней не справлюсь.' },
-  { id: 30, schemaKey: 'failure', text: 'Мне редко удается самому(ой) находить решения своих проблем.' },
-  { id: 31, schemaKey: 'failure', text: 'Я способен(на) справиться с тем, что бы ни произошло.', reverse: true },
-  { id: 32, schemaKey: 'failure', text: 'Большинство проблем слишком сложны для меня.' },
-  { id: 33, schemaKey: 'low_self_efficacy', text: 'Большинство людей добились большего, чем я.' },
-  { id: 34, schemaKey: 'low_self_efficacy', text: 'Я горжусь своими достижениями.', reverse: true },
-  { id: 35, schemaKey: 'low_self_efficacy', text: 'Когда я думаю о достижениях других людей, я чувствую себя хуже них.' },
-  { id: 36, schemaKey: 'low_self_efficacy', text: 'Я сравниваю свои достижения с чужими и чувствую, что менее успешен(на).' },
-  { id: 37, schemaKey: 'enmeshment', text: 'Я отвечаю за эмоции человека, с которым я наиболее близок(ка).' },
-  { id: 38, schemaKey: 'enmeshment', text: 'В близких отношениях мне трудно понять, где заканчиваются мои потребности и чувства и начинаются потребности и чувства другого человека.' },
-  { id: 39, schemaKey: 'enmeshment', text: 'Я настолько близок(ка) с кем-то, что порой кажется, будто мы слились в одно целое.' },
-  { id: 40, schemaKey: 'enmeshment', text: 'Потребности самого близкого мне человека поглощают меня.' },
-  { id: 41, schemaKey: 'subjugation', text: 'Другие люди лучше меня знают, как правильно.' },
-  { id: 42, schemaKey: 'subjugation', text: 'Я должен(на) всегда делать то, что мне говорят.' },
-  { id: 43, schemaKey: 'subjugation', text: 'Другие люди лучше знают, что для меня хорошо.' },
-  { id: 44, schemaKey: 'subjugation', text: 'В отношениях мне кажется, что я должен(на) позволять другим брать контроль на себя.' },
-  { id: 45, schemaKey: 'self_sacrifice', text: 'Я всегда ставлю других на первое место, независимо от того, что происходит со мной.' },
-  { id: 46, schemaKey: 'self_sacrifice', text: 'Я считаю своим долгом выслушивать чужие проблемы.' },
-  { id: 47, schemaKey: 'self_sacrifice', text: 'Мои потребности так же важны, как потребности других людей.', reverse: true },
-  { id: 48, schemaKey: 'self_sacrifice', text: 'Сколько бы я ни делал(а) для других, мне кажется, что этого все равно недостаточно.' },
-  { id: 49, schemaKey: 'approval_seeking', text: 'Одобрение других часто важнее для меня, чем мои собственные желания.' },
-  { id: 50, schemaKey: 'approval_seeking', text: 'Мне важно нравиться людям, поэтому я склонен(на) соглашаться с ними, даже если знаю, что они фактически неправы.' },
-  { id: 51, schemaKey: 'approval_seeking', text: 'Даже если человек мне не нравится, мне все равно очень хочется нравиться ему.' },
-  { id: 52, schemaKey: 'approval_seeking', text: 'Мне трудно принять решение, пока я не узнаю, что думают другие.' },
-  { id: 53, schemaKey: 'emotional_inhibition', text: 'Обращать внимание на свои эмоции полезно для меня.', reverse: true },
-  { id: 54, schemaKey: 'emotional_inhibition', text: 'Мои эмоции приносят больше вреда, чем пользы.' },
-  { id: 55, schemaKey: 'emotional_inhibition', text: 'Эмоции бесполезны, поэтому мне нужно их игнорировать.' },
-  { id: 56, schemaKey: 'emotional_inhibition', text: 'Сильные эмоции опасны.' },
-  { id: 57, schemaKey: 'negativity', text: 'У меня почти всегда все идет не так.' },
-  { id: 58, schemaKey: 'negativity', text: 'В неопределенных ситуациях я обычно ожидаю хорошего.', reverse: true },
-  { id: 59, schemaKey: 'negativity', text: 'Все равно все обычно складывается не в мою пользу, поэтому я предпочитаю ожидать худшего, чтобы не разочаровываться.' },
-  { id: 60, schemaKey: 'negativity', text: 'Я пессимистично смотрю в будущее.' },
-  { id: 61, schemaKey: 'unrelenting_standards', text: 'Если я совершаю ошибку, мне легко отпустить ее и двигаться дальше.', reverse: true },
-  { id: 62, schemaKey: 'unrelenting_standards', text: 'Соответствовать высоким стандартам для меня важнее, чем чувствовать себя счастливым(ой).' },
-  { id: 63, schemaKey: 'unrelenting_standards', text: 'Я должен(на) всегда показывать очень высокий результат.' },
-  { id: 64, schemaKey: 'unrelenting_standards', text: 'Для меня допустимо не всегда показывать высокий результат.', reverse: true },
-  { id: 65, schemaKey: 'punitiveness_self', text: 'Когда я ошибаюсь, я стараюсь относиться к себе с пониманием и сочувствием.', reverse: true },
-  { id: 66, schemaKey: 'punitiveness_self', text: 'Если что-то пошло не так, я не должен(на) просто избежать последствий.' },
-  { id: 67, schemaKey: 'punitiveness_self', text: 'Если я потерпел(а) неудачу, я должен(на) понести за нее последствия.' },
-  { id: 68, schemaKey: 'punitiveness_self', text: 'Какой бы маленькой ни была моя ошибка, я заслуживаю наказания.' },
-  { id: 69, schemaKey: 'punitiveness_others', text: 'Когда другие ошибаются, я стараюсь относиться к ним с пониманием и сочувствием.', reverse: true },
-  { id: 70, schemaKey: 'punitiveness_others', text: 'Людей нужно привлекать к ответственности за их промахи.' },
-  { id: 71, schemaKey: 'punitiveness_others', text: 'Если человек терпит неудачу, он должен столкнуться с последствиями.' },
-  { id: 72, schemaKey: 'punitiveness_others', text: 'Люди заслуживают наказания за свои ошибки.' },
-  { id: 73, schemaKey: 'entitlement', text: 'Когда я прошу человека о чем-то, он должен соглашаться.' },
-  { id: 74, schemaKey: 'entitlement', text: 'Я считаю, что обычные правила, которым следуют другие, на меня не распространяются.' },
-  { id: 75, schemaKey: 'entitlement', text: 'Другие должны ценить то, насколько я особенный(ая).' },
-  { id: 76, schemaKey: 'entitlement', text: 'Я заслуживаю особых привилегий.' }
+  {
+    id: 1,
+    schemaKey: 'abandonment',
+    text: 'Я боюсь, что важные для меня отношения могут неожиданно закончиться',
+  },
+  {
+    id: 2,
+    schemaKey: 'abandonment',
+    text: 'Я беспокоюсь, что люди, которых я люблю, не смогут быть рядом со мной по-настоящему и надолго',
+  },
+  {
+    id: 3,
+    schemaKey: 'abandonment',
+    text: 'Я уверен(а), что могу рассчитывать на других людей, когда мне понадобится поддержка',
+    reverse: true,
+  },
+  {
+    id: 4,
+    schemaKey: 'abandonment',
+    text: 'Я боюсь потерять людей, на которых рассчитываю',
+  },
+
+  {
+    id: 5,
+    schemaKey: 'emotional_deprivation',
+    text: 'В моей жизни есть люди, к которым я могу обратиться за советом и эмоциональной поддержкой',
+    reverse: true,
+  },
+  {
+    id: 6,
+    schemaKey: 'emotional_deprivation',
+    text: 'Если я окажусь в серьезной беде, я не буду знать, кому позвонить',
+  },
+  {
+    id: 7,
+    schemaKey: 'emotional_deprivation',
+    text: 'Другим людям нет дела до моих эмоциональных потребностей',
+  },
+  {
+    id: 8,
+    schemaKey: 'emotional_deprivation',
+    text: 'Я не чувствую поддержки со стороны других, поэтому не стал(а) бы делиться с ними своими чувствами',
+  },
+
+  {
+    id: 9,
+    schemaKey: 'mistrust',
+    text: 'Люди обычно скрывают свои настоящие намерения',
+  },
+  {
+    id: 10,
+    schemaKey: 'mistrust',
+    text: 'Я не доверяю людям',
+  },
+  {
+    id: 11,
+    schemaKey: 'mistrust',
+    text: 'Я не склонен(на) верить людям просто на слово',
+  },
+  {
+    id: 12,
+    schemaKey: 'mistrust',
+    text: 'Обычно люди говорят правду',
+    reverse: true,
+  },
+
+  {
+    id: 13,
+    schemaKey: 'social_isolation',
+    text: 'По своей сути я сильно отличаюсь от других людей',
+  },
+  {
+    id: 14,
+    schemaKey: 'social_isolation',
+    text: 'Мне не встречались люди, которые думают так же, как я',
+  },
+  {
+    id: 15,
+    schemaKey: 'social_isolation',
+    text: 'Обычно другие люди принимают меня',
+    reverse: true,
+  },
+  {
+    id: 16,
+    schemaKey: 'social_isolation',
+    text: 'Я чувствую себя чужим(ой) среди других людей',
+  },
+
+  {
+    id: 17,
+    schemaKey: 'defectiveness',
+    text: 'Если бы люди узнали меня по-настоящему, я бы им не понравился(ась)',
+  },
+  {
+    id: 18,
+    schemaKey: 'defectiveness',
+    text: 'Мне кажется, что со мной по сути что-то не так',
+  },
+  {
+    id: 19,
+    schemaKey: 'defectiveness',
+    text: 'Из-за моих недостатков меня невозможно по-настоящему любить',
+  },
+  {
+    id: 20,
+    schemaKey: 'defectiveness',
+    text: 'У меня есть причины стыдиться себя и своего характера',
+  },
+
+  {
+    id: 21,
+    schemaKey: 'vulnerability',
+    text: 'Мне страшно далеко уходить от привычного и знакомого, потому что вокруг происходит слишком много плохого',
+  },
+  {
+    id: 22,
+    schemaKey: 'vulnerability',
+    text: 'В целом мир для меня безопасен',
+    reverse: true,
+  },
+  {
+    id: 23,
+    schemaKey: 'vulnerability',
+    text: 'Мир опасен и суров, и я боюсь, что все может обернуться катастрофой',
+  },
+  {
+    id: 24,
+    schemaKey: 'vulnerability',
+    text: 'Я воспринимаю мир как опасное место, где мне могут причинить вред',
+  },
+
+  {
+    id: 25,
+    schemaKey: 'dependence',
+    text: 'Я не могу самостоятельно позаботиться о себе, поэтому мне нужно, чтобы обо мне заботились другие',
+  },
+  {
+    id: 26,
+    schemaKey: 'dependence',
+    text: 'Мне кажется, что без помощи других я не справляюсь с повседневными делами',
+  },
+  {
+    id: 27,
+    schemaKey: 'dependence',
+    text: 'Я часто тревожусь, когда нужно принять решение самостоятельно, и предпочитаю, чтобы это сделал кто-то другой',
+  },
+  {
+    id: 28,
+    schemaKey: 'dependence',
+    text: 'Я уверенно принимаю решения самостоятельно',
+    reverse: true,
+  },
+
+  {
+    id: 29,
+    schemaKey: 'failure',
+    text: 'Если задача сложная, я, скорее всего, не смогу с ней справиться',
+  },
+  {
+    id: 30,
+    schemaKey: 'failure',
+    text: 'Мне редко удается самостоятельно находить решения своих проблем',
+  },
+  {
+    id: 31,
+    schemaKey: 'failure',
+    text: 'Что бы ни произошло, я уверен(а), что смогу с этим справиться',
+    reverse: true,
+  },
+  {
+    id: 32,
+    schemaKey: 'failure',
+    text: 'Большинство проблем кажутся мне слишком сложными, чтобы справиться с ними самостоятельно',
+  },
+
+  {
+    id: 33,
+    schemaKey: 'low_self_efficacy',
+    text: 'Большинство других людей добились большего, чем я',
+  },
+  {
+    id: 34,
+    schemaKey: 'low_self_efficacy',
+    text: 'Я горжусь своими достижениями',
+    reverse: true,
+  },
+  {
+    id: 35,
+    schemaKey: 'low_self_efficacy',
+    text: 'Когда я думаю о достижениях других людей, я чувствую себя менее успешным(ой), чем они',
+  },
+  {
+    id: 36,
+    schemaKey: 'low_self_efficacy',
+    text: 'Я сравниваю свои достижения с достижениями других людей и чувствую, что менее успешен(на)',
+  },
+
+  {
+    id: 37,
+    schemaKey: 'enmeshment',
+    text: 'Я чувствую себя ответственным(ой) за эмоции самого близкого мне человека',
+  },
+  {
+    id: 38,
+    schemaKey: 'enmeshment',
+    text: 'В близких отношениях мне трудно понять, где заканчиваются мои потребности и эмоции и начинаются потребности и эмоции другого человека',
+  },
+  {
+    id: 39,
+    schemaKey: 'enmeshment',
+    text: 'Я бываю настолько близок(ка) с кем-то, что кажется, будто мы слились в одно целое',
+  },
+  {
+    id: 40,
+    schemaKey: 'enmeshment',
+    text: 'Потребности самого близкого мне человека полностью меня поглощают',
+  },
+
+  {
+    id: 41,
+    schemaKey: 'subjugation',
+    text: 'Другие люди лучше меня знают, как правильно поступать',
+  },
+  {
+    id: 42,
+    schemaKey: 'subjugation',
+    text: 'Я должен(на) всегда делать то, что мне говорят',
+  },
+  {
+    id: 43,
+    schemaKey: 'subjugation',
+    text: 'Другие люди лучше меня понимают, что для меня хорошо',
+  },
+  {
+    id: 44,
+    schemaKey: 'subjugation',
+    text: 'В отношениях мне кажется, что я должен(на) отдавать контроль другому человеку',
+  },
+
+  {
+    id: 45,
+    schemaKey: 'self_sacrifice',
+    text: 'Я всегда ставлю других на первое место, независимо от того, что происходит со мной',
+  },
+  {
+    id: 46,
+    schemaKey: 'self_sacrifice',
+    text: 'Я считаю своим долгом выслушивать проблемы других людей',
+  },
+  {
+    id: 47,
+    schemaKey: 'self_sacrifice',
+    text: 'Мои потребности так же важны, как потребности других людей',
+    reverse: true,
+  },
+  {
+    id: 48,
+    schemaKey: 'self_sacrifice',
+    text: 'Сколько бы я ни делал(а) для других, мне все равно кажется, что этого недостаточно',
+  },
+
+  {
+    id: 49,
+    schemaKey: 'approval_seeking',
+    text: 'Для меня часто важнее получить одобрение других, чем поступить в соответствии со своими желаниями',
+  },
+  {
+    id: 50,
+    schemaKey: 'approval_seeking',
+    text: 'Мне важно нравиться людям, поэтому я склонен(на) соглашаться с ними, даже когда знаю, что они неправы',
+  },
+  {
+    id: 51,
+    schemaKey: 'approval_seeking',
+    text: 'Даже если человек мне не нравится, мне все равно очень важно нравиться ему',
+  },
+  {
+    id: 52,
+    schemaKey: 'approval_seeking',
+    text: 'Мне трудно принять решение, пока я не узнаю, что думают другие',
+  },
+
+  {
+    id: 53,
+    schemaKey: 'emotional_inhibition',
+    text: 'Мне полезно прислушиваться к своим эмоциям',
+    reverse: true,
+  },
+  {
+    id: 54,
+    schemaKey: 'emotional_inhibition',
+    text: 'Мои эмоции приносят больше вреда, чем пользы',
+  },
+  {
+    id: 55,
+    schemaKey: 'emotional_inhibition',
+    text: 'Эмоции бесполезны, поэтому мне нужно их игнорировать',
+  },
+  {
+    id: 56,
+    schemaKey: 'emotional_inhibition',
+    text: 'Опасно испытывать слишком сильные эмоции',
+  },
+
+  {
+    id: 57,
+    schemaKey: 'negativity',
+    text: 'Со мной почти всегда что-нибудь идет не так',
+  },
+  {
+    id: 58,
+    schemaKey: 'negativity',
+    text: 'В неопределенных ситуациях я обычно ожидаю, что все сложится хорошо',
+    reverse: true,
+  },
+  {
+    id: 59,
+    schemaKey: 'negativity',
+    text: 'Мне кажется, что все неизбежно складывается не в мою пользу, поэтому я предпочитаю ожидать худшего, чтобы не разочаровываться',
+  },
+  {
+    id: 60,
+    schemaKey: 'negativity',
+    text: 'Я пессимистично смотрю в будущее',
+  },
+
+  {
+    id: 61,
+    schemaKey: 'unrelenting_standards',
+    text: 'Если я совершаю ошибку, мне легко перестать о ней думать и двигаться дальше',
+    reverse: true,
+  },
+  {
+    id: 62,
+    schemaKey: 'unrelenting_standards',
+    text: 'Для меня важнее соответствовать высоким стандартам, чем чувствовать себя счастливым(ой)',
+  },
+  {
+    id: 63,
+    schemaKey: 'unrelenting_standards',
+    text: 'Я должен(на) всегда показывать исключительно высокий результат',
+  },
+  {
+    id: 64,
+    schemaKey: 'unrelenting_standards',
+    text: 'Я считаю допустимым не всегда показывать высокий результат',
+    reverse: true,
+  },
+
+  {
+    id: 65,
+    schemaKey: 'punitiveness_self',
+    text: 'Когда я ошибаюсь, я стараюсь относиться к себе с пониманием и сочувствием',
+    reverse: true,
+  },
+  {
+    id: 66,
+    schemaKey: 'punitiveness_self',
+    text: 'Если я делаю что-то не так, это не должно сходить мне с рук',
+  },
+  {
+    id: 67,
+    schemaKey: 'punitiveness_self',
+    text: 'Если я терплю неудачу, я должен(на) столкнуться с последствиями',
+  },
+  {
+    id: 68,
+    schemaKey: 'punitiveness_self',
+    text: 'Даже за самую маленькую ошибку я заслуживаю наказания',
+  },
+
+  {
+    id: 69,
+    schemaKey: 'punitiveness_others',
+    text: 'Когда другие ошибаются, я стараюсь относиться к ним с пониманием и сочувствием',
+    reverse: true,
+  },
+  {
+    id: 70,
+    schemaKey: 'punitiveness_others',
+    text: 'Люди должны отвечать за свои промахи',
+  },
+  {
+    id: 71,
+    schemaKey: 'punitiveness_others',
+    text: 'Если человек терпит неудачу, он должен столкнуться с последствиями',
+  },
+  {
+    id: 72,
+    schemaKey: 'punitiveness_others',
+    text: 'Люди заслуживают наказания за свои ошибки',
+  },
+
+  {
+    id: 73,
+    schemaKey: 'entitlement',
+    text: 'Если я о чем-то прошу человека, он должен согласиться',
+  },
+  {
+    id: 74,
+    schemaKey: 'entitlement',
+    text: 'Я считаю, что обычные правила, которым следуют другие, на меня не распространяются',
+  },
+  {
+    id: 75,
+    schemaKey: 'entitlement',
+    text: 'Другие люди должны ценить мою уникальность',
+  },
+  {
+    id: 76,
+    schemaKey: 'entitlement',
+    text: 'Я заслуживаю особых привилегий',
+  },
 ];
 
 export function scoredValue(question: MssQuestion, rawValue: number) {

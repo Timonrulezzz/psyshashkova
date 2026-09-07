@@ -42,6 +42,18 @@ const ADDITIONAL_GROUPS = [
   'healthy',
 ] as const;
 
+function splitModeParagraphs(text: string) {
+  return text
+    .replace(/\\+n\\+n/g, '\n\n')
+    .split(/\n\s*\n/)
+    .filter(Boolean);
+}
+
+function capitalizeFirst(text: string) {
+  if (!text) return text;
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
 export default function SchemaModesMap() {
   const [openMode, setOpenMode] = useState<ModeKey | null>(null);
   const [hoveredMode, setHoveredMode] = useState<ModeKey | null>(null);
@@ -105,15 +117,14 @@ export default function SchemaModesMap() {
             </h1>
 
             <p
-              className="mt-5 max-w-[930px] text-[15px] leading-[1.7] md:text-[16px]"
-              style={{ ...sans, color: C.inkSoft }}
-            >
-              Иногда в похожих ситуациях мы очень быстро переходим в
-              узнаваемое состояние: начинаем нападать, замолкаем,
-              отстраняемся, требуем от себя невозможного или, наоборот,
-              хорошо удерживаем и эмоции, и реальность. В схема-терапии
-              такие повторяющиеся состояния описывают через модель режимов.
-            </p>
+  className="mt-5 w-full text-[15px] leading-[1.7] md:text-[16px]"
+  style={{ ...sans, color: C.inkSoft }}
+>
+  Иногда в похожих ситуациях мы быстро оказываемся в знакомом
+  состоянии: нападаем, замолкаем, отстраняемся, давим на себя
+  или, наоборот, сохраняем контакт с эмоциями и реальностью.
+  В схема-терапии такие повторяющиеся состояния называют режимами.
+</p>
           </Reveal>
 
           <Reveal delay={40}>
@@ -129,9 +140,9 @@ export default function SchemaModesMap() {
               />
 
               <InfoCard
-                title="Карта интерактивная"
-                text="Нажмите на любой сектор: страница откроет карточку режима с описанием, триггерами и более гибкой реакцией."
-              />
+  title="Интерактивная карта"
+  text="Нажмите на любой сектор: ниже откроется карточка с описанием режима, возможными триггерами и вариантами более гибкой реакции."
+/>
             </div>
           </Reveal>
         </section>
@@ -139,40 +150,41 @@ export default function SchemaModesMap() {
         <section className="mx-auto max-w-6xl px-6 pb-7 md:px-8">
           <Reveal delay={60}>
             <div
-              className="grid gap-5 px-5 py-5 md:grid-cols-[0.78fr_1.22fr] md:gap-9 md:px-6"
-              style={{
-                backgroundColor: C.surfaceWarm,
-                borderRadius: radius.lg,
-              }}
-            >
-              <div>
-                <Eyebrow>Как читать карту</Eyebrow>
+  className="grid gap-y-3 px-5 py-5 md:grid-cols-[0.78fr_1.22fr] md:gap-x-9 md:px-6"
+  style={{
+    backgroundColor: C.surfaceWarm,
+    borderRadius: radius.lg,
+  }}
+>
+  <div>
+    <Eyebrow>Как читать карту</Eyebrow>
+  </div>
 
-                <h2 className="mt-3 text-[26px] leading-[1.1] md:text-[31px]">
-                  Не искать «какой я режим», а замечать переключения
-                </h2>
-              </div>
+  <div className="hidden md:block" />
 
-              <div
-                className="space-y-3 text-[12.5px] leading-[1.68] md:text-[13.5px]"
-                style={{ ...sans, color: C.ink }}
-              >
-                <p>
-                  Один и тот же человек может переходить между разными
-                  режимами в течение дня. Важнее не приклеить к себе
-                  название, а заметить последовательность: что произошло,
-                  какое состояние включилось и к каким действиям оно
-                  подтолкнуло.
-                </p>
+  <h2 className="text-[26px] leading-[1.1] md:text-[31px]">
+    Обратите внимание на переключения
+  </h2>
 
-                <p>
-                  В терапии задача не в том, чтобы навсегда убрать
-                  «неправильные» режимы. Полезнее расширять способность
-                  раньше замечать переключение и возвращать себе выбор в
-                  том, как реагировать дальше.
-                </p>
-              </div>
-            </div>
+  <div
+    className="space-y-3 text-[12.5px] leading-[1.68] md:pt-[4px] md:text-[13.5px]"
+    style={{ ...sans, color: C.ink }}
+  >
+    <p>
+      Один и тот же человек может переходить между разными режимами
+      в течение дня. Важнее заметить последовательность: что произошло,
+      какое состояние стало активным, какие мысли и чувства появились
+      и к каким действиям это подтолкнуло.
+    </p>
+
+    <p>
+      Задача терапии не в том, чтобы избавиться от «неправильных»
+      режимов. Мы учимся раньше замечать переключение, лучше понимать,
+      что его запускает, и возвращать себе больше выбора в том,
+      как реагировать дальше.
+    </p>
+  </div>
+</div>
           </Reveal>
         </section>
 
@@ -214,7 +226,7 @@ export default function SchemaModesMap() {
                   </h2>
 
                   <p
-                    className="text-[13px] leading-[1.65]"
+  className="text-[13px] leading-[1.65] md:pt-[4px]"
                     style={{ ...sans, color: C.inkSoft }}
                   >
                     {categoryDescriptions[category]}
@@ -329,11 +341,11 @@ export default function SchemaModesMap() {
                 <Eyebrow>Если узнаете повторяющийся сценарий</Eyebrow>
 
                 <h2 className="mt-3 max-w-3xl text-[28px] font-normal leading-[1.08] tracking-[-0.02em] md:text-[34px]">
-                  Можно разбирать не название режима, а реальные ситуации
+                  Если режим повторяется, важнее разбирать реальные ситуации
                 </h2>
 
                 <p
-                  className="mt-3 max-w-2xl text-[13px] leading-[1.6]"
+                  className="mt-3 max-w-3xl text-[13px] leading-[1.6]"
                   style={{ ...sans, color: '#C9C2B5' }}
                 >
                   На встрече мы можем посмотреть, что обычно запускает
@@ -869,7 +881,7 @@ function ModeCard({
           style={{ borderTop: `1px solid ${C.line}` }}
         >
           <div className="pt-5">
-            {mode.fullDescription.split('\n\n').map((paragraph) => (
+            {splitModeParagraphs(mode.fullDescription).map((paragraph) => (
               <p
                 key={paragraph}
                 className="mb-3 text-[13.5px] leading-[1.68] last:mb-0"
@@ -1022,7 +1034,7 @@ function ListBlock({
             style={{ ...sans, color: C.ink }}
           >
             <span style={{ color }}>·</span>
-            <span>{item}</span>
+            <span>{capitalizeFirst(item)}</span>
           </li>
         ))}
       </ul>
