@@ -15,6 +15,7 @@ import Eyebrow from '@/app/components/Eyebrow';
 import Reveal from '@/app/components/Reveal';
 
 import { site } from '@/app/data/site';
+import { getAttribution } from '@/app/lib/attribution';
 import {
   C,
   radius,
@@ -228,7 +229,7 @@ export default function Book() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
+                    body: JSON.stringify({
             name,
             contactMethod,
             contact,
@@ -238,6 +239,8 @@ export default function Book() {
             termsAgreed,
             personalDataConsent,
             website,
+            attribution:
+              getAttribution(),
           }),
         },
       );

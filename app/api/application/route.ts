@@ -31,6 +31,7 @@ type ApplicationBody = {
   termsAgreed?: unknown;
   personalDataConsent?: unknown;
   website?: unknown;
+  attribution?: unknown;
 };
 
 type ValidationErrors = {
@@ -153,6 +154,22 @@ function cleanString(
     .slice(0, maxLength);
 }
 
+function cleanTechnicalString(
+  value: unknown,
+  maxLength: number,
+) {
+  if (
+    typeof value !== 'string'
+  ) {
+    return '';
+  }
+
+  return value
+    .replace(/[\r\n]+/g, ' ')
+    .trim()
+    .slice(0, maxLength);
+}
+
 function isTopicValue(
   value: unknown,
 ): value is TopicValue {
@@ -190,6 +207,74 @@ function validateApplication(
       body.comment,
       500,
     );
+
+      const attributionRaw =
+    body.attribution &&
+    typeof body.attribution === 'object' &&
+    !Array.isArray(body.attribution)
+      ? (
+          body.attribution as Record<
+            string,
+            unknown
+          >
+        )
+      : {};
+
+  const attribution = {
+    metrikaClientId:
+      cleanTechnicalString(
+        attributionRaw.metrikaClientId,
+        80,
+      ),
+
+    yclid:
+      cleanTechnicalString(
+        attributionRaw.yclid,
+        200,
+      ),
+
+    utmSource:
+      cleanTechnicalString(
+        attributionRaw.utmSource,
+        200,
+      ),
+
+    utmMedium:
+      cleanTechnicalString(
+        attributionRaw.utmMedium,
+        200,
+      ),
+
+    utmCampaign:
+      cleanTechnicalString(
+        attributionRaw.utmCampaign,
+        200,
+      ),
+
+    utmContent:
+      cleanTechnicalString(
+        attributionRaw.utmContent,
+        200,
+      ),
+
+    utmTerm:
+      cleanTechnicalString(
+        attributionRaw.utmTerm,
+        200,
+      ),
+
+    landingPage:
+      cleanTechnicalString(
+        attributionRaw.landingPage,
+        300,
+      ),
+
+    referrerOrigin:
+      cleanTechnicalString(
+        attributionRaw.referrerOrigin,
+        200,
+      ),
+  };
 
   const contactMethod =
     body.contactMethod ===
@@ -301,12 +386,13 @@ function validateApplication(
   return {
     errors,
 
-    data: {
+        data: {
       name,
       contactMethod,
       contact,
       topic,
       comment,
+      attribution,
     },
   };
 }
@@ -507,11 +593,64 @@ export async function POST(
     `Тема: ${topicLabels[topic]}`,
   ];
 
-  if (data.comment) {
+    if (data.comment) {
     messageParts.push(
       '',
       'Дополнительный комментарий:',
       data.comment,
+    );
+  }
+
+  const attributionLines = [
+    [
+      'Metrika ClientID',
+      data.attribution
+        .metrikaClientId,
+    ],
+    [
+      'yclid',
+      data.attribution.yclid,
+    ],
+    [
+      'utm_source',
+      data.attribution.utmSource,
+    ],
+    [
+      'utm_medium',
+      data.attribution.utmMedium,
+    ],
+    [
+      'utm_campaign',
+      data.attribution.utmCampaign,
+    ],
+    [
+      'utm_content',
+      data.attribution.utmContent,
+    ],
+    [
+      'utm_term',
+      data.attribution.utmTerm,
+    ],
+    [
+      'Первая страница',
+      data.attribution.landingPage,
+    ],
+    [
+      'Источник перехода',
+      data.attribution.referrerOrigin,
+    ],
+  ]
+    .filter(([, value]) => value)
+    .map(
+      ([label, value]) =>
+        `${label}: ${value}`,
+    );
+
+  if (attributionLines.length > 0) {
+    messageParts.push(
+      '',
+      'Источник и атрибуция:',
+      ...attributionLines,
     );
   }
 
@@ -520,7 +659,7 @@ export async function POST(
     'Условия работы: ознакомление подтверждено',
     'Согласие на обработку ПД: получено',
     '',
-    'Источник: psyshashkova.ru/book',
+    'Страница отправки: psyshashkova.ru/book',
   );
 
   const message =

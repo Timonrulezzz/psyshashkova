@@ -3,6 +3,10 @@
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import Script from 'next/script';
+import {
+  captureAttribution,
+  setMetrikaClientId,
+} from '@/app/lib/attribution';
 
 const METRIKA_ID = 112370943;
 
@@ -15,6 +19,57 @@ declare global {
 export default function YandexMetrika() {
   const pathname = usePathname();
   const firstPage = useRef(true);
+
+    useEffect(() => {
+    captureAttribution();
+
+    let attempts = 0;
+    let timer: number | undefined;
+
+    const requestClientId = () => {
+      attempts += 1;
+
+      if (
+        typeof window.ym === 'function'
+      ) {
+        try {
+          window.ym(
+            METRIKA_ID,
+            'getClientID',
+            (clientId: unknown) => {
+              if (
+                typeof clientId ===
+                'string'
+              ) {
+                setMetrikaClientId(
+                  clientId,
+                );
+              }
+            },
+          );
+
+          return;
+        } catch {
+          // Повторим ниже.
+        }
+      }
+
+      if (attempts < 10) {
+        timer = window.setTimeout(
+          requestClientId,
+          500,
+        );
+      }
+    };
+
+    requestClientId();
+
+    return () => {
+      if (timer !== undefined) {
+        window.clearTimeout(timer);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const handleApplicationStart = () => {
