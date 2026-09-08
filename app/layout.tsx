@@ -2,6 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { site } from '@/app/data/site';
 import { Literata, Manrope } from 'next/font/google';
+import YandexMetrika from '@/app/components/YandexMetrika';
 
 const literata = Literata({
   subsets: ['cyrillic', 'latin'],
@@ -58,7 +59,10 @@ export default function RootLayout({
   lang="ru"
   className={`${literata.variable} ${manrope.variable}`}
 >
-  <body>{children}</body>
+  <body>
+  {children}
+  <YandexMetrika />
+</body>
 </html>
   );
 }

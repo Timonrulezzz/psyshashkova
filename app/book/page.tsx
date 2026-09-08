@@ -532,7 +532,7 @@ export default function Book() {
                     onFocusCapture={markApplicationStarted}
                     onChangeCapture={markApplicationStarted}
                     noValidate
-                    className="p-5 md:p-7"
+                    className="ym-hide-content ym-disable-keys p-5 md:p-7"
                     style={{
                       backgroundColor: C.surface,
                       borderRadius: radius.lg,
