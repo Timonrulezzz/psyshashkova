@@ -140,11 +140,19 @@ export function captureAttribution():
 
     let referrerOrigin = '';
 
-    if (document.referrer) {
+        if (document.referrer) {
       try {
-        referrerOrigin = new URL(
+        const referrerUrl = new URL(
           document.referrer,
-        ).origin;
+        );
+
+        if (
+          referrerUrl.origin !==
+          url.origin
+        ) {
+          referrerOrigin =
+            referrerUrl.origin;
+        }
       } catch {
         referrerOrigin = '';
       }
