@@ -364,18 +364,18 @@ export default function Book() {
 
       <main>
         <section className="mx-auto max-w-6xl px-6 pb-7 pt-10 md:px-8 md:pb-9 md:pt-14">
-          <div className="max-w-4xl">
+          <div className="max-w-5xl">
             <Reveal>
               <Eyebrow>Запись</Eyebrow>
 
-              <h1 className="mt-4 max-w-[820px] text-[37px] font-normal leading-[1.03] tracking-[-0.025em] md:text-[46px] lg:text-[50px]">
+              <h1 className="mt-4 max-w-[1000px] text-[37px] font-normal leading-[1.03] tracking-[-0.025em] md:text-[46px] lg:text-[50px]">
                 Записаться на встречу
               </h1>
             </Reveal>
 
             <Reveal delay={80}>
               <p
-                className="mt-4 max-w-[730px] text-[15px] leading-[1.65] md:text-[16px]"
+                className="mt-4 max-w-[900px] text-[15px] leading-[1.65] md:text-[16px]"
                 style={{
                   ...sans,
                   color: C.inkSoft,
@@ -1020,7 +1020,7 @@ export default function Book() {
                     >
                       После отправки вы останетесь на этой
                       странице. Я отвечу по контакту, который
-                      вы указали.
+                      вы указали. Обычно я отвечаю в течение двух дней.
                     </p>
                   </form>
                 </Reveal>

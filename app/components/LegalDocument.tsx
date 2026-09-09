@@ -52,7 +52,7 @@ export function LegalDocument({
 
             {subtitle && (
               <p
-                className="mt-4 max-w-2xl text-[14px] leading-[1.65] md:text-[15px]"
+                className="mt-4 w-full text-[14px] leading-[1.65] md:text-[15px]"
                 style={{
                   ...sans,
                   color: C.inkSoft,
