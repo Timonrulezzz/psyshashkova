@@ -441,6 +441,55 @@ export default function AboutPage() {
   </Reveal>
 </section>
 
+{/* PROFESSIONAL COMMUNITY */}
+
+<section className="mx-auto max-w-6xl px-6 pb-2 md:px-8 md:pb-3">
+  <Reveal>
+    <div
+      className="grid gap-3 border-y py-5 md:grid-cols-[0.72fr_1.28fr] md:items-center md:gap-x-10"
+      style={{
+        borderColor: C.line,
+      }}
+    >
+      <div>
+        <Eyebrow>
+          Профессиональное сообщество
+        </Eyebrow>
+      </div>
+
+      <p
+        className="text-[13.5px] leading-[1.65] md:text-[14px]"
+        style={{
+          ...sans,
+          color: C.inkSoft,
+        }}
+      >
+        Я состою в{' '}
+        <a
+          href="https://associationcbt.ru/"
+          target="_blank"
+          rel="noreferrer"
+          className="underline underline-offset-4 transition-opacity hover:opacity-60"
+          style={{ color: C.ink }}
+        >
+          Ассоциации когнитивно-поведенческой психотерапии (АКПП)
+        </a>{' '}
+        и{' '}
+        <a
+          href="https://akpn.org/"
+          target="_blank"
+          rel="noreferrer"
+          className="underline underline-offset-4 transition-opacity hover:opacity-60"
+          style={{ color: C.ink }}
+        >
+          Ассоциации специалистов в сфере контекстуально-поведенческой науки (АКПН)
+        </a>
+        .
+      </p>
+    </div>
+  </Reveal>
+</section>
+
         {/* PROFESSIONAL CARE */}
 
         <section className="mx-auto max-w-6xl px-6 py-8 md:px-8 md:py-10">
