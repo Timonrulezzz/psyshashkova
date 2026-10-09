@@ -63,7 +63,7 @@ export const site = {
     },
 
     session: {
-      priceRub: 7000,
+      priceRub: 5000,
       durationMinutes: 50,
       format: 'Онлайн',
       platform: 'Яндекс Телемост',
